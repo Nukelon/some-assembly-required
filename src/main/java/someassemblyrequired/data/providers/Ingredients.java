@@ -12,6 +12,7 @@ import someassemblyrequired.SomeAssemblyRequired;
 import someassemblyrequired.data.providers.ingredient.CreateIngredients;
 import someassemblyrequired.data.providers.ingredient.FarmersDelightIngredients;
 import someassemblyrequired.data.providers.ingredient.IngredientBuilder;
+import someassemblyrequired.data.providers.ingredient.MinersDelightIngredients;
 import someassemblyrequired.ingredient.IngredientProperties;
 import someassemblyrequired.integration.ModCompat;
 import someassemblyrequired.registry.ModItems;
@@ -40,6 +41,7 @@ public record Ingredients(PackOutput packOutput) implements DataProvider {
                 ModItems.SLICED_ONION.get()
         ));
         MODEL_OVERRIDES.addAll(FarmersDelightIngredients.MODEL_OVERRIDES);
+        MODEL_OVERRIDES.addAll(MinersDelightIngredients.MODEL_OVERRIDES);
         MODEL_OVERRIDES.add(
                 Items.POTATO
         );
@@ -60,6 +62,9 @@ public record Ingredients(PackOutput packOutput) implements DataProvider {
         }
         if (ModCompat.isFarmersDelightLoaded()) {
             FarmersDelightIngredients.addIngredients(this);
+        }
+        if (ModCompat.isMinersDelightLoaded()) {
+            MinersDelightIngredients.addIngredients(this);
         }
 
         ItemStack displayItem = INGREDIENTS.get(ModItems.GOLDEN_APPLE_SLICES.get()).getDisplayItem().copy();

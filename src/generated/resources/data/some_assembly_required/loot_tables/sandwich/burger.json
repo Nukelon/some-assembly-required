@@ -27,6 +27,17 @@
         },
         {
           "type": "some_assembly_required:optional_item",
+          "name": "miners_delight:vegan_patty",
+          "weight": 5,
+          "when": [
+            {
+              "type": "forge:mod_loaded",
+              "modid": "miners_delight"
+            }
+          ]
+        },
+        {
+          "type": "some_assembly_required:optional_item",
           "name": "farmersdelight:cooked_bacon",
           "weight": 2,
           "when": [

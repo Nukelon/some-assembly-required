@@ -1,6 +1,7 @@
 package someassemblyrequired.data.providers;
 
 import com.google.common.base.Preconditions;
+import com.sammy.minersdelight.setup.MDItems;
 import com.simibubi.create.AllItems;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.LootTableProvider;
@@ -175,6 +176,7 @@ public class LootTables extends LootTableProvider {
                         .add(item(BURGER_BUN_BOTTOM.get()))
                 ).withPool(LootPool.lootPool()
                         .add(whenLoaded(ModItems.BEEF_PATTY.get(), 5))
+                        .add(whenLoaded(MDItems.VEGAN_PATTY.get(), 5))
                         .add(whenLoaded(ModItems.COOKED_BACON.get(), 2))
                         .add(whenLoaded(ModItems.COOKED_MUTTON_CHOPS.get(), 1))
                         .add(whenLoaded(ModItems.FRIED_EGG.get(), 2))

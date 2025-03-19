@@ -296,9 +296,15 @@
       }
     },
     {
-      "model": "some_assembly_required:ingredient/minecraft/potato",
+      "model": "some_assembly_required:ingredient/miners_delight/vegan_patty",
       "predicate": {
         "minecraft:custom_model_data": 50.0
+      }
+    },
+    {
+      "model": "some_assembly_required:ingredient/minecraft/potato",
+      "predicate": {
+        "minecraft:custom_model_data": 51.0
       }
     }
   ],

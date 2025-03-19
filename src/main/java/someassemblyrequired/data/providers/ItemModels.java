@@ -1,5 +1,6 @@
 package someassemblyrequired.data.providers;
 
+import com.sammy.minersdelight.setup.MDItems;
 import net.minecraft.core.Direction;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
@@ -82,7 +83,7 @@ public class ItemModels extends ItemModelProvider {
     }
 
     private void addCustomIngredientModels(HashMap<Item, ItemModelBuilder> customModels) {
-        addFarmersDelightCustomIngredientModels(customModels);
+        addBeefPattyModels(customModels);
 
         String path = getIngredientPath(Items.POTATO);
         ResourceLocation texture = prefixItem(path);
@@ -153,10 +154,11 @@ public class ItemModels extends ItemModelProvider {
         );
     }
 
-    private void addFarmersDelightCustomIngredientModels(HashMap<Item, ItemModelBuilder> customModels) {
+    private void addBeefPattyModels(HashMap<Item, ItemModelBuilder> customModels) {
         for (Item item : Arrays.asList(
                 vectorwing.farmersdelight.common.registry.ModItems.BEEF_PATTY.get(),
-                vectorwing.farmersdelight.common.registry.ModItems.MINCED_BEEF.get()
+                vectorwing.farmersdelight.common.registry.ModItems.MINCED_BEEF.get(),
+                MDItems.VEGAN_PATTY.get()
         )) {
             String path = getIngredientPath(item);
             ResourceLocation texture = prefixItem(path);

@@ -11,6 +11,7 @@ public class ModCompat {
     public static final String CREATE = "create";
     public static final String DIET = "diet";
     public static final String JEI = "jei";
+    public static final String MINERS_DELIGHT = "miners_delight";
 
     public static void setup() {
         if (isFarmersDelightLoaded()) FarmersDelightCompat.setup();
@@ -32,6 +33,10 @@ public class ModCompat {
 
     public static boolean isJEILoaded() {
         return isLoaded(JEI);
+    }
+
+    public static boolean isMinersDelightLoaded() {
+        return isLoaded(MINERS_DELIGHT);
     }
 
     private static boolean isLoaded(String modid) {

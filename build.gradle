@@ -83,6 +83,7 @@ dependencies {
     implementation fg.deobf("curse.maven:create-328085:4626108")
     implementation fg.deobf("curse.maven:appleskin-248787:4605078")
     implementation fg.deobf("curse.maven:diet-443570:4634780")
+    implementation fg.deobf("curse.maven:miners-delight-plus-689630:5038950")
     // https://maven.tterrag.com/com/tterrag/registrate/Registrate/
     compileOnly fg.deobf("com.tterrag.registrate:Registrate:MC1.20-1.3.3")
 }
