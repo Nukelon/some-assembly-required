@@ -116,10 +116,9 @@ public class SandwichItemHandler implements IItemHandler, IItemHandlerModifiable
             }
 
             if (ModCompat.isFarmersDelightLoaded() && uniqueIngredients.size() >= 2) {
-                boolean isBurger = items.get(0).is(ModTags.BURGER_BUNS) && items.get(items.size() - 1).is(ModTags.BURGER_BUNS);
                 // 1/3/5 minutes for 2/4/6 unique ingredients, excluding bread/items that provide effects
                 int duration = 1200 * (2 * (Math.min(uniqueIngredients.size(), 6) / 2) - 1);
-                MobEffect effect = isBurger ? FarmersDelightCompat.getNourishment() : FarmersDelightCompat.getComfort();
+                MobEffect effect = isBurger() ? FarmersDelightCompat.getNourishment() : FarmersDelightCompat.getComfort();
                 this.effect = new MobEffectInstance(effect, duration, 0);
                 builder.effect(() -> this.effect, 1F);
             }
@@ -166,6 +165,10 @@ public class SandwichItemHandler implements IItemHandler, IItemHandlerModifiable
 
     public boolean hasTopAndBottomBread() {
         return getItemCount() > 0 && bottom().is(ModTags.SANDWICH_BREAD) && top().is(ModTags.SANDWICH_BREAD);
+    }
+
+    public boolean isBurger() {
+        return getItemCount() > 0 && bottom().is(ModTags.BURGER_BUNS) && top().is(ModTags.BURGER_BUNS);
     }
 
     public boolean isDoubleDeckerSandwich() {

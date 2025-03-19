@@ -81,6 +81,8 @@ public record Ingredients(PackOutput packOutput) implements DataProvider {
         builder(ModItems.BURGER_BUN_BOTTOM.get()).setHeight(2).setRenderAsItem(false).setFullName(burgerBunHalf);
         builder(ModItems.BURGER_BUN_TOP.get()).setHeight(4).setRenderAsItem(false).setFullName(burgerBunHalf);
 
+        builder(Items.GOLD_BLOCK).setHeight(8).setRenderAsItem(false);
+
         Arrays.asList(
                 ModItems.TOASTED_BREAD_SLICE.get(),
                 ModItems.APPLE_SLICES.get(),

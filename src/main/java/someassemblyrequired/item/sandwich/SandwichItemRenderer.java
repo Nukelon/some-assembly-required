@@ -67,10 +67,14 @@ public class SandwichItemRenderer extends BlockEntityWithoutLevelRenderer {
             }
             ItemStack displayStack = Ingredients.getDisplayItem(stack);
 
-            if (!Ingredients.shouldRenderAsItem(stack)) {
+            boolean isGui3d = Minecraft.getInstance().getItemRenderer().getModel(stack, null, null, (int) seed + slot).isGui3d();
+            if (!Ingredients.shouldRenderAsItem(stack) || isGui3d) {
                 poseStack.mulPose(Axis.ZP.rotationDegrees(180));
                 poseStack.mulPose(Axis.XP.rotationDegrees(-90));
                 poseStack.translate(0, 0.5 - 1 / 32D, 0);
+                if (isGui3d) {
+                    poseStack.translate(0, -4 / 16D, 0);
+                }
             }
 
             poseStack.scale(1, 1, 0.99F);

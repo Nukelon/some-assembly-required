@@ -11,6 +11,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -43,10 +44,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import someassemblyrequired.SomeAssemblyRequired;
 import someassemblyrequired.block.SandwichBlock;
 import someassemblyrequired.ingredient.Ingredients;
-import someassemblyrequired.registry.ModAdvancementTriggers;
-import someassemblyrequired.registry.ModFoods;
-import someassemblyrequired.registry.ModItems;
-import someassemblyrequired.registry.ModTags;
+import someassemblyrequired.registry.*;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -203,30 +201,40 @@ public class SandwichItem extends BlockItem {
 
     @Override
     public ItemStack finishUsingItem(ItemStack stack, Level world, LivingEntity entity) {
-        if (entity instanceof Player player) {
-            triggerAdvancements(stack, player);
-        }
-
         SandwichItemHandler.get(stack).ifPresent(sandwich -> {
             for (ItemStack item : sandwich.items) {
                 Ingredients.onFoodEaten(item, entity);
+            }
+            if (entity instanceof ServerPlayer player) {
+                if (sandwich.isBurger()) {
+                    player.awardStat(ModStatistics.BURGERS_EATEN.get());
+                } else {
+                    player.awardStat(ModStatistics.SANDWICHES_EATEN.get());
+                }
+                triggerAdvancements(stack, player);
             }
         });
 
         return super.finishUsingItem(stack, world, entity);
     }
 
-    private void triggerAdvancements(ItemStack stack, Player player) {
-        if (!(player instanceof ServerPlayer serverPlayer)) {
-            return;
-        }
+    private void triggerAdvancements(ItemStack stack, ServerPlayer player) {
         SandwichItemHandler.get(stack).ifPresent(sandwich -> {
             if (sandwich.isDoubleDeckerSandwich()) {
-                ModAdvancementTriggers.CONSUME_DOUBLE_DECKER_SANDWICH.trigger(serverPlayer, stack);
+                ModAdvancementTriggers.CONSUME_DOUBLE_DECKER_SANDWICH.trigger(player, stack);
             }
             for (ItemStack ingredient : sandwich) {
                 if (ingredient.is(Items.POTION) && PotionUtils.getPotion(ingredient) != Potions.WATER) {
-                    ModAdvancementTriggers.CONSUME_POTION_SANDWICH.trigger(serverPlayer, stack);
+                    ModAdvancementTriggers.CONSUME_POTION_SANDWICH.trigger(player, stack);
+                }
+            }
+            if (sandwich.isBurger()) {
+                if (player.getStats().getValue(Stats.CUSTOM.get(ModStatistics.BURGERS_EATEN.get())) >= 1000) {
+                    ModAdvancementTriggers.CONSUME_1000_BURGERS.trigger(player);
+                }
+            } else {
+                if (player.getStats().getValue(Stats.CUSTOM.get(ModStatistics.SANDWICHES_EATEN.get())) >= 1000) {
+                    ModAdvancementTriggers.CONSUME_1000_SANDWICHES.trigger(player);
                 }
             }
         });

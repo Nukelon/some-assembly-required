@@ -11,6 +11,13 @@
   "some_assembly_required.advancement.consume_potion_sandwich.description": "Eat a sandwich with a potion in it",
   "some_assembly_required.advancement.consume_double_decker_sandwich.title": "Double Hungry",
   "some_assembly_required.advancement.consume_double_decker_sandwich.description": "Eat a double decker sandwich",
+  "some_assembly_required.advancement.consume_1000_sandwiches.title": "Sandwich Sam",
+  "some_assembly_required.advancement.consume_1000_sandwiches.description": "Eat 1000 sandwiches",
+  "some_assembly_required.advancement.consume_1000_burgers.title": "Burger Prince",
+  "some_assembly_required.advancement.consume_1000_burgers.description": "Eat 1000 burgers",
+
+  "stats.some_assembly_required.sandwiches_eaten": "Sandwiches Eaten",
+  "stats.some_assembly_required.burgers_eaten": "Burgers Eaten",
 
   "some_assembly_required.message.bottom_bread": "Missing bottom bread slice!",
   "some_assembly_required.message.full_sandwich": "The resulting sandwich is too large!",

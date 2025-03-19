@@ -39,6 +39,7 @@ public class SomeAssemblyRequired {
                 ModItems.ITEMS,
                 ModItems.CREATIVE_MODE_TABS,
                 ModBlocks.BLOCKS,
+                ModStatistics.CUSTOM_STATS,
                 ModBlockEntityTypes.ENTITY_TYPES,
                 ModSoundEvents.SOUND_EVENTS,
                 ModRecipeTypes.RECIPE_TYPES,
