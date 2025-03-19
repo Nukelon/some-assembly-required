@@ -3,6 +3,7 @@ package someassemblyrequired.data.providers.ingredient;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -33,12 +34,14 @@ public class IngredientBuilder {
 
     private boolean renderAsItem = true;
 
+    private FoodProperties foodProperties = null;
+
     public IngredientBuilder(Item item) {
         this.item = item;
     }
 
     public IngredientProperties build() {
-        return new IngredientProperties(null, displayName, fullName, displayItem, container, soundEvent, height, renderAsItem);
+        return new IngredientProperties(foodProperties, displayName, fullName, displayItem, container, soundEvent, height, renderAsItem);
     }
 
     public Item getItem() {
@@ -143,6 +146,11 @@ public class IngredientBuilder {
 
     public IngredientBuilder setRenderAsItem(boolean renderAsItem) {
         this.renderAsItem = renderAsItem;
+        return this;
+    }
+
+    public IngredientBuilder setFoodProperties(FoodProperties foodProperties) {
+        this.foodProperties = foodProperties;
         return this;
     }
 

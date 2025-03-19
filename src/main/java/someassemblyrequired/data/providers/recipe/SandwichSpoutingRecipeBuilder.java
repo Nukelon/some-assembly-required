@@ -34,6 +34,7 @@ public class SandwichSpoutingRecipeBuilder {
         consumer.accept(create(Items.HONEY_BOTTLE, AllFluids.HONEY.get()));
         consumer.accept(create(AllItems.BUILDERS_TEA.get(), AllFluids.TEA.get()));
         consumer.accept(create(Items.MILK_BUCKET, ForgeMod.MILK.get()));
+        consumer.accept(create(AllFluids.CHOCOLATE.get().getBucket(), AllFluids.CHOCOLATE.get()));
         consumer.accept(createPotionFillingRecipe("potion"));
     }
 
