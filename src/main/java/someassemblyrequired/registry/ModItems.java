@@ -82,7 +82,7 @@ public class ModItems {
     public static final RegistryObject<Item> SLICED_ONION = ITEMS.register("sliced_onion", () -> createFoodItem(ModFoods.SLICED_ONION));
 
     // misc items
-    public static final RegistryObject<SandwichItem> SANDWICH = ITEMS.register("sandwich", () -> new SandwichItem(ModBlocks.SANDWICH.get(), new Item.Properties().stacksTo(12).food(ModFoods.EMPTY)));
+    public static final RegistryObject<SandwichItem> SANDWICH = ITEMS.register("sandwich", () -> new SandwichItem(ModBlocks.SANDWICH.get(), new Item.Properties().stacksTo(16).food(ModFoods.EMPTY)));
     public static final RegistryObject<Item> SPREAD = ITEMS.register("spread", () -> new SpreadItem(new Item.Properties()));
 
     private static Item createBlockItem(Block block) {
