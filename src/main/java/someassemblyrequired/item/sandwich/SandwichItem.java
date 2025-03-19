@@ -8,9 +8,13 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffectUtil;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
@@ -104,6 +108,15 @@ public class SandwichItem extends BlockItem {
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack sandwich, @Nullable Level world, List<Component> tooltip, TooltipFlag flag) {
         super.appendHoverText(sandwich, world, tooltip, flag);
+        SandwichItemHandler.get(sandwich).ifPresent(handler -> {
+            MobEffectInstance instance = handler.getEffect();
+            if (instance != null) {
+                MutableComponent component = Component.translatable(instance.getDescriptionId());
+                MobEffect effect = instance.getEffect();
+                component = Component.translatable("potion.withDuration", component, MobEffectUtil.formatDuration(instance, 1));
+                tooltip.add(component.withStyle(effect.getCategory().getTooltipFormatting()));
+            }
+        });
         SandwichItemHandler.get(sandwich).ifPresent(handler -> handler.getItems()
                 .stream()
                 .collect(

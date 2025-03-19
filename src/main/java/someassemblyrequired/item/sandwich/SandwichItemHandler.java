@@ -3,8 +3,10 @@ package someassemblyrequired.item.sandwich;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -13,6 +15,8 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import someassemblyrequired.config.ModConfig;
 import someassemblyrequired.ingredient.Ingredients;
+import someassemblyrequired.integration.ModCompat;
+import someassemblyrequired.integration.farmersdelight.FarmersDelightCompat;
 import someassemblyrequired.mixin.FoodPropertiesMixin;
 import someassemblyrequired.registry.ModFoods;
 import someassemblyrequired.registry.ModItems;
@@ -20,16 +24,14 @@ import someassemblyrequired.registry.ModTags;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Supplier;
 
 public class SandwichItemHandler implements IItemHandler, IItemHandlerModifiable, INBTSerializable<ListTag>, Iterable<ItemStack> {
 
     protected final List<ItemStack> items;
     protected FoodProperties foodProperties;
+    protected MobEffectInstance effect;
 
     public SandwichItemHandler() {
         this.items = new ArrayList<>();
@@ -86,6 +88,11 @@ public class SandwichItemHandler implements IItemHandler, IItemHandlerModifiable
         return totalSaturation / getTotalNutrition();
     }
 
+    @Nullable
+    public MobEffectInstance getEffect() {
+        return effect;
+    }
+
     private void updateFoodProperties() {
         if (isEmpty()) {
             foodProperties = ModFoods.EMPTY;
@@ -94,12 +101,27 @@ public class SandwichItemHandler implements IItemHandler, IItemHandlerModifiable
                     .nutrition(getTotalNutrition())
                     .saturationMod(getAverageSaturation());
 
+            Set<Item> uniqueIngredients = new HashSet<>();
+
             for (ItemStack item : items) {
                 FoodProperties food = Ingredients.getFood(item, null);
 
                 for (Pair<Supplier<MobEffectInstance>, Float> pair : ((FoodPropertiesMixin) food).getEffectSuppliers()) {
                     builder.effect(pair.getFirst(), pair.getSecond());
                 }
+
+                if (food.getNutrition() > 0 && food.getEffects().isEmpty() && !item.is(ModTags.SANDWICH_BREAD)) {
+                    uniqueIngredients.add(item.getItem());
+                }
+            }
+
+            if (ModCompat.isFarmersDelightLoaded() && uniqueIngredients.size() >= 2) {
+                boolean isBurger = items.get(0).is(ModTags.BURGER_BUNS) && items.get(items.size() - 1).is(ModTags.BURGER_BUNS);
+                // 1/3/5 minutes for 2/4/6 unique ingredients, excluding bread/items that provide effects
+                int duration = 1200 * (2 * (Math.min(uniqueIngredients.size(), 6) / 2) - 1);
+                MobEffect effect = isBurger ? FarmersDelightCompat.getNourishment() : FarmersDelightCompat.getComfort();
+                this.effect = new MobEffectInstance(effect, duration, 0);
+                builder.effect(() -> this.effect, 1F);
             }
 
             foodProperties = builder.build();
