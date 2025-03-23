@@ -16,7 +16,7 @@ description='''${mod_description}'''
 [[dependencies.some_assembly_required]]
     modId = "forge"
     mandatory = true
-    versionRange="${forge_version_range}"
+    versionRange="*"
     ordering = "NONE"
     side = "BOTH"
 
@@ -30,13 +30,13 @@ description='''${mod_description}'''
 [[dependencies.some_assembly_required]]
     modId = "create"
     mandatory = false
-    versionRange = "${create_version_range}"
+    versionRange = "*"
     ordering = "AFTER"
     side = "BOTH"
 
 [[dependencies.some_assembly_required]]
     modId = "farmersdelight"
     mandatory = false
-    versionRange = "${farmersdelight_version_range}"
+    versionRange = "*"
     ordering = "AFTER"
     side = "BOTH"
