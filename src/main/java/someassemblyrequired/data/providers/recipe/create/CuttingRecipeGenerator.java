@@ -38,7 +38,9 @@ public class CuttingRecipeGenerator extends ProcessingRecipeGenerator {
                     for (ItemLike item : results) {
                         builder.output(item);
                     }
-                    return builder.duration(30).withItemIngredients(Ingredient.of(input));
+                    return builder.whenModMissing(ModCompat.SLICE_AND_DICE)
+                            .duration(30)
+                            .withItemIngredients(Ingredient.of(input));
                 }
         );
     }
@@ -53,7 +55,7 @@ public class CuttingRecipeGenerator extends ProcessingRecipeGenerator {
 
     private void cut(Ingredient input, ItemLike result, int count) {
         // noinspection ConstantConditions
-        create(SomeAssemblyRequired.id(ModCompat.CREATE + "/" + ForgeRegistries.ITEMS.getKey(result.asItem()).getPath()), builder -> builder.duration(30).output(result, count).withItemIngredients(input));
+        create(SomeAssemblyRequired.id(ModCompat.CREATE + "/" + ForgeRegistries.ITEMS.getKey(result.asItem()).getPath()), builder -> builder.whenModMissing(ModCompat.SLICE_AND_DICE).duration(30).output(result, count).withItemIngredients(input));
     }
 
     protected AllRecipeTypes getRecipeType() {

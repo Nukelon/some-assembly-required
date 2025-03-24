@@ -12,6 +12,7 @@ public class ModCompat {
     public static final String DIET = "diet";
     public static final String JEI = "jei";
     public static final String MINERS_DELIGHT = "miners_delight";
+    public static final String SLICE_AND_DICE = "sliceanddice";
 
     public static void setup() {
         if (isFarmersDelightLoaded()) FarmersDelightCompat.setup();
