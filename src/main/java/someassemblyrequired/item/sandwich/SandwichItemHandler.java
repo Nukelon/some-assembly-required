@@ -124,7 +124,7 @@ public class SandwichItemHandler implements IItemHandler, IItemHandlerModifiable
 
     public void addBonusEffect(FoodProperties.Builder builder, int uniqueIngredientCount) {
         String effectName = isBurger() ? ModConfig.server.burgerBonusEffect.get() : ModConfig.server.sandwichBonusEffect.get();
-        List<Integer> durations = isBurger() ? ModConfig.server.burgerEffectDurations.get() : ModConfig.server.sandwichEffectDurations.get();;
+        List<Integer> durations = isBurger() ? ModConfig.server.burgerEffectDurations.get() : ModConfig.server.sandwichEffectDurations.get();
         uniqueIngredientCount = Math.min(durations.size() - 1, uniqueIngredientCount);
         try {
             ResourceLocation effectId = new ResourceLocation(effectName);
