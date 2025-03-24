@@ -1,6 +1,5 @@
 package someassemblyrequired.integration.farmersdelight;
 
-import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -10,7 +9,6 @@ import someassemblyrequired.ingredient.Ingredients;
 import someassemblyrequired.integration.farmersdelight.ingredient.ConsumableItemBehavior;
 import someassemblyrequired.item.sandwich.SandwichItem;
 import vectorwing.farmersdelight.common.item.ConsumableItem;
-import vectorwing.farmersdelight.common.registry.ModEffects;
 import vectorwing.farmersdelight.common.registry.ModItems;
 
 public class FarmersDelightCompat {
@@ -38,13 +36,5 @@ public class FarmersDelightCompat {
                         .map(ConsumableItemBehavior::new)
                         .forEach(behavior -> Ingredients.addBehavior(behavior.item(), behavior))
         );
-    }
-
-    public static MobEffect getComfort() {
-        return ModEffects.COMFORT.get();
-    }
-
-    public static MobEffect getNourishment() {
-        return ModEffects.NOURISHMENT.get();
     }
 }

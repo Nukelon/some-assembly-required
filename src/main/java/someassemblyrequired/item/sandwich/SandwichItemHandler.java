@@ -1,8 +1,10 @@
 package someassemblyrequired.item.sandwich;
 
 import com.mojang.datafixers.util.Pair;
+import net.minecraft.ResourceLocationException;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.food.FoodProperties;
@@ -13,10 +15,9 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
+import net.minecraftforge.registries.ForgeRegistries;
 import someassemblyrequired.config.ModConfig;
 import someassemblyrequired.ingredient.Ingredients;
-import someassemblyrequired.integration.ModCompat;
-import someassemblyrequired.integration.farmersdelight.FarmersDelightCompat;
 import someassemblyrequired.mixin.FoodPropertiesMixin;
 import someassemblyrequired.registry.ModFoods;
 import someassemblyrequired.registry.ModItems;
@@ -115,18 +116,30 @@ public class SandwichItemHandler implements IItemHandler, IItemHandlerModifiable
                 }
             }
 
-            if (ModCompat.isFarmersDelightLoaded() && uniqueIngredients.size() >= 2) {
-                // 1/3/5 minutes for 2/4/6 unique ingredients, excluding bread/items that provide effects
-                int duration = 1200 * (2 * (Math.min(uniqueIngredients.size(), 6) / 2) - 1);
-                MobEffect effect = isBurger() ? FarmersDelightCompat.getNourishment() : FarmersDelightCompat.getComfort();
-                this.effect = new MobEffectInstance(effect, duration, 0);
-                builder.effect(() -> this.effect, 1F);
-            }
+            addBonusEffect(builder, uniqueIngredients.size());
 
             foodProperties = builder.build();
         }
     }
 
+    public void addBonusEffect(FoodProperties.Builder builder, int uniqueIngredientCount) {
+        String effectName = isBurger() ? ModConfig.server.burgerBonusEffect.get() : ModConfig.server.sandwichBonusEffect.get();
+        List<Integer> durations = isBurger() ? ModConfig.server.burgerEffectDurations.get() : ModConfig.server.sandwichEffectDurations.get();;
+        uniqueIngredientCount = Math.min(durations.size() - 1, uniqueIngredientCount);
+        try {
+            ResourceLocation effectId = new ResourceLocation(effectName);
+            MobEffect effect = ForgeRegistries.MOB_EFFECTS.getValue(effectId);
+            if (effect != null && !durations.isEmpty()) {
+                int duration = durations.get(uniqueIngredientCount);
+                if (duration > 0) {
+                    this.effect = new MobEffectInstance(effect, duration * 20, 0);
+                    builder.effect(() -> this.effect, 1F);
+                }
+            }
+        } catch (ResourceLocationException ignored) {
+
+        }
+    }
     public void add(ItemStack stack) {
         if (stack.isEmpty()) {
             throw new IllegalArgumentException();

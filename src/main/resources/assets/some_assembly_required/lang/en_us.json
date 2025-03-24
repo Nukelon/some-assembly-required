@@ -89,5 +89,9 @@
   "some_assembly_required.ingredient.farmersdelight.cooked_rice": "Rice",
 
   "some_assembly_required.config.server.maximum_sandwich_height": "Maximum sandwich height",
-  "some_assembly_required.config.server.generate_chest_loot": "Generate chest loot"
+  "some_assembly_required.config.server.generate_chest_loot": "Generate chest loot",
+  "some_assembly_required.config.server.sandwich_bonus_effect": "Sandwich bonus effect",
+  "some_assembly_required.config.server.burger_bonus_effect": "Burger bonus effect",
+  "some_assembly_required.config.server.sandwich_bonus_effect_durations": "Sandwich bonus effect durations",
+  "some_assembly_required.config.server.burger_bonus_effect_durations": "Burger bonus effect durations"
 }
