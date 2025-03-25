@@ -140,6 +140,7 @@ public class SandwichItemHandler implements IItemHandler, IItemHandlerModifiable
 
         }
     }
+
     public void add(ItemStack stack) {
         if (stack.isEmpty()) {
             throw new IllegalArgumentException();
