@@ -16,8 +16,8 @@
   "some_assembly_required.advancement.consume_1000_burgers.title": "Burger Prince",
   "some_assembly_required.advancement.consume_1000_burgers.description": "Eat 1000 burgers",
 
-  "stats.some_assembly_required.sandwiches_eaten": "Sandwiches Eaten",
-  "stats.some_assembly_required.burgers_eaten": "Burgers Eaten",
+  "stat.some_assembly_required.sandwiches_eaten": "Sandwiches Eaten",
+  "stat.some_assembly_required.burgers_eaten": "Burgers Eaten",
 
   "some_assembly_required.message.bottom_bread": "Missing bottom bread slice!",
   "some_assembly_required.message.full_sandwich": "The resulting sandwich is too large!",
