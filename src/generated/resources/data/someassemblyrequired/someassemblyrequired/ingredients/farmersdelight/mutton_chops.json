@@ -1,0 +1,19 @@
+{
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "farmersdelight"
+    }
+  ],
+  "displayItem": {
+    "item": "someassemblyrequired:spread",
+    "nbt": {
+      "CustomModelData": 17
+    }
+  },
+  "displayName": {
+    "translate": "someassemblyrequired.ingredient.farmersdelight.mutton_chops"
+  },
+  "item": "farmersdelight:mutton_chops",
+  "soundEvent": "someassemblyrequired:block.sandwich.add_item.moist"
+}

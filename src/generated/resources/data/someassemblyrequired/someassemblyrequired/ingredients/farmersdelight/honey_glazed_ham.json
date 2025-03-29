@@ -1,0 +1,22 @@
+{
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "farmersdelight"
+    }
+  ],
+  "container": {
+    "item": "minecraft:bowl"
+  },
+  "displayItem": {
+    "item": "someassemblyrequired:spread",
+    "nbt": {
+      "CustomModelData": 48
+    }
+  },
+  "fullName": {
+    "translate": "block.farmersdelight.honey_glazed_ham_block"
+  },
+  "item": "farmersdelight:honey_glazed_ham",
+  "soundEvent": "someassemblyrequired:block.sandwich.add_item.slimy"
+}

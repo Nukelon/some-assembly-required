@@ -1,0 +1,13 @@
+{
+  "container": {
+    "item": "minecraft:bowl"
+  },
+  "displayItem": {
+    "item": "someassemblyrequired:spread",
+    "nbt": {
+      "Color": 12546612
+    }
+  },
+  "item": "minecraft:rabbit_stew",
+  "soundEvent": "someassemblyrequired:block.sandwich.add_item.wet"
+}

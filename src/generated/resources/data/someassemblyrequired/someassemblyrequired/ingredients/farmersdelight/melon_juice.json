@@ -1,0 +1,19 @@
+{
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "farmersdelight"
+    }
+  ],
+  "container": {
+    "item": "minecraft:glass_bottle"
+  },
+  "displayItem": {
+    "item": "someassemblyrequired:spread",
+    "nbt": {
+      "Color": 13054501
+    }
+  },
+  "item": "farmersdelight:melon_juice",
+  "soundEvent": "someassemblyrequired:block.sandwich.add_item.moist"
+}

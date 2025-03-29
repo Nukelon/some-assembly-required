@@ -1,0 +1,13 @@
+{
+  "container": {
+    "item": "minecraft:bowl"
+  },
+  "displayItem": {
+    "item": "someassemblyrequired:spread",
+    "nbt": {
+      "Color": 9175075
+    }
+  },
+  "item": "minecraft:beetroot_soup",
+  "soundEvent": "someassemblyrequired:block.sandwich.add_item.moist"
+}

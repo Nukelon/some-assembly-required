@@ -1,0 +1,314 @@
+{
+  "parent": "minecraft:item/generated",
+  "overrides": [
+    {
+      "model": "someassemblyrequired:ingredient/someassemblyrequired/burger_bun",
+      "predicate": {
+        "minecraft:custom_model_data": 1.0
+      }
+    },
+    {
+      "model": "someassemblyrequired:ingredient/someassemblyrequired/burger_bun_bottom",
+      "predicate": {
+        "minecraft:custom_model_data": 2.0
+      }
+    },
+    {
+      "model": "someassemblyrequired:ingredient/someassemblyrequired/burger_bun_top",
+      "predicate": {
+        "minecraft:custom_model_data": 3.0
+      }
+    },
+    {
+      "model": "someassemblyrequired:ingredient/someassemblyrequired/apple_slices",
+      "predicate": {
+        "minecraft:custom_model_data": 4.0
+      }
+    },
+    {
+      "model": "someassemblyrequired:ingredient/someassemblyrequired/golden_apple_slices",
+      "predicate": {
+        "minecraft:custom_model_data": 5.0
+      }
+    },
+    {
+      "model": "someassemblyrequired:ingredient/someassemblyrequired/chopped_carrot",
+      "predicate": {
+        "minecraft:custom_model_data": 6.0
+      }
+    },
+    {
+      "model": "someassemblyrequired:ingredient/someassemblyrequired/chopped_golden_carrot",
+      "predicate": {
+        "minecraft:custom_model_data": 7.0
+      }
+    },
+    {
+      "model": "someassemblyrequired:ingredient/someassemblyrequired/chopped_beetroot",
+      "predicate": {
+        "minecraft:custom_model_data": 8.0
+      }
+    },
+    {
+      "model": "someassemblyrequired:ingredient/someassemblyrequired/tomato_slices",
+      "predicate": {
+        "minecraft:custom_model_data": 9.0
+      }
+    },
+    {
+      "model": "someassemblyrequired:ingredient/someassemblyrequired/sliced_onion",
+      "predicate": {
+        "minecraft:custom_model_data": 10.0
+      }
+    },
+    {
+      "model": "someassemblyrequired:ingredient/farmersdelight/fried_egg",
+      "predicate": {
+        "minecraft:custom_model_data": 11.0
+      }
+    },
+    {
+      "model": "someassemblyrequired:ingredient/farmersdelight/cabbage_leaf",
+      "predicate": {
+        "minecraft:custom_model_data": 12.0
+      }
+    },
+    {
+      "model": "someassemblyrequired:ingredient/farmersdelight/minced_beef",
+      "predicate": {
+        "minecraft:custom_model_data": 13.0
+      }
+    },
+    {
+      "model": "someassemblyrequired:ingredient/farmersdelight/beef_patty",
+      "predicate": {
+        "minecraft:custom_model_data": 14.0
+      }
+    },
+    {
+      "model": "someassemblyrequired:ingredient/farmersdelight/chicken_cuts",
+      "predicate": {
+        "minecraft:custom_model_data": 15.0
+      }
+    },
+    {
+      "model": "someassemblyrequired:ingredient/farmersdelight/cooked_chicken_cuts",
+      "predicate": {
+        "minecraft:custom_model_data": 16.0
+      }
+    },
+    {
+      "model": "someassemblyrequired:ingredient/farmersdelight/mutton_chops",
+      "predicate": {
+        "minecraft:custom_model_data": 17.0
+      }
+    },
+    {
+      "model": "someassemblyrequired:ingredient/farmersdelight/cooked_mutton_chops",
+      "predicate": {
+        "minecraft:custom_model_data": 18.0
+      }
+    },
+    {
+      "model": "someassemblyrequired:ingredient/farmersdelight/bacon",
+      "predicate": {
+        "minecraft:custom_model_data": 19.0
+      }
+    },
+    {
+      "model": "someassemblyrequired:ingredient/farmersdelight/cooked_bacon",
+      "predicate": {
+        "minecraft:custom_model_data": 20.0
+      }
+    },
+    {
+      "model": "someassemblyrequired:ingredient/farmersdelight/cod_slice",
+      "predicate": {
+        "minecraft:custom_model_data": 21.0
+      }
+    },
+    {
+      "model": "someassemblyrequired:ingredient/farmersdelight/cooked_cod_slice",
+      "predicate": {
+        "minecraft:custom_model_data": 22.0
+      }
+    },
+    {
+      "model": "someassemblyrequired:ingredient/farmersdelight/salmon_slice",
+      "predicate": {
+        "minecraft:custom_model_data": 23.0
+      }
+    },
+    {
+      "model": "someassemblyrequired:ingredient/farmersdelight/cooked_salmon_slice",
+      "predicate": {
+        "minecraft:custom_model_data": 24.0
+      }
+    },
+    {
+      "model": "someassemblyrequired:ingredient/farmersdelight/fruit_salad",
+      "predicate": {
+        "minecraft:custom_model_data": 25.0
+      }
+    },
+    {
+      "model": "someassemblyrequired:ingredient/farmersdelight/mixed_salad",
+      "predicate": {
+        "minecraft:custom_model_data": 26.0
+      }
+    },
+    {
+      "model": "someassemblyrequired:ingredient/farmersdelight/nether_salad",
+      "predicate": {
+        "minecraft:custom_model_data": 27.0
+      }
+    },
+    {
+      "model": "someassemblyrequired:ingredient/farmersdelight/cooked_rice",
+      "predicate": {
+        "minecraft:custom_model_data": 28.0
+      }
+    },
+    {
+      "model": "someassemblyrequired:ingredient/farmersdelight/beef_stew",
+      "predicate": {
+        "minecraft:custom_model_data": 29.0
+      }
+    },
+    {
+      "model": "someassemblyrequired:ingredient/farmersdelight/chicken_soup",
+      "predicate": {
+        "minecraft:custom_model_data": 30.0
+      }
+    },
+    {
+      "model": "someassemblyrequired:ingredient/farmersdelight/vegetable_soup",
+      "predicate": {
+        "minecraft:custom_model_data": 31.0
+      }
+    },
+    {
+      "model": "someassemblyrequired:ingredient/farmersdelight/fish_stew",
+      "predicate": {
+        "minecraft:custom_model_data": 32.0
+      }
+    },
+    {
+      "model": "someassemblyrequired:ingredient/farmersdelight/fried_rice",
+      "predicate": {
+        "minecraft:custom_model_data": 33.0
+      }
+    },
+    {
+      "model": "someassemblyrequired:ingredient/farmersdelight/pumpkin_soup",
+      "predicate": {
+        "minecraft:custom_model_data": 34.0
+      }
+    },
+    {
+      "model": "someassemblyrequired:ingredient/farmersdelight/baked_cod_stew",
+      "predicate": {
+        "minecraft:custom_model_data": 35.0
+      }
+    },
+    {
+      "model": "someassemblyrequired:ingredient/farmersdelight/noodle_soup",
+      "predicate": {
+        "minecraft:custom_model_data": 36.0
+      }
+    },
+    {
+      "model": "someassemblyrequired:ingredient/farmersdelight/bacon_and_eggs",
+      "predicate": {
+        "minecraft:custom_model_data": 37.0
+      }
+    },
+    {
+      "model": "someassemblyrequired:ingredient/farmersdelight/pasta_with_meatballs",
+      "predicate": {
+        "minecraft:custom_model_data": 38.0
+      }
+    },
+    {
+      "model": "someassemblyrequired:ingredient/farmersdelight/pasta_with_mutton_chop",
+      "predicate": {
+        "minecraft:custom_model_data": 39.0
+      }
+    },
+    {
+      "model": "someassemblyrequired:ingredient/farmersdelight/roasted_mutton_chops",
+      "predicate": {
+        "minecraft:custom_model_data": 40.0
+      }
+    },
+    {
+      "model": "someassemblyrequired:ingredient/farmersdelight/vegetable_noodles",
+      "predicate": {
+        "minecraft:custom_model_data": 41.0
+      }
+    },
+    {
+      "model": "someassemblyrequired:ingredient/farmersdelight/steak_and_potatoes",
+      "predicate": {
+        "minecraft:custom_model_data": 42.0
+      }
+    },
+    {
+      "model": "someassemblyrequired:ingredient/farmersdelight/ratatouille",
+      "predicate": {
+        "minecraft:custom_model_data": 43.0
+      }
+    },
+    {
+      "model": "someassemblyrequired:ingredient/farmersdelight/squid_ink_pasta",
+      "predicate": {
+        "minecraft:custom_model_data": 44.0
+      }
+    },
+    {
+      "model": "someassemblyrequired:ingredient/farmersdelight/grilled_salmon",
+      "predicate": {
+        "minecraft:custom_model_data": 45.0
+      }
+    },
+    {
+      "model": "someassemblyrequired:ingredient/farmersdelight/stuffed_pumpkin",
+      "predicate": {
+        "minecraft:custom_model_data": 46.0
+      }
+    },
+    {
+      "model": "someassemblyrequired:ingredient/farmersdelight/shepherds_pie",
+      "predicate": {
+        "minecraft:custom_model_data": 47.0
+      }
+    },
+    {
+      "model": "someassemblyrequired:ingredient/farmersdelight/honey_glazed_ham",
+      "predicate": {
+        "minecraft:custom_model_data": 48.0
+      }
+    },
+    {
+      "model": "someassemblyrequired:ingredient/farmersdelight/roast_chicken",
+      "predicate": {
+        "minecraft:custom_model_data": 49.0
+      }
+    },
+    {
+      "model": "someassemblyrequired:ingredient/miners_delight/vegan_patty",
+      "predicate": {
+        "minecraft:custom_model_data": 50.0
+      }
+    },
+    {
+      "model": "someassemblyrequired:ingredient/minecraft/potato",
+      "predicate": {
+        "minecraft:custom_model_data": 51.0
+      }
+    }
+  ],
+  "textures": {
+    "layer0": "someassemblyrequired:item/spread"
+  }
+}

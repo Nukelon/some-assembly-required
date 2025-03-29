@@ -1,0 +1,19 @@
+{
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "farmersdelight"
+    }
+  ],
+  "container": {
+    "item": "minecraft:bowl"
+  },
+  "displayItem": {
+    "item": "someassemblyrequired:spread",
+    "nbt": {
+      "CustomModelData": 45
+    }
+  },
+  "item": "farmersdelight:grilled_salmon",
+  "soundEvent": "someassemblyrequired:block.sandwich.add_item.wet"
+}

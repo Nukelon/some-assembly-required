@@ -1,0 +1,12 @@
+{
+  "displayItem": {
+    "item": "someassemblyrequired:spread",
+    "nbt": {
+      "CustomModelData": 5
+    }
+  },
+  "displayName": {
+    "translate": "someassemblyrequired.ingredient.golden_apple_slices"
+  },
+  "item": "someassemblyrequired:golden_apple_slices"
+}

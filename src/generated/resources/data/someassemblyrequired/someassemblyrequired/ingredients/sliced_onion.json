@@ -1,0 +1,12 @@
+{
+  "displayItem": {
+    "item": "someassemblyrequired:spread",
+    "nbt": {
+      "CustomModelData": 10
+    }
+  },
+  "displayName": {
+    "translate": "someassemblyrequired.ingredient.sliced_onion"
+  },
+  "item": "someassemblyrequired:sliced_onion"
+}

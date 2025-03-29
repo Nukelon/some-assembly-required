@@ -1,0 +1,53 @@
+{
+  "someassemblyrequired.creative_tab": "Some Assembly Required",
+
+  "someassemblyrequired.advancement.obtain_bread_slice.title": "Eine Geschichte von Leib und Brot",
+  "someassemblyrequired.advancement.obtain_bread_slice.description": "Schneide das Leib Brot in Scheiben mit dem Schneidebrett und ein Küchenmesser",
+  "someassemblyrequired.advancement.obtain_toasted_bread_slice.title": "Das beste Ding seit...",
+  "someassemblyrequired.advancement.obtain_sandwich.title": "Junger Bäcker",
+  "someassemblyrequired.advancement.obtain_sandwich.description": "Stelle ein Sandwich mit dem Sandwich-Montagetisch her.",
+  "someassemblyrequired.advancement.consume_potion_sandwich.title": "Sandwich des Zauberers",
+  "someassemblyrequired.advancement.consume_potion_sandwich.description": "Setze ein Trank auf dein Sandwich",
+  "someassemblyrequired.advancement.consume_double_decker_sandwich.title": "Doppelter Hunger",
+  "someassemblyrequired.advancement.consume_double_decker_sandwich.description": "Erschaffe und iss ein Doppeldecker Sandwich",
+
+  "someassemblyrequired.message.bottom_bread": "Untere Brotscheibe fehlt!",
+  "someassemblyrequired.message.full_sandwich": "Sie können nichts weiteres hinzufügen!",
+
+  "block.someassemblyrequired.sandwich": "Sandwich",
+
+  "item.someassemblyrequired.spread": "Aufstrich",
+  "item.someassemblyrequired.bread_slice": "Brotscheibe",
+  "item.someassemblyrequired.toasted_bread_slice": "Getoastete Brotscheibe",
+  "item.someassemblyrequired.apple_slices": "Apfelscheiben",
+  "item.someassemblyrequired.golden_apple_slices": "Goldene Apfelscheiben",
+  "item.someassemblyrequired.enchanted_golden_apple_slices": "Verzauberte Goldene Apfelscheiben",
+  "item.someassemblyrequired.chopped_carrot": "Geschnittene Karotten",
+  "item.someassemblyrequired.chopped_golden_carrot": "Geschnittene Gold-Karotten",
+  "item.someassemblyrequired.chopped_beetroot": "Geschnittene rote Beete",
+  "item.someassemblyrequired.tomato_slices": "Tomatenscheiben",
+
+  "item.someassemblyrequired.sandwich": "Sandwich",
+  "item.someassemblyrequired.bread_sandwich": "Sandwich... ?",
+  "item.someassemblyrequired.double_decker_sandwich": "Doppeldecker Sandwich",
+  "item.someassemblyrequired.ingredients_sandwich": "%s Sandwich",
+  "item.someassemblyrequired.double_decker_ingredients_sandwich": "Doppeldecker %s Sandwich",
+  "item.someassemblyrequired.potion_sandwich": "Sandwich der %s",
+
+  "someassemblyrequired.tooltip.ingredient_list.1": "%s",
+  "someassemblyrequired.tooltip.ingredient_list.2": "%s & %s",
+  "someassemblyrequired.tooltip.ingredient_list.3": "%s, %s & %s",
+
+  "someassemblyrequired.ingredient.toasted_bread_slice": "Toast",
+  "someassemblyrequired.ingredient.apple_slices": "Apfel",
+  "someassemblyrequired.ingredient.golden_apple_slices": "Goldener Apfel",
+  "someassemblyrequired.ingredient.enchanted_golden_apple_slices": "Verzauberter goldener Apfel",
+  "someassemblyrequired.ingredient.chopped_carrot": "Karotte",
+  "someassemblyrequired.ingredient.chopped_golden_carrot": "Goldene Karotte",
+  "someassemblyrequired.ingredient.chopped_beetroot": "Rote Beete",
+  "someassemblyrequired.ingredient.tomato_slices": "Tomaten",
+
+  "someassemblyrequired.ingredient.water_bottle": "Wasser",
+  "someassemblyrequired.ingredient.honey_bottle": "Honig",
+  "someassemblyrequired.ingredient.milk_bucket": "Milch"
+}

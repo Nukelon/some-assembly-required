@@ -1,0 +1,28 @@
+{
+  "type": "create:cutting",
+  "conditions": [
+    {
+      "type": "forge:not",
+      "value": {
+        "type": "forge:mod_loaded",
+        "modid": "sliceanddice"
+      }
+    },
+    {
+      "type": "forge:mod_loaded",
+      "modid": "create"
+    }
+  ],
+  "ingredients": [
+    {
+      "tag": "forge:crops/onion"
+    }
+  ],
+  "processingTime": 30,
+  "results": [
+    {
+      "count": 2,
+      "item": "someassemblyrequired:sliced_onion"
+    }
+  ]
+}

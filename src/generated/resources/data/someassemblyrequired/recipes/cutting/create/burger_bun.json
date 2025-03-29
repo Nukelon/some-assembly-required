@@ -1,0 +1,30 @@
+{
+  "type": "create:cutting",
+  "conditions": [
+    {
+      "type": "forge:not",
+      "value": {
+        "type": "forge:mod_loaded",
+        "modid": "sliceanddice"
+      }
+    },
+    {
+      "type": "forge:mod_loaded",
+      "modid": "create"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "someassemblyrequired:burger_bun"
+    }
+  ],
+  "processingTime": 30,
+  "results": [
+    {
+      "item": "someassemblyrequired:burger_bun_bottom"
+    },
+    {
+      "item": "someassemblyrequired:burger_bun_top"
+    }
+  ]
+}

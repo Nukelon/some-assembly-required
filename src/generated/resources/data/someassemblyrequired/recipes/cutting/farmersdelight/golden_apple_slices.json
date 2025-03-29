@@ -1,0 +1,23 @@
+{
+  "type": "farmersdelight:cutting",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "farmersdelight"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "minecraft:golden_apple"
+    }
+  ],
+  "result": [
+    {
+      "count": 2,
+      "item": "someassemblyrequired:golden_apple_slices"
+    }
+  ],
+  "tool": {
+    "tag": "forge:tools/knives"
+  }
+}

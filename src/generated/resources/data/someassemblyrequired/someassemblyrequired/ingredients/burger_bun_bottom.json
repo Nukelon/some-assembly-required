@@ -1,0 +1,14 @@
+{
+  "displayItem": {
+    "item": "someassemblyrequired:spread",
+    "nbt": {
+      "CustomModelData": 2
+    }
+  },
+  "fullName": {
+    "translate": "someassemblyrequired.ingredient.burger_bun_half"
+  },
+  "height": 2,
+  "item": "someassemblyrequired:burger_bun_bottom",
+  "renderAsItem": false
+}

@@ -1,0 +1,71 @@
+{
+  "someassemblyrequired.creative_tab": "Some Assembly Required",
+
+  "someassemblyrequired.advancement.obtain_bread_slice.title": "Une question de miche (et) de pain",
+  "someassemblyrequired.advancement.obtain_bread_slice.description": "Coupez une miche de pain en tranches",
+  "someassemblyrequired.advancement.obtain_toasted_bread_slice.title": "Brave Petit Grille-Pain",
+  "someassemblyrequired.advancement.obtain_toasted_bread_slice.description": "Faites griller une tranche de pain",
+  "someassemblyrequired.advancement.obtain_sandwich.title": "Débutant Sandwichmancien",
+  "someassemblyrequired.advancement.obtain_sandwich.description": "Créez votre premier sandwich",
+  "someassemblyrequired.advancement.consume_potion_sandwich.title": "Le Snack du Sorcier",
+  "someassemblyrequired.advancement.consume_potion_sandwich.description": "Mangez un sandwich avec une potion dedans",
+  "someassemblyrequired.advancement.consume_double_decker_sandwich.title": "La Double Dalle",
+  "someassemblyrequired.advancement.consume_double_decker_sandwich.description": "Mangez un sandwich double-étage",
+
+  "someassemblyrequired.message.bottom_bread": "Il manque la tranche en-dessous !",
+  "someassemblyrequired.message.full_sandwich": "Mollo sur les ingrédients !",
+
+  "block.someassemblyrequired.sandwiching_station": "Station à Sandwichs",
+  "block.someassemblyrequired.sandwich": "Sandwich",
+
+  "item.someassemblyrequired.spread": "Pâte à Tartiner",
+  "item.someassemblyrequired.bread_slice": "Tranche de Pain",
+  "item.someassemblyrequired.toasted_bread_slice": "Tranche de Pain Grillée",
+  "item.someassemblyrequired.apple_slices": "Tranches de Pomme",
+  "item.someassemblyrequired.golden_apple_slices": "Tranches de Pomme Dorée",
+  "item.someassemblyrequired.enchanted_golden_apple_slices": "Tranches de Pomme Dorée Enchantée",
+  "item.someassemblyrequired.chopped_carrot": "Haché de Carotte",
+  "item.someassemblyrequired.chopped_golden_carrot": "Haché de Carotte Dorée",
+  "item.someassemblyrequired.chopped_beetroot": "Haché de Betterave",
+  "item.someassemblyrequired.tomato_slices": "Tranches de Tomate",
+
+  "item.someassemblyrequired.sandwich": "Sandwich",
+  "item.someassemblyrequired.bread_sandwich": "MétaSandwich",
+  "item.someassemblyrequired.open_faced_sandwich": "Tartine",
+  "item.someassemblyrequired.double_decker_sandwich": "Sandwich Double-Étage",
+  "item.someassemblyrequired.ingredients_sandwich": "Sandwich %s",
+  "item.someassemblyrequired.open_faced_ingredients_sandwich": "Tartine %s",
+  "item.someassemblyrequired.double_decker_ingredients_sandwich": "Sandwich Double-Étage %s",
+  "item.someassemblyrequired.potion_sandwich": "Sandwich de %s",
+
+  "someassemblyrequired.tooltip.ingredient_list.1": "%s",
+  "someassemblyrequired.tooltip.ingredient_list.2": "%s & %s",
+  "someassemblyrequired.tooltip.ingredient_list.3": "%s, %s & %s",
+
+  "someassemblyrequired.tooltip.ingredient_count": "%s (x%s)",
+
+  "someassemblyrequired.ingredient.toasted_bread_slice": "Tranche de Pain Grillée",
+  "someassemblyrequired.ingredient.apple_slices": "Pomme",
+  "someassemblyrequired.ingredient.golden_apple_slices": "Pomme Dorée",
+  "someassemblyrequired.ingredient.enchanted_golden_apple_slices": "Pomme Dorée Enchantée",
+  "someassemblyrequired.ingredient.chopped_carrot": "Carotte",
+  "someassemblyrequired.ingredient.chopped_golden_carrot": "Carotte Dorée",
+  "someassemblyrequired.ingredient.chopped_beetroot": "Betterave",
+  "someassemblyrequired.ingredient.tomato_slices": "Tomate",
+
+  "someassemblyrequired.ingredient.water_bottle": "Eau",
+  "someassemblyrequired.ingredient.honey_bottle": "Miel",
+  "someassemblyrequired.ingredient.milk_bucket": "Lait",
+
+  "someassemblyrequired.ingredient.farmersdelight.cabbage_leaf": "Chou",
+  "someassemblyrequired.ingredient.farmersdelight.fried_egg": "Œuf",
+  "someassemblyrequired.ingredient.farmersdelight.beef_patty": "Bœuf",
+  "someassemblyrequired.ingredient.farmersdelight.chicken_cuts": "Poulet",
+  "someassemblyrequired.ingredient.farmersdelight.bacon": "Bacon",
+  "someassemblyrequired.ingredient.farmersdelight.cod_slice": "Morue",
+  "someassemblyrequired.ingredient.farmersdelight.salmon_slice": "Saumon",
+  "someassemblyrequired.ingredient.farmersdelight.mutton_chops": "Mouton",
+  "someassemblyrequired.ingredient.farmersdelight.cooked_rice": "Riz",
+
+  "someassemblyrequired.config.server.maximum_sandwich_height": "Hauteur maximum des sandwichs"
+}

@@ -1,0 +1,26 @@
+{
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "create"
+    }
+  ],
+  "container": {
+    "item": "minecraft:bucket"
+  },
+  "displayItem": {
+    "item": "someassemblyrequired:spread",
+    "nbt": {
+      "Color": 11358524
+    }
+  },
+  "food": {
+    "nutrition": 6,
+    "saturationModifier": 0.3
+  },
+  "fullName": {
+    "translate": "someassemblyrequired.ingredient.create.chocolate_bucket"
+  },
+  "item": "create:chocolate_bucket",
+  "soundEvent": "someassemblyrequired:block.sandwich.add_item.moist"
+}

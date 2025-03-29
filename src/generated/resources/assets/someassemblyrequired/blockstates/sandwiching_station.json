@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "someassemblyrequired:block/sandwiching_station"
+    }
+  }
+}

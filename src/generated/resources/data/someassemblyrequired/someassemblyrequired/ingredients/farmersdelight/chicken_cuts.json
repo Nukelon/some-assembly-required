@@ -1,0 +1,19 @@
+{
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "farmersdelight"
+    }
+  ],
+  "displayItem": {
+    "item": "someassemblyrequired:spread",
+    "nbt": {
+      "CustomModelData": 15
+    }
+  },
+  "displayName": {
+    "translate": "someassemblyrequired.ingredient.farmersdelight.chicken_cuts"
+  },
+  "item": "farmersdelight:chicken_cuts",
+  "soundEvent": "someassemblyrequired:block.sandwich.add_item.wet"
+}

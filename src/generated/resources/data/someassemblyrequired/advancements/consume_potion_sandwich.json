@@ -1,0 +1,31 @@
+{
+  "parent": "someassemblyrequired:obtain_sandwich",
+  "criteria": {
+    "consume_potion_sandwich": {
+      "conditions": {},
+      "trigger": "someassemblyrequired:consume_potion_sandwich"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "someassemblyrequired.advancement.consume_potion_sandwich.description"
+    },
+    "frame": "task",
+    "hidden": true,
+    "icon": {
+      "item": "someassemblyrequired:sandwich",
+      "nbt": "{BlockEntityTag:{Sandwich:[{Count:1b,id:\"someassemblyrequired:bread_slice\"},{Count:1b,id:\"minecraft:potion\",tag:{Potion:\"minecraft:night_vision\"}},{Count:1b,id:\"someassemblyrequired:bread_slice\"}]}}"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "someassemblyrequired.advancement.consume_potion_sandwich.title"
+    }
+  },
+  "requirements": [
+    [
+      "consume_potion_sandwich"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

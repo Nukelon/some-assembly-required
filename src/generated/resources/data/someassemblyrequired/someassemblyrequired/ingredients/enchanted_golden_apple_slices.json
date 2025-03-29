@@ -1,0 +1,13 @@
+{
+  "displayItem": {
+    "item": "someassemblyrequired:spread",
+    "nbt": {
+      "CustomModelData": 5,
+      "HasEffect": 1
+    }
+  },
+  "displayName": {
+    "translate": "someassemblyrequired.ingredient.enchanted_golden_apple_slices"
+  },
+  "item": "someassemblyrequired:enchanted_golden_apple_slices"
+}

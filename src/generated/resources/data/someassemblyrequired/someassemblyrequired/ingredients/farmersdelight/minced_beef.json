@@ -1,0 +1,18 @@
+{
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "farmersdelight"
+    }
+  ],
+  "displayItem": {
+    "item": "someassemblyrequired:spread",
+    "nbt": {
+      "CustomModelData": 13
+    }
+  },
+  "height": 2,
+  "item": "farmersdelight:minced_beef",
+  "renderAsItem": false,
+  "soundEvent": "someassemblyrequired:block.sandwich.add_item.slimy"
+}

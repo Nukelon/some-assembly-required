@@ -1,0 +1,11 @@
+{
+  "displayItem": {
+    "item": "someassemblyrequired:spread",
+    "nbt": {
+      "CustomModelData": 1
+    }
+  },
+  "height": 6,
+  "item": "someassemblyrequired:burger_bun",
+  "renderAsItem": false
+}

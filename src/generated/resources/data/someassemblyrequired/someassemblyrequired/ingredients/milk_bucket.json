@@ -1,0 +1,16 @@
+{
+  "container": {
+    "item": "minecraft:bucket"
+  },
+  "displayItem": {
+    "item": "someassemblyrequired:spread",
+    "nbt": {
+      "Color": 15662591
+    }
+  },
+  "fullName": {
+    "translate": "someassemblyrequired.ingredient.milk_bucket"
+  },
+  "item": "minecraft:milk_bucket",
+  "soundEvent": "someassemblyrequired:block.sandwich.add_item.moist"
+}

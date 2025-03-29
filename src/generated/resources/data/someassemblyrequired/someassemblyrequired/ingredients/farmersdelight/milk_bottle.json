@@ -1,0 +1,22 @@
+{
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "farmersdelight"
+    }
+  ],
+  "container": {
+    "item": "minecraft:glass_bottle"
+  },
+  "displayItem": {
+    "item": "someassemblyrequired:spread",
+    "nbt": {
+      "Color": 15662591
+    }
+  },
+  "fullName": {
+    "translate": "someassemblyrequired.ingredient.milk_bucket"
+  },
+  "item": "farmersdelight:milk_bottle",
+  "soundEvent": "someassemblyrequired:block.sandwich.add_item.moist"
+}

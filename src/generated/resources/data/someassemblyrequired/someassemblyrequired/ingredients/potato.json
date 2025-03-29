@@ -1,0 +1,11 @@
+{
+  "displayItem": {
+    "item": "someassemblyrequired:spread",
+    "nbt": {
+      "CustomModelData": 51
+    }
+  },
+  "height": 5,
+  "item": "minecraft:potato",
+  "renderAsItem": false
+}

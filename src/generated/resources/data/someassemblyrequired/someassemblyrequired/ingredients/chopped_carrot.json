@@ -1,0 +1,12 @@
+{
+  "displayItem": {
+    "item": "someassemblyrequired:spread",
+    "nbt": {
+      "CustomModelData": 6
+    }
+  },
+  "displayName": {
+    "translate": "someassemblyrequired.ingredient.chopped_carrot"
+  },
+  "item": "someassemblyrequired:chopped_carrot"
+}

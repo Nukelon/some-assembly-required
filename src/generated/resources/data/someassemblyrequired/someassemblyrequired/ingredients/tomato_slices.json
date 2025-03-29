@@ -1,0 +1,12 @@
+{
+  "displayItem": {
+    "item": "someassemblyrequired:spread",
+    "nbt": {
+      "CustomModelData": 9
+    }
+  },
+  "displayName": {
+    "translate": "someassemblyrequired.ingredient.tomato_slices"
+  },
+  "item": "someassemblyrequired:tomato_slices"
+}

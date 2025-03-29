@@ -92,8 +92,8 @@ dependencies {
 }
 
 mixin {
-    add sourceSets.main, 'mixins.some_assembly_required.refmap.json'
-    config 'mixins.some_assembly_required.json'
+    add sourceSets.main, 'mixins.someassemblyrequired.refmap.json'
+    config 'mixins.someassemblyrequired.json'
 }
 
 tasks.named('processResources', ProcessResources).configure {

@@ -1,0 +1,39 @@
+{
+  "parent": "someassemblyrequired:obtain_bread_slice",
+  "criteria": {
+    "obtain_sandwich": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "someassemblyrequired:sandwich"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "someassemblyrequired.advancement.obtain_sandwich.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "someassemblyrequired:sandwich",
+      "nbt": "{BlockEntityTag:{Sandwich:[{Count:1b,id:\"someassemblyrequired:bread_slice\"},{Count:1b,id:\"someassemblyrequired:tomato_slices\"},{Count:1b,id:\"someassemblyrequired:chopped_carrot\"},{Count:1b,id:\"someassemblyrequired:bread_slice\"}]}}"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "someassemblyrequired.advancement.obtain_sandwich.title"
+    }
+  },
+  "requirements": [
+    [
+      "obtain_sandwich"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

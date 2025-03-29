@@ -24,7 +24,7 @@ import someassemblyrequired.registry.*;
 @Mod(SomeAssemblyRequired.MOD_ID)
 public class SomeAssemblyRequired {
 
-    public static final String MOD_ID = "some_assembly_required";
+    public static final String MOD_ID = "someassemblyrequired";
 
     public static final Logger LOGGER = LogManager.getLogger();
 

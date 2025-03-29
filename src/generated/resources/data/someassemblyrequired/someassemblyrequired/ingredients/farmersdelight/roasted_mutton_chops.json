@@ -1,0 +1,19 @@
+{
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "farmersdelight"
+    }
+  ],
+  "container": {
+    "item": "minecraft:bowl"
+  },
+  "displayItem": {
+    "item": "someassemblyrequired:spread",
+    "nbt": {
+      "CustomModelData": 40
+    }
+  },
+  "item": "farmersdelight:roasted_mutton_chops",
+  "soundEvent": "someassemblyrequired:block.sandwich.add_item.wet"
+}

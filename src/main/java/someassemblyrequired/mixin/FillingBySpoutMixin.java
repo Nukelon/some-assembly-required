@@ -5,6 +5,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.FluidStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -32,7 +33,7 @@ public class FillingBySpoutMixin {
         if (!stack.is(ModItems.SANDWICH.get()) && !stack.is(ModTags.SANDWICH_BREAD)) {
             return;
         }
-        SandwichSpoutingRecipe recipe = getMatchingRecipe(availableFluid, level);
+        SandwichSpoutingRecipe recipe = someassemblyrequired$getMatchingRecipe(availableFluid, level);
 
         int resultHeight = SandwichItemHandler.get(stack)
                 .filter(h -> recipe != null)
@@ -48,7 +49,7 @@ public class FillingBySpoutMixin {
         if (!stack.is(ModItems.SANDWICH.get()) && !stack.is(ModTags.SANDWICH_BREAD)) {
             return;
         }
-        SandwichSpoutingRecipe recipe = getMatchingRecipe(availableFluid, level);
+        SandwichSpoutingRecipe recipe = someassemblyrequired$getMatchingRecipe(availableFluid, level);
         if (recipe == null) {
             return;
         }
@@ -59,7 +60,8 @@ public class FillingBySpoutMixin {
         cir.setReturnValue(sandwich);
     }
 
-    private static SandwichSpoutingRecipe getMatchingRecipe(FluidStack fluid, Level level) {
+    @Unique
+    private static SandwichSpoutingRecipe someassemblyrequired$getMatchingRecipe(FluidStack fluid, Level level) {
         for (SandwichSpoutingRecipe recipe : level.getRecipeManager().getAllRecipesFor(ModRecipeTypes.SANDWICH_SPOUTING.get())) {
             if (recipe.matches(fluid)) {
                 return recipe;
