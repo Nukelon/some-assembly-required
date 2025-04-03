@@ -168,4 +168,17 @@ public record SandwichContents(List<ItemStack> items) {
             return result;
         }
     }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SandwichContents contents)) return false;
+        return ItemStack.listMatches(items, contents.items);
+    }
+
+    @Override
+    public int hashCode() {
+        return items.hashCode();
+    }
 }

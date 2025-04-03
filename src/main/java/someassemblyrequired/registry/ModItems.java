@@ -11,6 +11,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import someassemblyrequired.SomeAssemblyRequired;
 import someassemblyrequired.integration.ModCompat;
+import someassemblyrequired.item.sandwich.SandwichContents;
 import someassemblyrequired.item.sandwich.SandwichItem;
 
 @SuppressWarnings("unused")
@@ -62,7 +63,7 @@ public class ModItems {
     public static final DeferredHolder<Item, Item> SLICED_ONION = ITEMS.register("sliced_onion", () -> createFoodItem(ModFoods.SLICED_ONION));
 
     // misc items
-    public static final DeferredHolder<Item, SandwichItem> SANDWICH = ITEMS.register("sandwich", () -> new SandwichItem(ModBlocks.SANDWICH.get(), new Item.Properties().stacksTo(16).food(new FoodProperties.Builder().build())));
+    public static final DeferredHolder<Item, SandwichItem> SANDWICH = ITEMS.register("sandwich", () -> new SandwichItem(ModBlocks.SANDWICH.get(), new Item.Properties().stacksTo(16).component(ModDataComponents.SANDWICH_CONTENTS, SandwichContents.EMPTY).food(new FoodProperties.Builder().build())));
     public static final DeferredHolder<Item, Item> SPREAD = ITEMS.register("spread", () -> new Item(new Item.Properties().component(ModDataComponents.SPREAD_COLOR.get(), 0xFFFFFFFF)));
 
     private static Item createBlockItem(Block block) {
