@@ -1,6 +1,5 @@
 package someassemblyrequired.registry;
 
-import com.mojang.datafixers.util.Unit;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -12,10 +11,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import someassemblyrequired.SomeAssemblyRequired;
 import someassemblyrequired.integration.ModCompat;
-import someassemblyrequired.integration.farmersdelight.FarmersDelightCompat;
 import someassemblyrequired.item.sandwich.SandwichItem;
-
-import java.util.function.Consumer;
 
 @SuppressWarnings("unused")
 public class ModItems {
@@ -45,20 +41,7 @@ public class ModItems {
                 .filter(item -> item != SANDWICH.get())
                 .forEach(output::accept);
 
-        addSandwiches(output::accept);
-    }
-
-    public static void addSandwiches(Consumer<ItemStack> creativeTab) {
-        ItemStack sandwich;
-        ItemStack burger;
-        if (ModCompat.isFarmersDelightLoaded()) {
-            sandwich = FarmersDelightCompat.createBLT();
-            burger = FarmersDelightCompat.createBurger();
-            sandwich.set(ModDataComponents.JEI_EXAMPLE, Unit.INSTANCE);
-            burger.set(ModDataComponents.JEI_EXAMPLE, Unit.INSTANCE);
-            creativeTab.accept(sandwich);
-            creativeTab.accept(burger);
-        }
+        ModCompat.gatherCreativeTabSandwiches(output::accept);
     }
 
     // sandwich assembly tables

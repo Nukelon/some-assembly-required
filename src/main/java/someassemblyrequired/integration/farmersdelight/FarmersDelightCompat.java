@@ -10,6 +10,8 @@ import someassemblyrequired.item.sandwich.SandwichItem;
 import vectorwing.farmersdelight.common.item.ConsumableItem;
 import vectorwing.farmersdelight.common.registry.ModItems;
 
+import java.util.function.Consumer;
+
 public class FarmersDelightCompat {
 
     public static void setup(IEventBus modEventBus) {
@@ -31,6 +33,15 @@ public class FarmersDelightCompat {
                 someassemblyrequired.registry.ModItems.TOMATO_SLICES.get(),
                 someassemblyrequired.registry.ModItems.SLICED_ONION.get()
         );
+    }
+
+    public static void populateCreativeTab(Consumer<ItemStack> items) {
+        items.accept(createBLT());
+        items.accept(createBurger());
+    }
+
+    public static void populateJEI(Consumer<ItemStack> items) {
+
     }
 
     public static void onCommonSetup(FMLCommonSetupEvent event) {

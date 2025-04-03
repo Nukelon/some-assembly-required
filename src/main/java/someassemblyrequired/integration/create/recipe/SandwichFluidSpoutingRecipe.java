@@ -3,6 +3,7 @@ package someassemblyrequired.integration.create.recipe;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
@@ -25,7 +26,7 @@ public class SandwichFluidSpoutingRecipe extends SandwichSpoutingRecipe {
         return ingredient;
     }
 
-    private ItemStack result() {
+    public ItemStack result() {
         return result;
     }
 
@@ -41,6 +42,11 @@ public class SandwichFluidSpoutingRecipe extends SandwichSpoutingRecipe {
 
     @Override
     public ItemStack assemble(FluidStack fluid) {
+        return result.copy();
+    }
+
+    @Override
+    public ItemStack getResultItem(HolderLookup.Provider registries) {
         return result.copy();
     }
 

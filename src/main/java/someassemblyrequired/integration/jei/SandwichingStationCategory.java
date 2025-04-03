@@ -22,7 +22,6 @@ import someassemblyrequired.ingredient.Ingredients;
 import someassemblyrequired.item.sandwich.SandwichContents;
 import someassemblyrequired.item.sandwich.SandwichItem;
 import someassemblyrequired.registry.ModBlocks;
-import someassemblyrequired.registry.ModDataComponents;
 import someassemblyrequired.registry.ModItems;
 import someassemblyrequired.registry.ModTags;
 
@@ -31,14 +30,12 @@ import java.util.Optional;
 
 public class SandwichingStationCategory implements IRecipeCategory<SandwichingStationCategory.Recipe> {
 
-    private final IDrawable background;
     private final IDrawable icon;
     private final IDrawable slot;
     private final IDrawable arrow;
 
     public SandwichingStationCategory(IGuiHelper helper) {
         ResourceLocation texture = SomeAssemblyRequired.id("textures/jei/sandwiching_station.png");
-        background = helper.createBlankDrawable(96, 120);
         icon = helper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.SANDWICHING_STATION.get()));
         slot = helper.createDrawable(texture, 0, 0, 18, 18);
         arrow = helper.createDrawable(texture, 18, 0, 24, 17);
@@ -55,8 +52,13 @@ public class SandwichingStationCategory implements IRecipeCategory<SandwichingSt
     }
 
     @Override
-    public IDrawable getBackground() {
-        return background;
+    public int getHeight() {
+        return 120;
+    }
+
+    @Override
+    public int getWidth() {
+        return 96;
     }
 
     @Override
@@ -70,7 +72,6 @@ public class SandwichingStationCategory implements IRecipeCategory<SandwichingSt
                 .findFirst()
                 .map(IFocus::getTypedValue)
                 .flatMap(ITypedIngredient::getItemStack)
-                .filter(item -> !item.has(ModDataComponents.JEI_EXAMPLE))
                 .map(SandwichContents::get);
 
         if (sandwich.isEmpty()) {

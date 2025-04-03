@@ -9,7 +9,6 @@ import com.simibubi.create.content.kinetics.deployer.DeployerRecipeSearchEvent;
 import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipe;
 import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipeBuilder;
 import net.minecraft.core.Holder;
-import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -20,6 +19,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.fluids.FluidStack;
 import someassemblyrequired.SomeAssemblyRequired;
+import someassemblyrequired.integration.ModCompat;
 import someassemblyrequired.integration.create.recipe.SandwichFluidSpoutingRecipe;
 import someassemblyrequired.integration.create.recipe.deployer.SandwichDeployingRecipe;
 import someassemblyrequired.item.sandwich.SandwichContents;
@@ -30,7 +30,7 @@ import someassemblyrequired.registry.ModRecipeTypes;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
+import java.util.function.Consumer;
 
 public class CreateCompat {
 
@@ -43,38 +43,19 @@ public class CreateCompat {
     }
 
     public static List<SequencedAssemblyRecipe> createSandwichAssemblingRecipes() {
-        NonNullList<ItemStack> sandwiches = NonNullList.create();
-        ModItems.addSandwiches(sandwiches::add);
+        if (true) {
+            return List.of();
+        }
+        List<ItemStack> sandwiches = new ArrayList<>();
+
+        ModCompat.gatherJEISandwiches(sandwiches::add);
+        ModCompat.gatherCreativeTabSandwiches(sandwiches::add);
+
         List<SequencedAssemblyRecipe> recipes = new ArrayList<>();
 
         for (ItemStack sandwich : sandwiches) {
-            recipes.add(createSandwichRecipe(sandwich, "sandwich_deploying"));
+            recipes.add(createSandwichRecipe(sandwich, "sandwich_assembly"));
         }
-
-        Stream.of(
-                Potions.NIGHT_VISION,
-                Potions.INVISIBILITY,
-                Potions.LEAPING,
-                Potions.FIRE_RESISTANCE,
-                Potions.SWIFTNESS,
-                Potions.SLOWNESS,
-                Potions.TURTLE_MASTER,
-                Potions.WATER_BREATHING,
-                Potions.HEALING,
-                Potions.HARMING,
-                Potions.POISON,
-                Potions.REGENERATION,
-                Potions.STRENGTH,
-                Potions.WEAKNESS,
-                Potions.SLOW_FALLING,
-                Potions.WIND_CHARGED,
-                Potions.WEAVING,
-                Potions.OOZING,
-                Potions.INFESTED
-        )
-                .map(SandwichItem::makeSandwich)
-                .map(sandwich -> createSandwichRecipe(sandwich, "sequenced_assembly/sandwich_potions"))
-                .forEach(recipes::add);
 
         CreateJEI.getTypedRecipesExcluding(ModRecipeTypes.SANDWICH_SPOUTING.get(), recipe -> recipe.value().getSerializer() != ModRecipeTypes.SANDWICH_FLUID_SPOUTING_SERIALIZER.get())
                 .stream()
@@ -113,5 +94,17 @@ public class CreateCompat {
                 .transitionTo(ModItems.SANDWICH.get())
                 .loops(1)
                 .addOutput(sandwich, 1);
+    }
+
+    public static void populateCreativeTab(Consumer<ItemStack> items) {
+
+    }
+
+    public static void populateJEI(Consumer<ItemStack> items) {
+        CreateJEI.getTypedRecipesExcluding(ModRecipeTypes.SANDWICH_SPOUTING.get(), recipe -> recipe.value().getSerializer() != ModRecipeTypes.SANDWICH_FLUID_SPOUTING_SERIALIZER.get())
+                .stream()
+                .map(recipe -> (SandwichFluidSpoutingRecipe) recipe.value())
+                .map(recipe -> SandwichItem.makeSandwich(recipe.assemble(FluidStack.EMPTY)))
+                .forEach(items);
     }
 }
