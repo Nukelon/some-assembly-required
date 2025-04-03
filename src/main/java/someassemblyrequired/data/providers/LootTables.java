@@ -1,10 +1,14 @@
 package someassemblyrequired.data.providers;
 
 import com.google.common.base.Preconditions;
-import com.sammy.minersdelight.setup.MDItems;
 import com.simibubi.create.AllItems;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.LootTableProvider;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.world.item.Item;
@@ -14,11 +18,10 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.ValidationContext;
 import net.minecraft.world.level.storage.loot.entries.AlternativesEntry;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.entries.LootPoolSingletonContainer;
-import net.minecraft.world.level.storage.loot.entries.LootTableReference;
+import net.minecraft.world.level.storage.loot.entries.NestedLootTable;
 import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.functions.SetPotionFunction;
@@ -29,22 +32,21 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
-import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
-import net.minecraftforge.common.crafting.conditions.NotCondition;
-import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
+import net.neoforged.neoforge.common.conditions.NotCondition;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import someassemblyrequired.SomeAssemblyRequired;
 import someassemblyrequired.integration.ModCompat;
 import someassemblyrequired.loot.OptionalLootItem;
-import someassemblyrequired.loot.SetIngredientsFunction;
+import someassemblyrequired.loot.SetSandwichContentsFunction;
 import someassemblyrequired.loot.SmeltMatchingItemFunction;
 import someassemblyrequired.registry.ModBlocks;
 import vectorwing.farmersdelight.common.registry.ModItems;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 import static someassemblyrequired.registry.ModItems.*;
 
@@ -56,10 +58,10 @@ public class LootTables extends LootTableProvider {
     private final ExistingFileHelper existingFileHelper;
     private final LootModifiers lootModifiers;
 
-    protected static final ResourceLocation VILLAGE_SANDWICH = SomeAssemblyRequired.id("inject/chests/village_house");
+    protected static final ResourceKey<LootTable> VILLAGE_SANDWICH = SomeAssemblyRequired.key(Registries.LOOT_TABLE, "inject/chests/village_house");
 
-    public LootTables(PackOutput packOutput, ExistingFileHelper existingFileHelper, LootModifiers lootModifiers) {
-        super(packOutput, Set.of(), List.of());
+    public LootTables(PackOutput packOutput, ExistingFileHelper existingFileHelper, LootModifiers lootModifiers, CompletableFuture<HolderLookup.Provider> registries) {
+        super(packOutput, Set.of(), List.of(), registries);
         this.existingFileHelper = existingFileHelper;
         this.lootModifiers = lootModifiers;
     }
@@ -79,15 +81,15 @@ public class LootTables extends LootTableProvider {
     }
 
     private void addSandwichLootTables() {
-        ResourceLocation sandwich = SomeAssemblyRequired.id("sandwich/sandwich");
-        ResourceLocation sandwichLayer = SomeAssemblyRequired.id("sandwich/sandwich_layer");
-        ResourceLocation special = SomeAssemblyRequired.id("sandwich/special");
-        ResourceLocation burger = SomeAssemblyRequired.id("sandwich/burger");
+        ResourceKey<LootTable> sandwich = SomeAssemblyRequired.key(Registries.LOOT_TABLE, "sandwich/sandwich");
+        ResourceKey<LootTable> sandwichLayer = SomeAssemblyRequired.key(Registries.LOOT_TABLE, "sandwich/sandwich_layer");
+        ResourceKey<LootTable> special = SomeAssemblyRequired.key(Registries.LOOT_TABLE, "sandwich/special");
+        ResourceKey<LootTable> burger = SomeAssemblyRequired.key(Registries.LOOT_TABLE, "sandwich/burger");
 
-        ResourceLocation protein = SomeAssemblyRequired.id("sandwich/ingredients/protein");
-        ResourceLocation vegetables = SomeAssemblyRequired.id("sandwich/ingredients/vegetables");
+        ResourceKey<LootTable> protein = SomeAssemblyRequired.key(Registries.LOOT_TABLE, "sandwich/ingredients/protein");
+        ResourceKey<LootTable> vegetables = SomeAssemblyRequired.key(Registries.LOOT_TABLE, "sandwich/ingredients/vegetables");
 
-        addLootTable(protein.getPath(),
+        addLootTable(protein.location().getPath(),
                 LootTable.lootTable().withPool(LootPool.lootPool()
                         .add(whenNotLoaded(Items.COOKED_BEEF, 1, ModCompat.FARMERSDELIGHT))
                         .add(whenNotLoaded(Items.COOKED_PORKCHOP, 1, ModCompat.FARMERSDELIGHT))
@@ -104,7 +106,7 @@ public class LootTables extends LootTableProvider {
                 , LootContextParamSets.CHEST
         );
 
-        addLootTable(vegetables.getPath(),
+        addLootTable(vegetables.location().getPath(),
                 LootTable.lootTable().withPool(LootPool.lootPool()
                         .add(item(Items.SWEET_BERRIES, 1))
 
@@ -120,34 +122,34 @@ public class LootTables extends LootTableProvider {
                 , LootContextParamSets.CHEST
         );
 
-        addLootTable(sandwichLayer.getPath(),
+        addLootTable(sandwichLayer.location().getPath(),
                 LootTable.lootTable().withPool(LootPool.lootPool()
                         .add(item(BREAD_SLICE.get()))
                 ).withPool(LootPool.lootPool()
                         .add(AlternativesEntry.alternatives(
-                                        LootTableReference.lootTableReference(protein).when(chance(0.7))
+                                    NestedLootTable.lootTableReference(protein).when(chance(0.7))
                                 ).otherwise(
-                                        LootTableReference.lootTableReference(vegetables)
+                                    NestedLootTable.lootTableReference(vegetables)
                                 )
                         )
                 ).withPool(LootPool.lootPool()
-                        .add(LootTableReference.lootTableReference(vegetables))
+                        .add(NestedLootTable.lootTableReference(vegetables))
                 )
                 , LootContextParamSets.CHEST
         );
 
-        addLootTable(sandwich.getPath(),
+        addLootTable(sandwich.location().getPath(),
                 LootTable.lootTable().withPool(LootPool.lootPool()
-                        .add(LootTableReference.lootTableReference(sandwichLayer))
+                        .add(NestedLootTable.lootTableReference(sandwichLayer))
                 ).withPool(LootPool.lootPool()
-                        .add(LootTableReference.lootTableReference(sandwichLayer))
+                        .add(NestedLootTable.lootTableReference(sandwichLayer))
                         .when(chance(0.1))
                 ).withPool(LootPool.lootPool()
                         .add(item(BREAD_SLICE.get()))
                 ), LootContextParamSets.CHEST
         );
 
-        addLootTable(special.getPath(),
+        addLootTable(special.location().getPath(),
                 LootTable.lootTable().withPool(LootPool.lootPool()
                         .add(item(BREAD_SLICE.get()))
                 ).withPool(LootPool.lootPool()
@@ -171,12 +173,12 @@ public class LootTables extends LootTableProvider {
                 LootContextParamSets.CHEST
         );
 
-        addLootTable(burger.getPath(),
+        addLootTable(burger.location().getPath(),
                 LootTable.lootTable().withPool(LootPool.lootPool()
                         .add(item(BURGER_BUN_BOTTOM.get()))
                 ).withPool(LootPool.lootPool()
                         .add(whenLoaded(ModItems.BEEF_PATTY.get(), 5))
-                        .add(whenLoaded(MDItems.VEGAN_PATTY.get(), 5))
+                        // .add(whenLoaded(MDItems.VEGAN_PATTY.get(), 5))
                         .add(whenLoaded(ModItems.COOKED_BACON.get(), 2))
                         .add(whenLoaded(ModItems.COOKED_MUTTON_CHOPS.get(), 1))
                         .add(whenLoaded(ModItems.FRIED_EGG.get(), 2))
@@ -209,27 +211,27 @@ public class LootTables extends LootTableProvider {
                 LootContextParamSets.CHEST
         );
 
-        addLootTableUnchecked(VILLAGE_SANDWICH.getPath(),
+        addLootTableUnchecked(VILLAGE_SANDWICH.location().getPath(),
                 LootTable.lootTable().withPool(LootPool.lootPool()
                         .when(chance(0.4))
                         .add(sandwich()
                                 .setWeight(4)
                                 .apply(count(2, 5))
-                                .apply(SetIngredientsFunction.setIngredients().withEntry(
+                                .apply(SetSandwichContentsFunction.setIngredients().withEntry(
                                         AlternativesEntry.alternatives(
-                                                LootTableReference.lootTableReference(special)
+                                                NestedLootTable.lootTableReference(special)
                                                         .when(chance(0.15)),
-                                                LootTableReference.lootTableReference(sandwich)
+                                                NestedLootTable.lootTableReference(sandwich)
                                                         .when(chance(0.25))
                                                         .apply(toastBread())
                                         ).otherwise(
-                                                LootTableReference.lootTableReference(sandwich)
+                                                NestedLootTable.lootTableReference(sandwich)
                                         )
                                 ))
                         ).add(sandwich()
                                 .apply(count(2, 5))
-                                .apply(SetIngredientsFunction.setIngredients().withEntry(
-                                        LootTableReference.lootTableReference(burger)
+                                .apply(SetSandwichContentsFunction.setIngredients().withEntry(
+                                        NestedLootTable.lootTableReference(burger)
                                 ))
                         )
                 ), LootContextParamSets.CHEST
@@ -241,7 +243,7 @@ public class LootTables extends LootTableProvider {
     }
 
     private void addBlockLootTable(Block block, LootTable.Builder lootTable) {
-        lootTables.add(new SubProviderEntry(() -> lootBuilder -> lootBuilder.accept(block.getLootTable(), lootTable), LootContextParamSets.BLOCK));
+        lootTables.add(new SubProviderEntry(registries -> lootBuilder -> lootBuilder.accept(block.getLootTable(), lootTable), LootContextParamSets.BLOCK));
     }
 
     private LootPool.Builder createStandardDrops(ItemLike itemProvider) {
@@ -250,10 +252,10 @@ public class LootTables extends LootTableProvider {
     }
 
     protected static LootItemConditionalFunction.Builder<?> toastBread() {
-        return SmeltMatchingItemFunction.smeltMatching(BREAD_SLICE.get());
+        return SmeltMatchingItemFunction.smeltMatching(BREAD_SLICE);
     }
 
-    protected static LootPoolSingletonContainer.Builder<?> sandwich(Potion potion) {
+    protected static LootPoolSingletonContainer.Builder<?> sandwich(Holder<Potion> potion) {
         return sandwich(potion(potion));
     }
 
@@ -262,7 +264,7 @@ public class LootTables extends LootTableProvider {
     }
 
     protected static LootPoolSingletonContainer.Builder<?> sandwich(LootPoolSingletonContainer.Builder<?> ingredient) {
-        return sandwich().apply(SetIngredientsFunction.setIngredients()
+        return sandwich().apply(SetSandwichContentsFunction.setIngredients()
                 .withEntry(item(BREAD_SLICE.get()))
                 .withEntry(ingredient)
                 .withEntry(item(BREAD_SLICE.get()))
@@ -273,7 +275,7 @@ public class LootTables extends LootTableProvider {
         return item(SANDWICH.get());
     }
 
-    protected static LootPoolSingletonContainer.Builder<?> potion(Potion potion) {
+    protected static LootPoolSingletonContainer.Builder<?> potion(Holder<Potion> potion) {
         return LootTables.item(Items.POTION).apply(SetPotionFunction.setPotion(potion));
     }
 
@@ -282,7 +284,7 @@ public class LootTables extends LootTableProvider {
     }
 
     protected static LootPoolSingletonContainer.Builder<?> whenNotLoaded(Item item, int weight, String modid) {
-        return OptionalLootItem.optionalLootItem(ForgeRegistries.ITEMS.getKey(item), new NotCondition(new ModLoadedCondition(modid))).setWeight(weight);
+        return OptionalLootItem.optionalLootItem(BuiltInRegistries.ITEM.getKey(item), new NotCondition(new ModLoadedCondition(modid))).setWeight(weight);
     }
 
 
@@ -305,17 +307,12 @@ public class LootTables extends LootTableProvider {
     private void addLootTable(String location, LootTable.Builder lootTable, LootContextParamSet lootParameterSet) {
         if (location.startsWith("inject/")) {
             String actualLocation = location.replace("inject/", "");
-            Preconditions.checkArgument(existingFileHelper.exists(new ResourceLocation("loot_tables/" + actualLocation + ".json"), PackType.SERVER_DATA), "Loot table %s does not exist in any known data pack", actualLocation);
+            Preconditions.checkArgument(existingFileHelper.exists(ResourceLocation.parse("loot_table/" + actualLocation + ".json"), PackType.SERVER_DATA), "Loot table %s does not exist in any known data pack", actualLocation);
         }
-        lootTables.add(new SubProviderEntry(() -> lootBuilder -> lootBuilder.accept(new ResourceLocation(SomeAssemblyRequired.MOD_ID, location), lootTable), lootParameterSet));
+        lootTables.add(new SubProviderEntry(registries -> lootBuilder -> lootBuilder.accept(SomeAssemblyRequired.key(Registries.LOOT_TABLE, location), lootTable), lootParameterSet));
     }
 
     private void addLootTableUnchecked(String location, LootTable.Builder lootTable, LootContextParamSet lootParameterSet) {
-        lootTables.add(new SubProviderEntry(() -> lootBuilder -> lootBuilder.accept(new ResourceLocation(SomeAssemblyRequired.MOD_ID, location), lootTable), lootParameterSet));
-    }
-
-    @Override
-    protected void validate(Map<ResourceLocation, LootTable> map, ValidationContext validationContext) {
-        map.forEach((location, lootTable) -> lootTable.validate(validationContext));
+        lootTables.add(new SubProviderEntry(registries -> lootBuilder -> lootBuilder.accept(SomeAssemblyRequired.key(Registries.LOOT_TABLE, location), lootTable), lootParameterSet));
     }
 }

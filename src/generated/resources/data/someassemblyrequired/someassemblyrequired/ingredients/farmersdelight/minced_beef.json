@@ -1,18 +1,19 @@
 {
-  "conditions": [
+  "neoforge:conditions": [
     {
-      "type": "forge:mod_loaded",
+      "type": "neoforge:mod_loaded",
       "modid": "farmersdelight"
     }
   ],
-  "displayItem": {
-    "item": "someassemblyrequired:spread",
-    "nbt": {
-      "CustomModelData": 13
-    }
+  "display_item": {
+    "components": {
+      "minecraft:custom_model_data": 13
+    },
+    "count": 1,
+    "id": "someassemblyrequired:spread"
   },
   "height": 2,
   "item": "farmersdelight:minced_beef",
-  "renderAsItem": false,
-  "soundEvent": "someassemblyrequired:block.sandwich.add_item.slimy"
+  "render_as_item": false,
+  "sound": "someassemblyrequired:block.sandwich.add_item.slimy"
 }

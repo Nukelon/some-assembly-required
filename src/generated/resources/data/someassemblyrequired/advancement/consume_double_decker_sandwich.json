@@ -1,0 +1,66 @@
+{
+  "parent": "someassemblyrequired:obtain_sandwich",
+  "criteria": {
+    "consume_double_decker_sandwich": {
+      "conditions": {
+        "item": {
+          "predicates": {
+            "someassemblyrequired:is_double_decker": {}
+          }
+        }
+      },
+      "trigger": "minecraft:consume_item"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "someassemblyrequired.advancement.consume_double_decker_sandwich.description"
+    },
+    "hidden": true,
+    "icon": {
+      "components": {
+        "someassemblyrequired:sandwich_contents": [
+          {
+            "count": 1,
+            "id": "someassemblyrequired:bread_slice"
+          },
+          {
+            "count": 1,
+            "id": "someassemblyrequired:tomato_slices"
+          },
+          {
+            "count": 1,
+            "id": "someassemblyrequired:chopped_carrot"
+          },
+          {
+            "count": 1,
+            "id": "someassemblyrequired:bread_slice"
+          },
+          {
+            "count": 1,
+            "id": "someassemblyrequired:tomato_slices"
+          },
+          {
+            "count": 1,
+            "id": "someassemblyrequired:chopped_carrot"
+          },
+          {
+            "count": 1,
+            "id": "someassemblyrequired:bread_slice"
+          }
+        ]
+      },
+      "count": 1,
+      "id": "someassemblyrequired:sandwich"
+    },
+    "title": {
+      "translate": "someassemblyrequired.advancement.consume_double_decker_sandwich.title"
+    }
+  },
+  "requirements": [
+    [
+      "consume_double_decker_sandwich"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

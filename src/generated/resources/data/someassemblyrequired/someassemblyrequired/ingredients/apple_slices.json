@@ -1,11 +1,12 @@
 {
-  "displayItem": {
-    "item": "someassemblyrequired:spread",
-    "nbt": {
-      "CustomModelData": 4
-    }
+  "display_item": {
+    "components": {
+      "minecraft:custom_model_data": 4
+    },
+    "count": 1,
+    "id": "someassemblyrequired:spread"
   },
-  "displayName": {
+  "display_name": {
     "translate": "someassemblyrequired.ingredient.apple_slices"
   },
   "item": "someassemblyrequired:apple_slices"

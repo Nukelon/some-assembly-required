@@ -1,6 +1,7 @@
 package someassemblyrequired.ingredient;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -9,12 +10,12 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import someassemblyrequired.SomeAssemblyRequired;
 import someassemblyrequired.ingredient.behavior.*;
-import someassemblyrequired.registry.ModFoods;
+import someassemblyrequired.registry.ModIngredients;
 
-import javax.annotation.Nullable;
 import java.util.HashMap;
 
 public class Ingredients {
@@ -23,7 +24,7 @@ public class Ingredients {
 
     public static void addBehavior(Item item, IngredientBehavior properties) {
         if (INGREDIENT_BEHAVIORS.get(item) != null) {
-            SomeAssemblyRequired.LOGGER.error("Multiple ingredient behaviors for item " + ForgeRegistries.ITEMS.getKey(item));
+            SomeAssemblyRequired.LOGGER.error("Multiple ingredient behaviors for item {}", BuiltInRegistries.ITEM.getKey(item));
         } else {
             INGREDIENT_BEHAVIORS.put(item, properties);
         }
@@ -37,57 +38,48 @@ public class Ingredients {
     }
 
     public static boolean hasCustomIngredientProperties(Item item) {
-        return IngredientPropertiesManager.hasIngredientFor(item);
+        return ModIngredients.hasIngredientFor(item);
     }
 
     public static boolean canAddToSandwich(ItemStack item) {
-        return !item.isEmpty() && (item.isEdible() || IngredientPropertiesManager.get(item) != null);
+        return !item.isEmpty() && (item.getFoodProperties(null) != null || ModIngredients.get(item) != null);
     }
 
-    public static FoodProperties getFood(ItemStack item, @Nullable LivingEntity entity) {
-        FoodProperties result = IngredientPropertiesManager.getOrDefault(item).getFood(item, entity);
-        return result == null ? ModFoods.EMPTY : result;
+    public static @NotNull FoodProperties getFood(ItemStack item, @Nullable LivingEntity entity) {
+        return ModIngredients.getOrDefault(item).getFood(item, entity);
     }
 
-    public static void onFoodEaten(ItemStack item, LivingEntity entity) {
+    public static void applyIngredientBehaviours(ItemStack item, LivingEntity entity) {
         if (INGREDIENT_BEHAVIORS.containsKey(item.getItem())) {
             INGREDIENT_BEHAVIORS.get(item.getItem()).onEaten(item, entity);
         }
     }
 
     public static Component getDisplayName(ItemStack item) {
-        return IngredientPropertiesManager.getOrDefault(item).getDisplayName(item);
+        return ModIngredients.getOrDefault(item).getDisplayName(item);
     }
 
     public static Component getFullName(ItemStack item) {
-        return IngredientPropertiesManager.getOrDefault(item).getFullName(item);
+        return ModIngredients.getOrDefault(item).getFullName(item);
     }
 
     public static ItemStack getDisplayItem(ItemStack item) {
-        return IngredientPropertiesManager.getOrDefault(item).getDisplayItem(item);
-    }
-
-    public static ItemStack getContainer(ItemStack item) {
-        return IngredientPropertiesManager.getOrDefault(item).getContainer(item);
-    }
-
-    public static boolean hasContainer(ItemStack item) {
-        return !getContainer(item).isEmpty();
+        return ModIngredients.getOrDefault(item).getDisplayItem(item);
     }
 
     public static int getHeight(ItemStack item) {
-        return IngredientPropertiesManager.getOrDefault(item).getHeight(item);
+        return ModIngredients.getOrDefault(item).height();
     }
 
     public static boolean shouldRenderAsItem(ItemStack item) {
-        return IngredientPropertiesManager.getOrDefault(item).shouldRenderAsItem(item);
+        return ModIngredients.getOrDefault(item).renderAsItem();
     }
 
     public static void playApplySound(ItemStack item, Level level, @Nullable Player player, BlockPos pos) {
-        IngredientPropertiesManager.getOrDefault(item).playSound(level, player, pos, 1);
+        ModIngredients.getOrDefault(item).playSound(level, player, pos, 1);
     }
 
     public static void playRemoveSound(ItemStack item, Level level, @Nullable Player player, BlockPos pos) {
-        IngredientPropertiesManager.getOrDefault(item).playSound(level, player, pos, 1.2F);
+        ModIngredients.getOrDefault(item).playSound(level, player, pos, 1.2F);
     }
 }

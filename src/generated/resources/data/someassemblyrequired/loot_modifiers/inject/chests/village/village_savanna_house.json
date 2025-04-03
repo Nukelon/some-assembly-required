@@ -5,9 +5,9 @@
       "condition": "someassemblyrequired:sandwich_loot_enabled"
     },
     {
-      "condition": "forge:loot_table_id",
+      "condition": "neoforge:loot_table_id",
       "loot_table_id": "minecraft:chests/village/village_savanna_house"
     }
   ],
-  "lootTable": "someassemblyrequired:inject/chests/village_house"
+  "loot_table": "someassemblyrequired:inject/chests/village_house"
 }

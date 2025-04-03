@@ -1,18 +1,16 @@
 {
-  "conditions": [
+  "neoforge:conditions": [
     {
-      "type": "forge:mod_loaded",
+      "type": "neoforge:mod_loaded",
       "modid": "farmersdelight"
     }
   ],
-  "container": {
-    "item": "minecraft:bowl"
-  },
-  "displayItem": {
-    "item": "someassemblyrequired:spread",
-    "nbt": {
-      "CustomModelData": 33
-    }
+  "display_item": {
+    "components": {
+      "minecraft:custom_model_data": 33
+    },
+    "count": 1,
+    "id": "someassemblyrequired:spread"
   },
   "item": "farmersdelight:fried_rice"
 }

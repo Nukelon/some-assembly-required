@@ -1,19 +1,20 @@
 {
-  "conditions": [
+  "neoforge:conditions": [
     {
-      "type": "forge:mod_loaded",
+      "type": "neoforge:mod_loaded",
       "modid": "farmersdelight"
     }
   ],
-  "displayItem": {
-    "item": "someassemblyrequired:spread",
-    "nbt": {
-      "CustomModelData": 23
-    }
+  "display_item": {
+    "components": {
+      "minecraft:custom_model_data": 23
+    },
+    "count": 1,
+    "id": "someassemblyrequired:spread"
   },
-  "displayName": {
+  "display_name": {
     "translate": "someassemblyrequired.ingredient.farmersdelight.salmon_slice"
   },
   "item": "farmersdelight:salmon_slice",
-  "soundEvent": "someassemblyrequired:block.sandwich.add_item.wet"
+  "sound": "someassemblyrequired:block.sandwich.add_item.wet"
 }

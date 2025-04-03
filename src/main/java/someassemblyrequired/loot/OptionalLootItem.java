@@ -1,11 +1,9 @@
 package someassemblyrequired.loot;
 
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonSerializationContext;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
@@ -14,11 +12,9 @@ import net.minecraft.world.level.storage.loot.entries.LootPoolEntryType;
 import net.minecraft.world.level.storage.loot.entries.LootPoolSingletonContainer;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraftforge.common.crafting.conditions.ICondition;
-import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.common.conditions.ICondition;
+import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
 import someassemblyrequired.registry.ModLootPoolEntries;
-import someassemblyrequired.util.JsonHelper;
 
 import java.util.Arrays;
 import java.util.List;
@@ -29,10 +25,24 @@ public class OptionalLootItem extends LootPoolSingletonContainer {
     private final ResourceLocation item;
     private final List<ICondition> loadingConditions;
 
-    OptionalLootItem(ResourceLocation item, List<ICondition> loadingConditions, int weight, int quality, LootItemCondition[] conditions, LootItemFunction[] functions) {
+    public static final MapCodec<OptionalLootItem> CODEC = RecordCodecBuilder.mapCodec(instance ->
+            singletonFields(instance)
+                    .and(ResourceLocation.CODEC.fieldOf("item").forGetter(OptionalLootItem::item))
+                    .and(ICondition.LIST_CODEC.fieldOf("loading_conditions").forGetter(OptionalLootItem::loadingConditions))
+                    .apply(instance, OptionalLootItem::new));
+
+    public OptionalLootItem(int weight, int quality, List<LootItemCondition> conditions, List<LootItemFunction> functions, ResourceLocation item, List<ICondition> loadingConditions) {
         super(weight, quality, conditions, functions);
         this.item = item;
         this.loadingConditions = loadingConditions;
+    }
+
+    private ResourceLocation item() {
+        return item;
+    }
+
+    private List<ICondition> loadingConditions() {
+        return loadingConditions;
     }
 
     public LootPoolEntryType getType() {
@@ -46,7 +56,7 @@ public class OptionalLootItem extends LootPoolSingletonContainer {
         }
         entries.accept(new LootPoolSingletonContainer.EntryBase() {
             public void createItemStack(Consumer<ItemStack> items, LootContext context1) {
-                items.accept(new ItemStack(ForgeRegistries.ITEMS.getValue(item)));
+                items.accept(new ItemStack(BuiltInRegistries.ITEM.get(item)));
             }
         });
         return true;
@@ -62,11 +72,11 @@ public class OptionalLootItem extends LootPoolSingletonContainer {
     }
 
     public void createItemStack(Consumer<ItemStack> pStackConsumer, LootContext pLootContext) {
-        pStackConsumer.accept(new ItemStack(ForgeRegistries.ITEMS.getValue(item)));
+        pStackConsumer.accept(new ItemStack(BuiltInRegistries.ITEM.get(item)));
     }
 
     public static LootPoolSingletonContainer.Builder<?> whenLoaded(Item item) {
-        return whenLoaded(ForgeRegistries.ITEMS.getKey(item));
+        return whenLoaded(BuiltInRegistries.ITEM.getKey(item));
     }
 
     public static LootPoolSingletonContainer.Builder<?> whenLoaded(ResourceLocation item) {
@@ -74,24 +84,6 @@ public class OptionalLootItem extends LootPoolSingletonContainer {
     }
 
     public static LootPoolSingletonContainer.Builder<?> optionalLootItem(ResourceLocation item, ICondition... loadingConditions) {
-        return simpleBuilder((weight, quality, conditions, functions) -> new OptionalLootItem(item, Arrays.asList(loadingConditions), weight, quality, conditions, functions));
-    }
-
-    public static class Serializer extends LootPoolSingletonContainer.Serializer<OptionalLootItem> {
-
-        public void serializeCustom(JsonObject object, OptionalLootItem lootItem, JsonSerializationContext context) {
-            super.serializeCustom(object, lootItem, context);
-            object.add("when", JsonHelper.serializeConditions(lootItem.loadingConditions));
-            object.addProperty("name", lootItem.item.toString());
-        }
-
-        protected OptionalLootItem deserialize(JsonObject object, JsonDeserializationContext context, int weight, int quality, LootItemCondition[] conditions, LootItemFunction[] functions) {
-            ResourceLocation item = new ResourceLocation(GsonHelper.getAsString(object, "name"));
-            List<ICondition> loadingConditions = JsonHelper.deserializeConditions(object, "when");
-            if (testConditions(loadingConditions) && !ForgeRegistries.ITEMS.containsKey(item)) {
-                throw new JsonParseException("Could not find unknown item " + item);
-            }
-            return new OptionalLootItem(item, loadingConditions, weight, quality, conditions, functions);
-        }
+        return simpleBuilder((weight, quality, conditions, functions) -> new OptionalLootItem(weight, quality, conditions, functions, item, Arrays.asList(loadingConditions)));
     }
 }

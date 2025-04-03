@@ -1,17 +1,18 @@
 {
-  "conditions": [
+  "neoforge:conditions": [
     {
-      "type": "forge:mod_loaded",
+      "type": "neoforge:mod_loaded",
       "modid": "farmersdelight"
     }
   ],
-  "displayItem": {
-    "item": "someassemblyrequired:spread",
-    "nbt": {
-      "CustomModelData": 18
-    }
+  "display_item": {
+    "components": {
+      "minecraft:custom_model_data": 18
+    },
+    "count": 1,
+    "id": "someassemblyrequired:spread"
   },
-  "displayName": {
+  "display_name": {
     "translate": "someassemblyrequired.ingredient.farmersdelight.mutton_chops"
   },
   "item": "farmersdelight:cooked_mutton_chops"

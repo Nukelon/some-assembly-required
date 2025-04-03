@@ -5,6 +5,8 @@ import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeSerializer;
 import com.simibubi.create.foundation.data.recipe.ProcessingRecipeGen;
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
@@ -12,7 +14,6 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
-import net.minecraftforge.registries.ForgeRegistries;
 import someassemblyrequired.SomeAssemblyRequired;
 import someassemblyrequired.integration.ModCompat;
 
@@ -26,8 +27,8 @@ public abstract class ProcessingRecipeGenerator extends ProcessingRecipeGen {
 
     private static final List<ProcessingRecipeGenerator> GENERATORS = new ArrayList<>();
 
-    public static void registerAll(boolean runProviders, DataGenerator gen) {
-        GENERATORS.add(new CuttingRecipeGenerator(gen.getPackOutput()));
+    public static void registerAll(boolean runProviders, DataGenerator gen, CompletableFuture<HolderLookup.Provider> registries) {
+        GENERATORS.add(new CuttingRecipeGenerator(gen.getPackOutput(), registries));
 
         gen.addProvider(runProviders, new DataProvider() {
             public String getName() {
@@ -40,8 +41,8 @@ public abstract class ProcessingRecipeGenerator extends ProcessingRecipeGen {
         });
     }
 
-    public ProcessingRecipeGenerator(PackOutput packOutput) {
-        super(packOutput);
+    public ProcessingRecipeGenerator(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> registries) {
+        super(packOutput, registries);
     }
 
     protected <T extends ProcessingRecipe<?>> GeneratedRecipe create(String namespace, Supplier<ItemLike> singleIngredient, UnaryOperator<ProcessingRecipeBuilder<T>> transform) {
@@ -52,7 +53,7 @@ public abstract class ProcessingRecipeGenerator extends ProcessingRecipeGen {
             transform.apply(
                     new ProcessingRecipeBuilder<>(
                             serializer.getFactory(),
-                            new ResourceLocation(namespace, ForgeRegistries.ITEMS.getKey(iItemProvider.asItem()).getPath())
+                            ResourceLocation.fromNamespaceAndPath(namespace, BuiltInRegistries.ITEM.getKey(iItemProvider.asItem()).getPath())
                     ).whenModLoaded(ModCompat.CREATE).withItemIngredients(Ingredient.of(iItemProvider))
             ).build(c);
         };
@@ -82,7 +83,7 @@ public abstract class ProcessingRecipeGenerator extends ProcessingRecipeGen {
 
     protected Supplier<ResourceLocation> idWithSuffix(Supplier<ItemLike> item, String suffix) {
         return () -> {
-            ResourceLocation registryName = ForgeRegistries.ITEMS.getKey(item.get().asItem());
+            ResourceLocation registryName = BuiltInRegistries.ITEM.getKey(item.get().asItem());
             // noinspection ConstantConditions
             return SomeAssemblyRequired.id(registryName.getPath() + suffix);
         };

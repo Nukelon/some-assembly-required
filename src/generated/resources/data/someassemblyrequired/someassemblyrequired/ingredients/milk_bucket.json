@@ -1,16 +1,21 @@
 {
-  "container": {
-    "item": "minecraft:bucket"
+  "display_item": {
+    "components": {
+      "someassemblyrequired:spread_color": -1114625
+    },
+    "count": 1,
+    "id": "someassemblyrequired:spread"
   },
-  "displayItem": {
-    "item": "someassemblyrequired:spread",
-    "nbt": {
-      "Color": 15662591
+  "food": {
+    "nutrition": 0,
+    "saturation": 0.0,
+    "using_converts_to": {
+      "id": "minecraft:bucket"
     }
   },
-  "fullName": {
+  "full_name": {
     "translate": "someassemblyrequired.ingredient.milk_bucket"
   },
   "item": "minecraft:milk_bucket",
-  "soundEvent": "someassemblyrequired:block.sandwich.add_item.moist"
+  "sound": "someassemblyrequired:block.sandwich.add_item.moist"
 }

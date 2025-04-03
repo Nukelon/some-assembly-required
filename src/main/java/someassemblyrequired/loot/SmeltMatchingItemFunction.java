@@ -1,43 +1,53 @@
 package someassemblyrequired.loot;
 
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSerializationContext;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.util.GsonHelper;
-import net.minecraft.world.SimpleContainer;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraftforge.registries.ForgeRegistries;
 import someassemblyrequired.SomeAssemblyRequired;
 import someassemblyrequired.registry.ModLootFunctions;
 
+import java.util.List;
 import java.util.Optional;
 
 public class SmeltMatchingItemFunction extends LootItemConditionalFunction {
 
-    private final Item item;
+    public static final MapCodec<SmeltMatchingItemFunction> CODEC = RecordCodecBuilder.mapCodec(instance ->
+            commonFields(instance)
+                    .and(BuiltInRegistries.ITEM.holderByNameCodec().fieldOf("item").forGetter(SmeltMatchingItemFunction::item))
+                    .apply(instance, SmeltMatchingItemFunction::new));
 
-    SmeltMatchingItemFunction(LootItemCondition[] conditions, Item item) {
+    private final Holder<Item> item;
+
+    public SmeltMatchingItemFunction(List<LootItemCondition> conditions, Holder<Item> item) {
         super(conditions);
         this.item = item;
     }
 
-    public LootItemFunctionType getType() {
+    private Holder<Item> item() {
+        return item;
+    }
+
+    public LootItemFunctionType<SmeltMatchingItemFunction> getType() {
         return ModLootFunctions.SMELT_MATCHING_ITEM.get();
     }
 
     public ItemStack run(ItemStack stack, LootContext context) {
-        if (!stack.isEmpty() && stack.getItem() == item) {
-            Optional<SmeltingRecipe> optional = context.getLevel().getRecipeManager().getRecipeFor(RecipeType.SMELTING, new SimpleContainer(stack), context.getLevel());
+        if (!stack.isEmpty() && stack.getItem() == item.value()) {
+            Optional<RecipeHolder<SmeltingRecipe>> optional = context.getLevel().getRecipeManager().getRecipeFor(RecipeType.SMELTING, new SingleRecipeInput(stack), context.getLevel());
             if (optional.isPresent()) {
-                ItemStack smelted = optional.get().getResultItem(RegistryAccess.EMPTY);
+                ItemStack smelted = optional.get().value().getResultItem(RegistryAccess.EMPTY);
                 if (!smelted.isEmpty()) {
                     ItemStack result = smelted.copy();
                     result.setCount(stack.getCount() * smelted.getCount());
@@ -50,21 +60,7 @@ public class SmeltMatchingItemFunction extends LootItemConditionalFunction {
         return stack;
     }
 
-    public static LootItemConditionalFunction.Builder<?> smeltMatching(Item item) {
+    public static LootItemConditionalFunction.Builder<?> smeltMatching(Holder<Item> item) {
         return simpleBuilder(conditions -> new SmeltMatchingItemFunction(conditions, item));
-    }
-
-    public static class Serializer extends LootItemConditionalFunction.Serializer<SmeltMatchingItemFunction> {
-
-        public void serialize(JsonObject object, SmeltMatchingItemFunction function, JsonSerializationContext context) {
-            super.serialize(object, function, context);
-            // noinspection ConstantConditions
-            object.addProperty("item", ForgeRegistries.ITEMS.getKey(function.item).toString());
-        }
-
-        public SmeltMatchingItemFunction deserialize(JsonObject object, JsonDeserializationContext context, LootItemCondition[] conditions) {
-            Item item = GsonHelper.getAsItem(object, "item");
-            return new SmeltMatchingItemFunction(conditions, item);
-        }
     }
 }

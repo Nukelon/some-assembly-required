@@ -1,0 +1,53 @@
+{
+  "parent": "someassemblyrequired:obtain_bread_slice",
+  "criteria": {
+    "obtain_sandwich": {
+      "conditions": {
+        "items": [
+          {
+            "items": "someassemblyrequired:sandwich"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "someassemblyrequired.advancement.obtain_sandwich.description"
+    },
+    "icon": {
+      "components": {
+        "someassemblyrequired:sandwich_contents": [
+          {
+            "count": 1,
+            "id": "someassemblyrequired:bread_slice"
+          },
+          {
+            "count": 1,
+            "id": "someassemblyrequired:tomato_slices"
+          },
+          {
+            "count": 1,
+            "id": "someassemblyrequired:chopped_carrot"
+          },
+          {
+            "count": 1,
+            "id": "someassemblyrequired:bread_slice"
+          }
+        ]
+      },
+      "count": 1,
+      "id": "someassemblyrequired:sandwich"
+    },
+    "title": {
+      "translate": "someassemblyrequired.advancement.obtain_sandwich.title"
+    }
+  },
+  "requirements": [
+    [
+      "obtain_sandwich"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

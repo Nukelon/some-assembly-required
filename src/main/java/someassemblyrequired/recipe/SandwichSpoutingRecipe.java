@@ -1,38 +1,25 @@
 package someassemblyrequired.recipe;
 
-import com.google.gson.JsonObject;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.Container;
+import com.mojang.serialization.MapCodec;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 import someassemblyrequired.registry.ModRecipeTypes;
 
-import javax.annotation.Nullable;
-
-public abstract class SandwichSpoutingRecipe implements Recipe<Container> {
-
-    private final ResourceLocation id;
-
-    public SandwichSpoutingRecipe(ResourceLocation id) {
-        this.id = id;
-    }
+public abstract class SandwichSpoutingRecipe implements Recipe<RecipeInput> {
 
     public abstract int getAmountRequired(FluidStack fluid);
 
     public abstract boolean matches(FluidStack fluid);
 
     public abstract ItemStack assemble(FluidStack fluid);
-
-    @Override
-    public ResourceLocation getId() {
-        return id;
-    }
 
     @Override
     public RecipeType<?> getType() {
@@ -45,41 +32,38 @@ public abstract class SandwichSpoutingRecipe implements Recipe<Container> {
     }
 
     @Override
-    public final boolean matches(Container container, Level level) {
-        return false;
-    }
-
-    @Override
-    public final ItemStack assemble(Container container, RegistryAccess registryAccess) {
-        return ItemStack.EMPTY;
-    }
-
-    @Override
     public final boolean canCraftInDimensions(int p_43999_, int p_44000_) {
         return false;
     }
 
     @Override
-    public ItemStack getResultItem(RegistryAccess registryAccess) {
+    public boolean matches(RecipeInput input, Level level) {
+        return false;
+    }
+
+    @Override
+    public ItemStack assemble(RecipeInput input, HolderLookup.Provider registries) {
+        return ItemStack.EMPTY;
+    }
+
+    @Override
+    public ItemStack getResultItem(HolderLookup.Provider registries) {
         return ItemStack.EMPTY;
     }
 
     public static class EmptySerializer implements RecipeSerializer<SandwichSpoutingRecipe> {
 
         @Override
-        public SandwichSpoutingRecipe fromJson(ResourceLocation id, JsonObject object) {
-            return null;
-        }
-
-        @Nullable
-        @Override
-        public SandwichSpoutingRecipe fromNetwork(ResourceLocation id, FriendlyByteBuf buffer) {
-            throw new UnsupportedOperationException();
+        public MapCodec<SandwichSpoutingRecipe> codec() {
+            return MapCodec.unit(() -> {
+                throw new UnsupportedOperationException();
+            });
         }
 
         @Override
-        public void toNetwork(FriendlyByteBuf buffer, SandwichSpoutingRecipe recipe) {
-            throw new UnsupportedOperationException();
+        public StreamCodec<RegistryFriendlyByteBuf, SandwichSpoutingRecipe> streamCodec() {
+            // noinspection ConstantConditions
+            return StreamCodec.unit(null);
         }
     }
 }

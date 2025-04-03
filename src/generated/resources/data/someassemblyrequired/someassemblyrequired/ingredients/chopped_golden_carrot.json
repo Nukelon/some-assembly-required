@@ -1,11 +1,12 @@
 {
-  "displayItem": {
-    "item": "someassemblyrequired:spread",
-    "nbt": {
-      "CustomModelData": 7
-    }
+  "display_item": {
+    "components": {
+      "minecraft:custom_model_data": 7
+    },
+    "count": 1,
+    "id": "someassemblyrequired:spread"
   },
-  "displayName": {
+  "display_name": {
     "translate": "someassemblyrequired.ingredient.chopped_golden_carrot"
   },
   "item": "someassemblyrequired:chopped_golden_carrot"

@@ -7,15 +7,14 @@ import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.items.wrapper.RecipeWrapper;
+import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
 import someassemblyrequired.SomeAssemblyRequired;
 import someassemblyrequired.config.ModConfig;
 import someassemblyrequired.ingredient.Ingredients;
+import someassemblyrequired.item.sandwich.SandwichContents;
 import someassemblyrequired.item.sandwich.SandwichItem;
-import someassemblyrequired.item.sandwich.SandwichItemHandler;
 import someassemblyrequired.registry.ModItems;
 import someassemblyrequired.registry.ModTags;
 
@@ -30,7 +29,7 @@ public class SandwichDeployingRecipe extends ProcessingRecipe<RecipeWrapper> {
         super(TYPE_INFO, params);
     }
 
-    public static Optional<SandwichDeployingRecipe> createRecipe(RecipeWrapper inventory) {
+    public static Optional<RecipeHolder<SandwichDeployingRecipe>> createRecipe(RecipeWrapper inventory) {
         if (!matches(inventory)) {
             return Optional.empty();
         }
@@ -50,25 +49,27 @@ public class SandwichDeployingRecipe extends ProcessingRecipe<RecipeWrapper> {
         }
 
         return ModConfig.server.maximumSandwichHeight.get() >= Ingredients.getHeight(ingredient)
-                + SandwichItemHandler.get(item)
-                        .map(SandwichItemHandler::getTotalHeight)
+                + SandwichContents.maybeGet(item)
+                        .map(SandwichContents::getTotalHeight)
                         .orElse(Ingredients.getHeight(item));
     }
 
-    public static SandwichDeployingRecipe createRecipe(ItemStack sandwich, ItemStack ingredient) {
+    public static RecipeHolder<SandwichDeployingRecipe> createRecipe(ItemStack sandwich, ItemStack ingredient) {
         sandwich = sandwich.copy();
         sandwich.setCount(1);
         ingredient = ingredient.copy();
         ingredient.setCount(1);
 
-        ItemStack container = Ingredients.getContainer(ingredient);
+        ItemStack container = Ingredients.getFood(ingredient, null).usingConvertsTo().orElse(ItemStack.EMPTY);
         ItemStack result = SandwichItem.of(sandwich, ingredient);
 
-        return new ProcessingRecipeBuilder<>(SandwichDeployingRecipe::new, RECIPE_ID)
+        SandwichDeployingRecipe recipe = new ProcessingRecipeBuilder<>(SandwichDeployingRecipe::new, RECIPE_ID)
                 .withItemOutputs(
                         new ProcessingOutput(result, 1),
                         container.isEmpty() ? ProcessingOutput.EMPTY : new ProcessingOutput(container, 1)
                 ).build();
+
+        return new RecipeHolder<>(RECIPE_ID, recipe);
     }
 
     @Override
@@ -99,7 +100,7 @@ public class SandwichDeployingRecipe extends ProcessingRecipe<RecipeWrapper> {
         }
 
         @Override
-        public <T extends RecipeType<?>> T getType() {
+        public <I extends RecipeInput, R extends Recipe<I>> RecipeType<R> getType() {
             return AllRecipeTypes.DEPLOYING.getType();
         }
     }

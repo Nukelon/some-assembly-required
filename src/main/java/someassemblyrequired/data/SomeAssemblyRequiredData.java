@@ -3,40 +3,33 @@ package someassemblyrequired.data;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
-import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.data.event.GatherDataEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import someassemblyrequired.SomeAssemblyRequired;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.data.event.GatherDataEvent;
 import someassemblyrequired.data.providers.*;
 import someassemblyrequired.data.providers.recipe.create.ProcessingRecipeGenerator;
-import someassemblyrequired.integration.ModCompat;
 
 import java.util.concurrent.CompletableFuture;
 
-@SuppressWarnings("unused")
-@Mod.EventBusSubscriber(modid = SomeAssemblyRequired.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class SomeAssemblyRequiredData {
 
-    @SubscribeEvent
     public static void gatherData(GatherDataEvent event) {
         DataGenerator generator = event.getGenerator();
         ExistingFileHelper helper = event.getExistingFileHelper();
         PackOutput packOutput = event.getGenerator().getPackOutput();
-        CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
+        CompletableFuture<HolderLookup.Provider> registries = event.getLookupProvider();
 
-        BlockTags blockTagsProvider = new BlockTags(packOutput, lookupProvider, helper);
+        BlockTags blockTagsProvider = new BlockTags(packOutput, registries, helper);
         generator.addProvider(event.includeServer(), blockTagsProvider);
-        generator.addProvider(event.includeServer(), new ItemTags(packOutput, lookupProvider, blockTagsProvider.contentsGetter(), helper));
-        generator.addProvider(event.includeServer(), new Recipes(packOutput));
-        generator.addProvider(event.includeServer(), new Advancements(packOutput, lookupProvider, helper));
-        LootModifiers lootModifiers = new LootModifiers(packOutput);
+        generator.addProvider(event.includeServer(), new ItemTags(packOutput, registries, blockTagsProvider.contentsGetter(), helper));
+        generator.addProvider(event.includeServer(), new Recipes(packOutput, registries));
+        generator.addProvider(event.includeServer(), new Advancements(packOutput, registries, helper));
+        LootModifiers lootModifiers = new LootModifiers(packOutput, registries);
         generator.addProvider(event.includeServer(), lootModifiers);
-        generator.addProvider(event.includeServer(), new LootTables(packOutput, helper, lootModifiers));
+        generator.addProvider(event.includeServer(), new LootTables(packOutput, helper, lootModifiers, registries));
         generator.addProvider(event.includeServer(), new Ingredients(packOutput));
-        if (ModCompat.isCreateLoaded()) {
-            ProcessingRecipeGenerator.registerAll(event.includeServer(), generator);
-        }
+        generator.addProvider(event.includeServer(), new DataMaps(packOutput, registries));
+        ProcessingRecipeGenerator.registerAll(event.includeServer(), generator, registries);
+
 
         BlockStates blockStates = new BlockStates(packOutput, helper);
         generator.addProvider(event.includeClient(), blockStates);

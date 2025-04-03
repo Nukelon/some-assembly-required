@@ -1,24 +1,25 @@
 package someassemblyrequired;
 
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.DeferredRegister;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.registries.DataPackRegistryEvent;
+import net.neoforged.neoforge.registries.DeferredRegister;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import someassemblyrequired.config.ModConfig;
+import someassemblyrequired.data.SomeAssemblyRequiredData;
 import someassemblyrequired.event.BlockEventHandler;
-import someassemblyrequired.ingredient.IngredientPropertiesManager;
+import someassemblyrequired.ingredient.IngredientProperties;
 import someassemblyrequired.ingredient.Ingredients;
 import someassemblyrequired.integration.ModCompat;
-import someassemblyrequired.network.NetworkHandler;
 import someassemblyrequired.registry.*;
 
 @Mod(SomeAssemblyRequired.MOD_ID)
@@ -28,35 +29,41 @@ public class SomeAssemblyRequired {
 
     public static final Logger LOGGER = LogManager.getLogger();
 
-    public SomeAssemblyRequired() {
-        DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> SomeAssemblyRequiredClient::new);
+    public SomeAssemblyRequired(IEventBus modEventBus, Dist dist, ModContainer container) {
+        if (dist == Dist.CLIENT) {
+            new SomeAssemblyRequiredClient(modEventBus);
+        }
+        container.registerConfig(net.neoforged.fml.config.ModConfig.Type.SERVER, ModConfig.serverSpec);
 
-        ModCompat.setup();
-
-        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        ModCompat.setup(modEventBus);
 
         register(modEventBus,
                 ModItems.ITEMS,
-                ModItems.CREATIVE_MODE_TABS,
                 ModBlocks.BLOCKS,
                 ModStatistics.CUSTOM_STATS,
-                ModBlockEntityTypes.ENTITY_TYPES,
+                ModItems.CREATIVE_MODE_TABS,
                 ModSoundEvents.SOUND_EVENTS,
                 ModRecipeTypes.RECIPE_TYPES,
-                ModRecipeTypes.RECIPE_SERIALIZERS,
                 ModLootModifiers.LOOT_MODIFIERS,
+                ModBlockEntityTypes.ENTITY_TYPES,
+                ModRecipeTypes.RECIPE_SERIALIZERS,
                 ModLootFunctions.LOOT_FUNCTION_TYPES,
+                ModDataComponents.DATA_COMPONENT_TYPES,
                 ModLootConditions.LOOT_CONDITION_TYPES,
-                ModLootPoolEntries.LOOT_POOL_ENTRY_TYPES
+                ModLootPoolEntries.LOOT_POOL_ENTRY_TYPES,
+                ModAdvancementTriggers.CRITERIA_TRIGGERS,
+                ModItemSubPredicateTypes.ITEM_SUB_PREDICATE_TYPES
         );
 
         modEventBus.addListener(this::onCommonSetup);
+        modEventBus.addListener(SomeAssemblyRequiredData::gatherData);
+        modEventBus.addListener(this::registerDataPackRegistries);
 
-        MinecraftForge.EVENT_BUS.addListener(IngredientPropertiesManager::onAddReloadListener);
-        MinecraftForge.EVENT_BUS.addListener(IngredientPropertiesManager::onDataPackReload);
-
-        ModAdvancementTriggers.register();
         BlockEventHandler.register();
+    }
+
+    private void registerDataPackRegistries(DataPackRegistryEvent.NewRegistry event) {
+        event.dataPackRegistry(ModIngredients.INGREDIENTS, IngredientProperties.CODEC, IngredientProperties.CODEC, e -> e.onBake(ModIngredients::onBake));
     }
 
     private static void register(IEventBus modEventBus, DeferredRegister<?>... registers) {
@@ -66,16 +73,15 @@ public class SomeAssemblyRequired {
     }
 
     public void onCommonSetup(FMLCommonSetupEvent event) {
-        event.enqueueWork(() -> {
-            ModConfig.registerServer();
-            Ingredients.addBehaviors();
-            NetworkHandler.register();
-            ModItems.registerCompostables();
-        });
+        event.enqueueWork(Ingredients::addBehaviors);
     }
 
     public static ResourceLocation id(String path) {
-        return new ResourceLocation(MOD_ID, path);
+        return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
+    }
+
+    public static <T> ResourceKey<T> key(ResourceKey<? extends Registry<T>> registryKey, String path) {
+        return ResourceKey.create(registryKey, id(path));
     }
 
     public static MutableComponent translate(String key, Object... args) {

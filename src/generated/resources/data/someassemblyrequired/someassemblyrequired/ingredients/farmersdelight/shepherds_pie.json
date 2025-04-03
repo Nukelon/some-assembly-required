@@ -1,22 +1,20 @@
 {
-  "conditions": [
+  "neoforge:conditions": [
     {
-      "type": "forge:mod_loaded",
+      "type": "neoforge:mod_loaded",
       "modid": "farmersdelight"
     }
   ],
-  "container": {
-    "item": "minecraft:bowl"
+  "display_item": {
+    "components": {
+      "minecraft:custom_model_data": 47
+    },
+    "count": 1,
+    "id": "someassemblyrequired:spread"
   },
-  "displayItem": {
-    "item": "someassemblyrequired:spread",
-    "nbt": {
-      "CustomModelData": 47
-    }
-  },
-  "fullName": {
+  "full_name": {
     "translate": "block.farmersdelight.shepherds_pie_block"
   },
   "item": "farmersdelight:shepherds_pie",
-  "soundEvent": "someassemblyrequired:block.sandwich.add_item.moist"
+  "sound": "someassemblyrequired:block.sandwich.add_item.moist"
 }

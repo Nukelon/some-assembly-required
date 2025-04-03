@@ -1,19 +1,20 @@
 {
-  "conditions": [
+  "neoforge:conditions": [
     {
-      "type": "forge:mod_loaded",
+      "type": "neoforge:mod_loaded",
       "modid": "farmersdelight"
     }
   ],
-  "displayItem": {
-    "item": "someassemblyrequired:spread",
-    "nbt": {
-      "CustomModelData": 11
-    }
+  "display_item": {
+    "components": {
+      "minecraft:custom_model_data": 11
+    },
+    "count": 1,
+    "id": "someassemblyrequired:spread"
   },
-  "displayName": {
+  "display_name": {
     "translate": "someassemblyrequired.ingredient.farmersdelight.fried_egg"
   },
   "item": "farmersdelight:fried_egg",
-  "soundEvent": "someassemblyrequired:block.sandwich.add_item.slimy"
+  "sound": "someassemblyrequired:block.sandwich.add_item.slimy"
 }

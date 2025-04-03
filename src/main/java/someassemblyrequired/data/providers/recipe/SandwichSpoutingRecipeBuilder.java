@@ -1,126 +1,53 @@
 package someassemblyrequired.data.providers.recipe;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
-import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.common.crafting.CraftingHelper;
-import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.common.NeoForgeMod;
+import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
 import someassemblyrequired.SomeAssemblyRequired;
 import someassemblyrequired.integration.ModCompat;
-import someassemblyrequired.registry.ModRecipeTypes;
-import someassemblyrequired.util.JsonHelper;
-
-import javax.annotation.Nullable;
-import java.util.function.Consumer;
+import someassemblyrequired.integration.create.recipe.SandwichFluidSpoutingRecipe;
+import someassemblyrequired.integration.create.recipe.SandwichPotionSpoutingRecipe;
 
 public class SandwichSpoutingRecipeBuilder {
 
-    public static void addFillingRecipes(Consumer<FinishedRecipe> consumer) {
-        consumer.accept(create("water_bottle", PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER), FluidIngredient.fromFluid(Fluids.WATER, 250)));
-        consumer.accept(create(Items.HONEY_BOTTLE, AllFluids.HONEY.get()));
-        consumer.accept(create(AllItems.BUILDERS_TEA.get(), AllFluids.TEA.get()));
-        consumer.accept(create(Items.MILK_BUCKET, ForgeMod.MILK.get()));
-        consumer.accept(create(AllFluids.CHOCOLATE.get().getBucket(), AllFluids.CHOCOLATE.get()));
-        consumer.accept(createPotionFillingRecipe("potion"));
+    public static void addFillingRecipes(RecipeOutput output) {
+        create(output, "water_bottle", PotionContents.createItemStack(Items.POTION, Potions.WATER), FluidIngredient.fromFluid(Fluids.WATER, 250));
+        create(output, Items.HONEY_BOTTLE, AllFluids.HONEY.get());
+        create(output, AllItems.BUILDERS_TEA.get(), AllFluids.TEA.get());
+        create(output, Items.MILK_BUCKET, NeoForgeMod.MILK.get());
+        create(output, AllFluids.CHOCOLATE.get().getBucket(), AllFluids.CHOCOLATE.get());
+        output.accept(SomeAssemblyRequired.id("sandwich_spouting/potion"), new SandwichPotionSpoutingRecipe(), null, new ModLoadedCondition(ModCompat.CREATE));
     }
 
-    public static Result create(Item result, Fluid fluid) {
-        return create(new ItemStack(result), fluid, 250);
+    public static void create(RecipeOutput output, Item result, Fluid fluid) {
+        create(output, new ItemStack(result), fluid, 250);
     }
 
-    public static Result create(Item result, Fluid fluid, int amountRequired) {
-        return create(new ItemStack(result), fluid, amountRequired);
+    public static void create(RecipeOutput output, Item result, Fluid fluid, int amountRequired) {
+        create(output, new ItemStack(result), fluid, amountRequired);
     }
 
-    public static Result create(ItemStack result, Fluid fluid, int amountRequired) {
-        // noinspection ConstantConditions
-        return create(ForgeRegistries.ITEMS.getKey(result.getItem()).getPath(), result, FluidIngredient.fromFluid(fluid, amountRequired));
+    public static void create(RecipeOutput output, ItemStack result, Fluid fluid, int amountRequired) {
+        create(output, BuiltInRegistries.ITEM.getKey(result.getItem()).getPath(), result, FluidIngredient.fromFluid(fluid, amountRequired));
     }
 
-    public static Result create(String name, ItemStack result, FluidIngredient ingredient) {
-        return new Result(id(name), ingredient, result);
+    public static void create(RecipeOutput output, String name, ItemStack result, FluidIngredient ingredient) {
+        output.accept(id(name), new SandwichFluidSpoutingRecipe(ingredient, result), null, new ModLoadedCondition(ModCompat.CREATE));
     }
 
     private static ResourceLocation id(String id) {
         return SomeAssemblyRequired.id("sandwich_spouting/%s".formatted(id));
-    }
-
-    public static FinishedRecipe createPotionFillingRecipe(String id) {
-        return new FinishedRecipe() {
-
-            @Override
-            public void serializeRecipeData(JsonObject object) {
-                JsonHelper.addModLoadedCondition(object, ModCompat.CREATE);
-            }
-
-            @Override
-            public ResourceLocation getId() {
-                return id(id);
-            }
-
-            @Override
-            public RecipeSerializer<?> getType() {
-                return ModRecipeTypes.SANDWICH_POTION_SPOUTING_SERIALIZER.get();
-            }
-
-            @Nullable
-            @Override
-            public JsonObject serializeAdvancement() {
-                return null;
-            }
-
-            @Nullable
-            @Override
-            public ResourceLocation getAdvancementId() {
-                return null;
-            }
-        };
-    }
-
-    public record Result(ResourceLocation id, FluidIngredient ingredient, ItemStack result) implements FinishedRecipe {
-
-        @Override
-        public ResourceLocation getId() {
-            return id;
-        }
-
-        @Override
-        public RecipeSerializer<?> getType() {
-            return ModRecipeTypes.SANDWICH_FLUID_SPOUTING_SERIALIZER.get();
-        }
-
-        public void serializeRecipeData(JsonObject object) {
-            JsonArray conditions = new JsonArray();
-            conditions.add(CraftingHelper.serialize(new ModLoadedCondition(ModCompat.CREATE)));
-            object.add("conditions", conditions);
-            object.add("fluid", ingredient.serialize());
-            object.add("result", JsonHelper.writeItemStack(result));
-        }
-
-        @Nullable
-        @Override
-        public JsonObject serializeAdvancement() {
-            return null;
-        }
-
-        @Nullable
-        @Override
-        public ResourceLocation getAdvancementId() {
-            return null;
-        }
     }
 }

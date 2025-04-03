@@ -1,14 +1,15 @@
 {
-  "displayItem": {
-    "item": "someassemblyrequired:spread",
-    "nbt": {
-      "CustomModelData": 3
-    }
+  "display_item": {
+    "components": {
+      "minecraft:custom_model_data": 3
+    },
+    "count": 1,
+    "id": "someassemblyrequired:spread"
   },
-  "fullName": {
+  "full_name": {
     "translate": "someassemblyrequired.ingredient.burger_bun_half"
   },
   "height": 4,
   "item": "someassemblyrequired:burger_bun_top",
-  "renderAsItem": false
+  "render_as_item": false
 }

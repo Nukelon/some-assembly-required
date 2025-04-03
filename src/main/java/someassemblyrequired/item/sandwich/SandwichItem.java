@@ -2,20 +2,16 @@ package someassemblyrequired.item.sandwich;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffectUtil;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
@@ -24,31 +20,30 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionUtils;
-import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.LazyOptional;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.Nullable;
 import someassemblyrequired.SomeAssemblyRequired;
 import someassemblyrequired.block.SandwichBlock;
 import someassemblyrequired.ingredient.Ingredients;
+import someassemblyrequired.integration.ModCompat;
 import someassemblyrequired.registry.*;
+import vectorwing.farmersdelight.common.utility.TextUtils;
 
-import javax.annotation.Nullable;
-import java.util.*;
-import java.util.function.Consumer;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class SandwichItem extends BlockItem {
@@ -57,10 +52,8 @@ public class SandwichItem extends BlockItem {
         super(block, builder);
     }
 
-    public static ItemStack makeSandwich(Potion potion) {
-        ItemStack item = new ItemStack(Items.POTION);
-        PotionUtils.setPotion(item, potion);
-        return makeSandwich(item);
+    public static ItemStack makeSandwich(Holder<Potion> potion) {
+        return makeSandwich(PotionContents.createItemStack(Items.POTION, potion));
     }
 
     public static ItemStack makeSandwich(ItemLike... items) {
@@ -77,6 +70,20 @@ public class SandwichItem extends BlockItem {
         return of(list);
     }
 
+    public static ItemStack makeBurger(ItemLike... items) {
+        return makeBurger(Arrays.stream(items)
+                .map(ItemStack::new)
+                .toArray(ItemStack[]::new));
+    }
+
+    public static ItemStack makeBurger(ItemStack... items) {
+        ArrayList<ItemStack> list = new ArrayList<>();
+        list.add(new ItemStack(ModItems.BURGER_BUN_BOTTOM.get()));
+        list.addAll(Arrays.asList(items));
+        list.add(new ItemStack(ModItems.BURGER_BUN_TOP.get()));
+        return of(list);
+    }
+
     public static ItemStack of(ItemStack... items) {
         return of(Arrays.asList(items));
     }
@@ -86,37 +93,31 @@ public class SandwichItem extends BlockItem {
         for (ItemStack item : items) {
             if (item.getCount() != 1) {
                 throw new IllegalArgumentException();
-            }
-            if (!item.is(ModItems.SANDWICH.get())) {
-                flattenedItems.add(item);
+            } else if (item.is(ModItems.SANDWICH.get())) {
+                flattenedItems.addAll(SandwichContents.get(item).items());
             } else {
-                SandwichItemHandler.get(item).stream()
-                        .map(SandwichItemHandler::getItems)
-                        .flatMap(Collection::stream)
-                        .forEach(flattenedItems::add);
+                flattenedItems.add(item);
             }
         }
 
         ItemStack result = new ItemStack(ModItems.SANDWICH.get());
-        result.getOrCreateTagElement("BlockEntityTag").put("Sandwich", SandwichItemHandler.serializeItems(flattenedItems));
+        SandwichContents contents = new SandwichContents(flattenedItems);
+        result.set(ModDataComponents.SANDWICH_CONTENTS.get(), contents);
         return result;
     }
 
     @Override
+    public FoodProperties getFoodProperties(ItemStack stack, @Nullable LivingEntity entity) {
+        return stack.getOrDefault(ModDataComponents.SANDWICH_CONTENTS.get(), SandwichContents.EMPTY).createFoodProperties(entity);
+    }
+
+    @Override
     @OnlyIn(Dist.CLIENT)
-    public void appendHoverText(ItemStack sandwich, @Nullable Level world, List<Component> tooltip, TooltipFlag flag) {
-        super.appendHoverText(sandwich, world, tooltip, flag);
-        SandwichItemHandler.get(sandwich).ifPresent(handler -> {
-            MobEffectInstance instance = handler.getEffect();
-            if (instance != null) {
-                MutableComponent component = Component.translatable(instance.getDescriptionId());
-                MobEffect effect = instance.getEffect();
-                component = Component.translatable("potion.withDuration", component, MobEffectUtil.formatDuration(instance, 1));
-                tooltip.add(component.withStyle(effect.getCategory().getTooltipFormatting()));
-            }
-        });
-        SandwichItemHandler.get(sandwich).ifPresent(handler -> handler.getItems()
-                .stream()
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
+        super.appendHoverText(stack, context, tooltip, flag);
+        SandwichContents sandwich = SandwichContents.get(stack);
+
+        sandwich.items().stream()
                 .collect(
                         Collectors.groupingBy(
                                 item -> Ingredients.getFullName(item).plainCopy(),
@@ -132,7 +133,13 @@ public class SandwichItem extends BlockItem {
                                 tooltip.add(item.withStyle(ChatFormatting.GRAY));
                             }
                         }
-                ));
+                );
+
+        FoodProperties food = getFoodProperties(stack, null);
+        if (ModCompat.isFarmersDelightLoaded() && food != null && !food.effects().isEmpty()) {
+            tooltip.add(CommonComponents.EMPTY);
+            TextUtils.addFoodEffectTooltip(stack, tooltip::add, 1, context.tickRate());
+        }
     }
 
     @Override
@@ -159,11 +166,11 @@ public class SandwichItem extends BlockItem {
             return InteractionResult.FAIL;
         }
 
-        Optional<SandwichItemHandler> itemHandler = SandwichItemHandler.get(sandwich);
-        if (itemHandler.isEmpty()) {
+        SandwichContents contents = SandwichContents.get(sandwich);
+        if (contents.items().isEmpty()) {
             return InteractionResult.FAIL;
         }
-        int size = SandwichBlock.getSizeFromSandwich(itemHandler.get());
+        int size = SandwichBlock.getSizeFromSandwich(contents);
         blockstate = blockstate.setValue(SandwichBlock.SIZE, size);
 
         if (!placeBlock(placeContext, blockstate)) {
@@ -174,6 +181,7 @@ public class SandwichItem extends BlockItem {
         BlockState placedState = level.getBlockState(pos);
         if (placedState.is(blockstate.getBlock())) {
             updateCustomBlockEntityTag(pos, level, player, sandwich, placedState);
+            updateBlockEntityComponents(level, pos, sandwich);
             placedState.getBlock().setPlacedBy(level, pos, placedState, player, sandwich);
             if (player instanceof ServerPlayer serverPlayer) {
                 CriteriaTriggers.PLACED_BLOCK.trigger(serverPlayer, pos, sandwich);
@@ -192,109 +200,50 @@ public class SandwichItem extends BlockItem {
         return InteractionResult.sidedSuccess(level.isClientSide);
     }
 
-    @Override
-    public FoodProperties getFoodProperties(ItemStack stack, @Nullable LivingEntity entity) {
-        return SandwichItemHandler.get(stack)
-                .map(SandwichItemHandler::getFoodProperties)
-                .orElse(ModFoods.EMPTY);
+    private static void updateBlockEntityComponents(Level level, BlockPos pos, ItemStack stack) {
+        BlockEntity blockentity = level.getBlockEntity(pos);
+        if (blockentity != null) {
+            blockentity.applyComponentsFromItemStack(stack);
+            blockentity.setChanged();
+        }
     }
 
     @Override
     public ItemStack finishUsingItem(ItemStack stack, Level world, LivingEntity entity) {
-        SandwichItemHandler.get(stack).ifPresent(sandwich -> {
-            for (ItemStack item : sandwich.items) {
-                Ingredients.onFoodEaten(item, entity);
+        SandwichContents sandwich = SandwichContents.get(stack);
+        for (ItemStack item : sandwich.items()) {
+            Ingredients.applyIngredientBehaviours(item, entity);
+        }
+        if (entity instanceof ServerPlayer player) {
+            if (sandwich.isBurger()) {
+                player.awardStat(ModStatistics.BURGERS_EATEN.get());
+            } else {
+                player.awardStat(ModStatistics.SANDWICHES_EATEN.get());
             }
-            if (entity instanceof ServerPlayer player) {
-                if (sandwich.isBurger()) {
-                    player.awardStat(ModStatistics.BURGERS_EATEN.get());
-                } else {
-                    player.awardStat(ModStatistics.SANDWICHES_EATEN.get());
-                }
-                triggerAdvancements(stack, player);
-            }
-        });
+            triggerAdvancements(stack, player);
+        }
 
         return super.finishUsingItem(stack, world, entity);
     }
 
     private void triggerAdvancements(ItemStack stack, ServerPlayer player) {
-        SandwichItemHandler.get(stack).ifPresent(sandwich -> {
-            if (sandwich.isDoubleDeckerSandwich()) {
-                ModAdvancementTriggers.CONSUME_DOUBLE_DECKER_SANDWICH.trigger(player, stack);
+        SandwichContents sandwich = SandwichContents.get(stack);
+        if (sandwich.isBurger()) {
+            if (player.getStats().getValue(Stats.CUSTOM.get(ModStatistics.BURGERS_EATEN.get())) >= 1000) {
+                ModAdvancementTriggers.CONSUME_1000_BURGERS.get().trigger(player);
             }
-            for (ItemStack ingredient : sandwich) {
-                if (ingredient.is(Items.POTION) && PotionUtils.getPotion(ingredient) != Potions.WATER) {
-                    ModAdvancementTriggers.CONSUME_POTION_SANDWICH.trigger(player, stack);
-                }
+        } else {
+            if (player.getStats().getValue(Stats.CUSTOM.get(ModStatistics.SANDWICHES_EATEN.get())) >= 1000) {
+                ModAdvancementTriggers.CONSUME_1000_SANDWICHES.get().trigger(player);
             }
-            if (sandwich.isBurger()) {
-                if (player.getStats().getValue(Stats.CUSTOM.get(ModStatistics.BURGERS_EATEN.get())) >= 1000) {
-                    ModAdvancementTriggers.CONSUME_1000_BURGERS.trigger(player);
-                }
-            } else {
-                if (player.getStats().getValue(Stats.CUSTOM.get(ModStatistics.SANDWICHES_EATEN.get())) >= 1000) {
-                    ModAdvancementTriggers.CONSUME_1000_SANDWICHES.trigger(player);
-                }
-            }
-        });
+        }
     }
 
     @Override
     public Component getName(ItemStack stack) {
-        if (stack.hasCustomHoverName()) {
+        if (stack.has(DataComponents.CUSTOM_NAME)) {
             return super.getName(stack);
         }
         return SandwichNameHelper.getSandwichDisplayName(stack);
-    }
-
-    @Override
-    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-        consumer.accept(new IClientItemExtensions() {
-
-            private final BlockEntityWithoutLevelRenderer renderer = new SandwichItemRenderer();
-
-            @Override
-            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-                return renderer;
-            }
-        });
-    }
-
-    @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag compoundNBT) {
-        return new ICapabilityProvider() {
-
-            private final LazyOptional<SandwichItemHandler> handler = LazyOptional.of(this::createHandler);
-
-            private SandwichItemHandler createHandler() {
-                SandwichItemHandler handler = new ItemHandler(stack);
-                handler.deserializeNBT(stack.getOrCreateTagElement("BlockEntityTag").getList("Sandwich", Tag.TAG_COMPOUND));
-                return handler;
-            }
-
-            @Override
-            public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction side) {
-                if (capability == ForgeCapabilities.ITEM_HANDLER) {
-                    return handler.cast();
-                }
-                return LazyOptional.empty();
-            }
-        };
-    }
-
-    private static class ItemHandler extends SandwichItemHandler {
-
-        private final ItemStack sandwich;
-
-        private ItemHandler(ItemStack sandwich) {
-            this.sandwich = sandwich;
-        }
-
-        @Override
-        protected void onContentsChanged() {
-            super.onContentsChanged();
-            sandwich.getOrCreateTagElement("BlockEntityTag").put("Sandwich", serializeNBT());
-        }
     }
 }

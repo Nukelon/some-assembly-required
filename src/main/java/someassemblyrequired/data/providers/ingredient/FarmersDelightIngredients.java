@@ -1,5 +1,7 @@
 package someassemblyrequired.data.providers.ingredient;
 
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -54,12 +56,13 @@ public class FarmersDelightIngredients {
             ModItems.ROAST_CHICKEN.get()
     );
 
+    @SuppressWarnings("unchecked")
     public static void addIngredients(Ingredients ingredients) {
-        ingredients.builder(ModItems.TOMATO_SAUCE.get()).setBowled().setSpread(0xbe331f).setMoistSound();
-        ingredients.builder(ModItems.MILK_BOTTLE.get()).setFullName(Items.MILK_BUCKET).setBottled().setSpread(0xEEFDFF).setMoistSound();
-        ingredients.builder(ModItems.HOT_COCOA.get()).setBottled().setSpread(0x7b4835).setMoistSound();
-        ingredients.builder(ModItems.APPLE_CIDER.get()).setBottled().setSpread(0xbd783d).setMoistSound();
-        ingredients.builder(ModItems.MELON_JUICE.get()).setBottled().setSpread(0xc73225).setMoistSound();
+        ingredients.builder(ModItems.TOMATO_SAUCE.get()).setSpread(0xbe331f).setMoistSound();
+        ingredients.builder(ModItems.MILK_BOTTLE.get()).setFullName(BuiltInRegistries.ITEM.wrapAsHolder(Items.MILK_BUCKET)).setSpread(0xEEFDFF).setMoistSound();
+        ingredients.builder(ModItems.HOT_COCOA.get()).setSpread(0x7b4835).setMoistSound();
+        ingredients.builder(ModItems.APPLE_CIDER.get()).setSpread(0xbd783d, 0.8).setMoistSound();
+        ingredients.builder(ModItems.MELON_JUICE.get()).setSpread(0xc73225, 0.8).setMoistSound();
 
         ingredients.builder(ModItems.MINCED_BEEF.get()).setSlimySound().setRenderAsItem(false).setHeight(2);
         ingredients.builder(ModItems.CHICKEN_CUTS.get()).setCustomDisplayName().setWetSound();
@@ -71,38 +74,38 @@ public class FarmersDelightIngredients {
         ingredients.builder(ModItems.CABBAGE_LEAF.get()).setCustomDisplayName().setLeafySound();
         ingredients.builder(ModItems.FRIED_EGG.get()).setCustomDisplayName().setSlimySound();
         ingredients.builder(ModItems.BEEF_PATTY.get()).setCustomDisplayName().setRenderAsItem(false).setHeight(2);
-        ingredients.builder(ModItems.COOKED_CHICKEN_CUTS.get()).setDisplayName(ModItems.CHICKEN_CUTS.get());
-        ingredients.builder(ModItems.COOKED_BACON.get()).setDisplayName(ModItems.BACON.get());
-        ingredients.builder(ModItems.COOKED_COD_SLICE.get()).setDisplayName(ModItems.COD_SLICE.get());
-        ingredients.builder(ModItems.COOKED_SALMON_SLICE.get()).setDisplayName(ModItems.SALMON_SLICE.get());
-        ingredients.builder(ModItems.COOKED_MUTTON_CHOPS.get()).setDisplayName(ModItems.MUTTON_CHOPS.get());
+        ingredients.builder(ModItems.COOKED_CHICKEN_CUTS.get()).setDisplayName((Holder<Item>) ModItems.CHICKEN_CUTS);
+        ingredients.builder(ModItems.COOKED_BACON.get()).setDisplayName((Holder<Item>) ModItems.BACON);
+        ingredients.builder(ModItems.COOKED_COD_SLICE.get()).setDisplayName((Holder<Item>) ModItems.COD_SLICE);
+        ingredients.builder(ModItems.COOKED_SALMON_SLICE.get()).setDisplayName((Holder<Item>) ModItems.SALMON_SLICE);
+        ingredients.builder(ModItems.COOKED_MUTTON_CHOPS.get()).setDisplayName((Holder<Item>) ModItems.MUTTON_CHOPS);
 
-        ingredients.builder(ModItems.COOKED_RICE.get()).setBowled().setCustomDisplayName();
+        ingredients.builder(ModItems.COOKED_RICE.get()).setCustomDisplayName();
 
-        ingredients.builder(ModItems.MIXED_SALAD.get()).setBowled().setLeafySound();
-        ingredients.builder(ModItems.FRUIT_SALAD.get()).setBowled().setWetSound();
-        ingredients.builder(ModItems.NETHER_SALAD.get()).setBowled();
-        ingredients.builder(ModItems.BEEF_STEW.get()).setBowled().setMoistSound();
-        ingredients.builder(ModItems.CHICKEN_SOUP.get()).setBowled().setMoistSound();
-        ingredients.builder(ModItems.VEGETABLE_SOUP.get()).setBowled().setMoistSound();
-        ingredients.builder(ModItems.FISH_STEW.get()).setBowled().setMoistSound();
-        ingredients.builder(ModItems.FRIED_RICE.get()).setBowled();
-        ingredients.builder(ModItems.PUMPKIN_SOUP.get()).setBowled().setMoistSound();
-        ingredients.builder(ModItems.BAKED_COD_STEW.get()).setBowled().setSlimySound();
-        ingredients.builder(ModItems.NOODLE_SOUP.get()).setBowled().setSlimySound();
-        ingredients.builder(ModItems.BACON_AND_EGGS.get()).setBowled().setWetSound();
-        ingredients.builder(ModItems.PASTA_WITH_MEATBALLS.get()).setBowled().setSlimySound();
-        ingredients.builder(ModItems.PASTA_WITH_MUTTON_CHOP.get()).setBowled().setSlimySound();
-        ingredients.builder(ModItems.ROASTED_MUTTON_CHOPS.get()).setBowled().setWetSound();
-        ingredients.builder(ModItems.VEGETABLE_NOODLES.get()).setBowled().setSlimySound();
-        ingredients.builder(ModItems.STEAK_AND_POTATOES.get()).setBowled().setWetSound();
-        ingredients.builder(ModItems.RATATOUILLE.get()).setBowled().setWetSound();
-        ingredients.builder(ModItems.SQUID_INK_PASTA.get()).setBowled().setSlimySound();
-        ingredients.builder(ModItems.GRILLED_SALMON.get()).setBowled().setWetSound();
-        ingredients.builder(ModItems.ROAST_CHICKEN.get()).setBowled().setWetSound().setFullName(getTranslationKey(ModItems.ROAST_CHICKEN_BLOCK.get()));
-        ingredients.builder(ModItems.STUFFED_PUMPKIN.get()).setBowled().setSlimySound().setFullName(getTranslationKey(ModItems.STUFFED_PUMPKIN_BLOCK.get()));
-        ingredients.builder(ModItems.HONEY_GLAZED_HAM.get()).setBowled().setSlimySound().setFullName(getTranslationKey(ModItems.HONEY_GLAZED_HAM_BLOCK.get()));
-        ingredients.builder(ModItems.SHEPHERDS_PIE.get()).setBowled().setMoistSound().setFullName(getTranslationKey(ModItems.SHEPHERDS_PIE_BLOCK.get()));
+        ingredients.builder(ModItems.MIXED_SALAD.get()).setLeafySound();
+        ingredients.builder(ModItems.FRUIT_SALAD.get()).setWetSound();
+        ingredients.builder(ModItems.NETHER_SALAD.get());
+        ingredients.builder(ModItems.BEEF_STEW.get()).setMoistSound();
+        ingredients.builder(ModItems.CHICKEN_SOUP.get()).setMoistSound();
+        ingredients.builder(ModItems.VEGETABLE_SOUP.get()).setMoistSound();
+        ingredients.builder(ModItems.FISH_STEW.get()).setMoistSound();
+        ingredients.builder(ModItems.FRIED_RICE.get());
+        ingredients.builder(ModItems.PUMPKIN_SOUP.get()).setMoistSound();
+        ingredients.builder(ModItems.BAKED_COD_STEW.get()).setSlimySound();
+        ingredients.builder(ModItems.NOODLE_SOUP.get()).setSlimySound();
+        ingredients.builder(ModItems.BACON_AND_EGGS.get()).setWetSound();
+        ingredients.builder(ModItems.PASTA_WITH_MEATBALLS.get()).setSlimySound();
+        ingredients.builder(ModItems.PASTA_WITH_MUTTON_CHOP.get()).setSlimySound();
+        ingredients.builder(ModItems.ROASTED_MUTTON_CHOPS.get()).setWetSound();
+        ingredients.builder(ModItems.VEGETABLE_NOODLES.get()).setSlimySound();
+        ingredients.builder(ModItems.STEAK_AND_POTATOES.get()).setWetSound();
+        ingredients.builder(ModItems.RATATOUILLE.get()).setWetSound();
+        ingredients.builder(ModItems.SQUID_INK_PASTA.get()).setSlimySound();
+        ingredients.builder(ModItems.GRILLED_SALMON.get()).setWetSound();
+        ingredients.builder(ModItems.ROAST_CHICKEN.get()).setWetSound().setFullName(getTranslationKey(ModItems.ROAST_CHICKEN_BLOCK.get()));
+        ingredients.builder(ModItems.STUFFED_PUMPKIN.get()).setSlimySound().setFullName(getTranslationKey(ModItems.STUFFED_PUMPKIN_BLOCK.get()));
+        ingredients.builder(ModItems.HONEY_GLAZED_HAM.get()).setSlimySound().setFullName(getTranslationKey(ModItems.HONEY_GLAZED_HAM_BLOCK.get()));
+        ingredients.builder(ModItems.SHEPHERDS_PIE.get()).setMoistSound().setFullName(getTranslationKey(ModItems.SHEPHERDS_PIE_BLOCK.get()));
     }
 
     private static Component getTranslationKey(Item item) {

@@ -1,11 +1,12 @@
 {
-  "displayItem": {
-    "item": "someassemblyrequired:spread",
-    "nbt": {
-      "CustomModelData": 8
-    }
+  "display_item": {
+    "components": {
+      "minecraft:custom_model_data": 8
+    },
+    "count": 1,
+    "id": "someassemblyrequired:spread"
   },
-  "displayName": {
+  "display_name": {
     "translate": "someassemblyrequired.ingredient.chopped_beetroot"
   },
   "item": "someassemblyrequired:chopped_beetroot"

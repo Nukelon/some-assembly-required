@@ -1,19 +1,17 @@
 {
-  "conditions": [
+  "neoforge:conditions": [
     {
-      "type": "forge:mod_loaded",
+      "type": "neoforge:mod_loaded",
       "modid": "farmersdelight"
     }
   ],
-  "container": {
-    "item": "minecraft:bowl"
-  },
-  "displayItem": {
-    "item": "someassemblyrequired:spread",
-    "nbt": {
-      "CustomModelData": 45
-    }
+  "display_item": {
+    "components": {
+      "minecraft:custom_model_data": 45
+    },
+    "count": 1,
+    "id": "someassemblyrequired:spread"
   },
   "item": "farmersdelight:grilled_salmon",
-  "soundEvent": "someassemblyrequired:block.sandwich.add_item.wet"
+  "sound": "someassemblyrequired:block.sandwich.add_item.wet"
 }

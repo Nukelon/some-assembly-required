@@ -1,11 +1,12 @@
 {
-  "displayItem": {
-    "item": "someassemblyrequired:spread",
-    "nbt": {
-      "CustomModelData": 1
-    }
+  "display_item": {
+    "components": {
+      "minecraft:custom_model_data": 1
+    },
+    "count": 1,
+    "id": "someassemblyrequired:spread"
   },
   "height": 6,
   "item": "someassemblyrequired:burger_bun",
-  "renderAsItem": false
+  "render_as_item": false
 }

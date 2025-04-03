@@ -1,16 +1,14 @@
 {
-  "container": {
-    "item": "minecraft:glass_bottle"
+  "display_item": {
+    "components": {
+      "someassemblyrequired:spread_color": -856643314
+    },
+    "count": 1,
+    "id": "someassemblyrequired:spread"
   },
-  "displayItem": {
-    "item": "someassemblyrequired:spread",
-    "nbt": {
-      "Color": 15771918
-    }
-  },
-  "fullName": {
+  "full_name": {
     "translate": "someassemblyrequired.ingredient.honey_bottle"
   },
   "item": "minecraft:honey_bottle",
-  "soundEvent": "someassemblyrequired:block.sandwich.add_item.moist"
+  "sound": "someassemblyrequired:block.sandwich.add_item.moist"
 }

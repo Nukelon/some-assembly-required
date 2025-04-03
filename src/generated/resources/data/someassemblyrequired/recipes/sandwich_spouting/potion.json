@@ -1,9 +1,0 @@
-{
-  "type": "someassemblyrequired:sandwich_potion_spouting",
-  "conditions": [
-    {
-      "type": "forge:mod_loaded",
-      "modid": "create"
-    }
-  ]
-}

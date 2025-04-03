@@ -1,7 +1,10 @@
 package someassemblyrequired.data.providers;
 
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -16,8 +19,8 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
-import net.minecraftforge.common.data.GlobalLootModifierProvider;
-import net.minecraftforge.common.loot.LootTableIdCondition;
+import net.neoforged.neoforge.common.data.GlobalLootModifierProvider;
+import net.neoforged.neoforge.common.loot.LootTableIdCondition;
 import someassemblyrequired.SomeAssemblyRequired;
 import someassemblyrequired.loot.RollLootTableModifier;
 import someassemblyrequired.loot.SandwichLootEnabledCondition;
@@ -25,13 +28,14 @@ import someassemblyrequired.registry.ModItems;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class LootModifiers extends GlobalLootModifierProvider {
 
     protected final List<Builder> lootBuilders = new ArrayList<>();
 
-    public LootModifiers(PackOutput packOutput) {
-        super(packOutput, SomeAssemblyRequired.MOD_ID);
+    public LootModifiers(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> registries) {
+        super(packOutput, registries, SomeAssemblyRequired.MOD_ID);
     }
 
     private void addLoot() {
@@ -57,17 +61,17 @@ public class LootModifiers extends GlobalLootModifierProvider {
         );
     }
 
-    private void addSandwich(ResourceLocation lootTable, Item item) {
+    private void addSandwich(ResourceKey<LootTable> lootTable, Item item) {
         builder(lootTable, 0.05).getLootPool().add(LootTables.sandwich(item));
     }
 
-    private void addSandwich(ResourceLocation lootTable, Potion potion) {
+    private void addSandwich(ResourceKey<LootTable> lootTable, Holder<Potion> potion) {
         builder(lootTable, 0.05).getLootPool().add(LootTables.sandwich(potion));
     }
 
-    protected Builder builder(ResourceLocation lootTable, double chance) {
-        Builder builder = new Builder(lootTable.getPath());
-        builder.lootModifierCondition(LootTableIdCondition.builder(lootTable).build());
+    protected Builder builder(ResourceKey<LootTable> lootTable, double chance) {
+        Builder builder = new Builder(lootTable.location().getPath());
+        builder.lootModifierCondition(LootTableIdCondition.builder(lootTable.location()).build());
         builder.lootModifierCondition(SandwichLootEnabledCondition.sandwichLootEnabled());
         if (chance != 1) {
             builder.lootPoolCondition(LootItemRandomChanceCondition.randomChance((float) chance));
@@ -85,7 +89,7 @@ public class LootModifiers extends GlobalLootModifierProvider {
             add(lootBuilder.getName(), lootBuilder.build());
         }
 
-        for (ResourceLocation lootTable : List.of(
+        for (ResourceKey<LootTable> lootTable : List.of(
                 BuiltInLootTables.VILLAGE_DESERT_HOUSE,
                 BuiltInLootTables.VILLAGE_SAVANNA_HOUSE,
                 BuiltInLootTables.VILLAGE_PLAINS_HOUSE,
@@ -94,8 +98,8 @@ public class LootModifiers extends GlobalLootModifierProvider {
         )) {
             List<LootItemCondition> conditions = new ArrayList<>();
             conditions.add(SandwichLootEnabledCondition.sandwichLootEnabled());
-            conditions.add(LootTableIdCondition.builder(lootTable).build());
-            add("inject/" + lootTable.getPath(), new RollLootTableModifier(conditions.toArray(new LootItemCondition[]{}), LootTables.VILLAGE_SANDWICH));
+            conditions.add(LootTableIdCondition.builder(lootTable.location()).build());
+            add("inject/" + lootTable.location().getPath(), new RollLootTableModifier(conditions.toArray(new LootItemCondition[]{}), LootTables.VILLAGE_SANDWICH));
         }
     }
 
@@ -114,7 +118,7 @@ public class LootModifiers extends GlobalLootModifierProvider {
         }
 
         private RollLootTableModifier build() {
-            return new RollLootTableModifier(conditions.toArray(new LootItemCondition[]{}), SomeAssemblyRequired.id(getName()));
+            return new RollLootTableModifier(conditions.toArray(new LootItemCondition[]{}), SomeAssemblyRequired.key(Registries.LOOT_TABLE, getName()));
         }
 
         protected LootTable.Builder createLootTable() {

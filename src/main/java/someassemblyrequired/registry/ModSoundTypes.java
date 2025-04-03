@@ -2,10 +2,10 @@ package someassemblyrequired.registry;
 
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.block.SoundType;
-import net.minecraftforge.common.util.ForgeSoundType;
+import net.neoforged.neoforge.common.util.DeferredSoundType;
 
 public class ModSoundTypes {
 
-    public static final SoundType SANDWICH_SOUND_TYPE = new ForgeSoundType(1.0F, 1.5F, () -> SoundEvents.WOOL_BREAK, () -> SoundEvents.WOOL_STEP, () -> SoundEvents.WOOL_PLACE, () -> SoundEvents.WOOL_HIT, () -> SoundEvents.WOOL_FALL);
+    public static final SoundType SANDWICH_SOUND_TYPE = new DeferredSoundType(1.0F, 1.5F, () -> SoundEvents.WOOL_BREAK, () -> SoundEvents.WOOL_STEP, () -> SoundEvents.WOOL_PLACE, () -> SoundEvents.WOOL_HIT, () -> SoundEvents.WOOL_FALL);
 
 }

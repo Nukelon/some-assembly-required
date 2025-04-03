@@ -1,169 +1,147 @@
 package someassemblyrequired.block;
 
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
 import someassemblyrequired.SomeAssemblyRequired;
 import someassemblyrequired.config.ModConfig;
 import someassemblyrequired.ingredient.Ingredients;
-import someassemblyrequired.item.sandwich.SandwichItemHandler;
+import someassemblyrequired.item.sandwich.SandwichContents;
 import someassemblyrequired.registry.ModBlockEntityTypes;
 import someassemblyrequired.registry.ModBlocks;
+import someassemblyrequired.registry.ModDataComponents;
 import someassemblyrequired.registry.ModItems;
-import someassemblyrequired.registry.ModSoundEvents;
 
-import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SandwichBlockEntity extends BlockEntity {
 
-    private final SandwichItemHandler sandwich = new ItemHandler();
-    private final LazyOptional<SandwichItemHandler> itemHandler = LazyOptional.of(() -> sandwich);
+    private SandwichContents contents = SandwichContents.EMPTY;
 
     public SandwichBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntityTypes.SANDWICH.get(), pos, state);
     }
 
-    public InteractionResult interact(Player player, InteractionHand hand) {
-        if (player.getItemInHand(InteractionHand.OFF_HAND).isEmpty() && player.getItemInHand(InteractionHand.MAIN_HAND).isEmpty()) {
-            removeItem(player);
-            return InteractionResult.SUCCESS;
-        }
-        
-        return addItem(player, hand);
+    public SandwichContents getContents() {
+        return contents;
     }
 
-    private void removeItem(Player player) {
+    private void setContents(SandwichContents contents) {
+        this.contents = contents;
+        onSandwichUpdated();
+    }
+
+    public InteractionResult useWithoutItem(Player player) {
         if (level == null) {
-            return;
-        }
-        ItemStack stack = sandwich.top();
-        Ingredients.playRemoveSound(stack, level, player, getBlockPos());
-        if (level.isClientSide()) {
-            return;
+            return InteractionResult.SUCCESS_NO_ITEM_USED;
         }
 
-        sandwich.pop();
+        ItemStack stack = contents.items().getLast();
+        Ingredients.playRemoveSound(stack, level, player, getBlockPos());
+
+        setContents(getContents().dropLast());
+
         BlockPos pos = getBlockPos();
-        if (!Ingredients.hasContainer(stack) && !player.isCreative()) {
-            double y = pos.getY() + Math.max(0.2, sandwich.getTotalHeight() * (1 / 32D) - 0.2);
+        if (Ingredients.getFood(stack, player).usingConvertsTo().isEmpty() && !player.isCreative()) {
+            double y = pos.getY() + Math.max(0.2, contents.getTotalHeight() * (1 / 32D) - 0.2);
             ItemEntity item = new ItemEntity(level, pos.getX() + 0.5, y, pos.getZ() + 0.5, stack);
             item.setPickUpDelay(5);
             level.addFreshEntity(item);
         }
 
-        updateHeight();
+        onSandwichUpdated();
+        return InteractionResult.SUCCESS_NO_ITEM_USED;
     }
 
-    private InteractionResult addItem(Player player, InteractionHand hand) {
-        if (player.getItemInHand(hand).isEmpty()) {
-            return InteractionResult.PASS;
+    public ItemInteractionResult useItemOn(ItemStack useItem, Player player, InteractionHand hand) {
+        if (useItem.isEmpty()) {
+            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        } else if (!Ingredients.canAddToSandwich(useItem)) {
+            return ItemInteractionResult.CONSUME;
         }
-        ItemStack itemToAdd = player.getItemInHand(hand).copy();
-        itemToAdd.setCount(1);
-        if (itemToAdd.is(ModItems.SANDWICH.get())) {
-            addSandwich(player, hand, itemToAdd);
-            updateHeight();
-            return InteractionResult.SUCCESS;
-        } else if (!Ingredients.canAddToSandwich(itemToAdd)) {
-            return InteractionResult.PASS;
-        } else if (sandwich.getTotalHeight() + Ingredients.getHeight(itemToAdd) > ModConfig.server.maximumSandwichHeight.get()) {
-            player.displayClientMessage(SomeAssemblyRequired.translate("message.full_sandwich"), true);
-            return InteractionResult.SUCCESS;
+
+        List<ItemStack> itemsToAdd = new ArrayList<>();
+        if (useItem.is(ModItems.SANDWICH)) {
+            itemsToAdd.addAll(SandwichContents.get(useItem).items());
         } else {
-            addSingleItem(player, hand, itemToAdd);
-            updateHeight();
-            return InteractionResult.SUCCESS;
-        }
-    }
-
-    private void addSingleItem(Player player, InteractionHand hand, ItemStack stack) {
-        if (level == null) {
-            return;
-        }
-        Ingredients.playApplySound(stack, level, player, getBlockPos());
-        if (level.isClientSide()) {
-            return;
+            itemsToAdd.add(useItem);
         }
 
-        sandwich.add(stack);
-        shrinkHeldItem(player, hand);
-    }
-
-    private void addSandwich(Player player, InteractionHand hand, ItemStack stack) {
-        if (level == null || level.isClientSide()) {
-            return;
+        int totalHeight = getContents().getTotalHeight();
+        for (ItemStack item : itemsToAdd) {
+            totalHeight += Ingredients.getHeight(item);
         }
-        SandwichItemHandler.get(stack).ifPresent(handler -> {
-            if (!sandwich.canAdd(handler)) {
-                player.displayClientMessage(SomeAssemblyRequired.translate("message.full_sandwich"), true);
-            } else {
-                sandwich.add(handler);
-                shrinkHeldItem(player, hand);
-                level.playSound(null, getBlockPos(), ModSoundEvents.ADD_ITEM.get(), SoundSource.BLOCKS, 1, 1);
-            }
-        });
+
+        if (totalHeight > ModConfig.server.maximumSandwichHeight.get()) {
+            player.displayClientMessage(SomeAssemblyRequired.translate("message.full_sandwich"), true);
+        } else {
+            setContents(getContents().concat(itemsToAdd));
+            Ingredients.playApplySound(useItem, getLevel(), player, getBlockPos());
+            shrinkHeldItem(player, hand);
+        }
+        return ItemInteractionResult.SUCCESS;
     }
 
     private static void shrinkHeldItem(Player player, InteractionHand hand) {
         if (!player.isCreative()) {
-            ItemStack item = player.getItemInHand(hand);
-            ItemStack container = Ingredients.getContainer(item).copy();
-            item.shrink(1);
+            ItemStack heldItem = player.getItemInHand(hand);
+            ItemStack container = Ingredients.getFood(heldItem, player).usingConvertsTo().orElse(ItemStack.EMPTY);
+            heldItem.shrink(1);
             if (!container.isEmpty()) {
-                if (player.getItemInHand(hand).isEmpty()) {
-                    player.setItemInHand(hand, container);
-                } else if (!player.getInventory().add(container)) {
-                    player.drop(container, false);
+                ItemStack stack = container.copy();
+                if (heldItem.isEmpty()) {
+                    player.setItemInHand(hand, stack);
+                } else if (!player.getInventory().add(stack)) {
+                    player.drop(stack, false);
                 }
             }
         }
     }
 
-    public void updateHeight() {
-        if (level == null) {
-            return;
-        }
-        if (sandwich.isEmpty()) {
-            level.removeBlock(getBlockPos(), false);
-        } else {
-            SandwichItemHandler.get(level.getBlockEntity(getBlockPos()))
-                    .ifPresent(sandwich -> {
-                        BlockState state = level.getBlockState(getBlockPos());
-                        if (state.is(ModBlocks.SANDWICH.get())) {
-                            BlockState newState = state.setValue(SandwichBlock.SIZE, SandwichBlock.getSizeFromSandwich(sandwich));
-                            if (!newState.getValue(SandwichBlock.SIZE).equals(state.getValue(SandwichBlock.SIZE))) {
-                                level.setBlock(getBlockPos(), state.setValue(SandwichBlock.SIZE, SandwichBlock.getSizeFromSandwich(sandwich)), Block.UPDATE_ALL);
-                            }
-                        }
-                    });
+    public void onSandwichUpdated() {
+        if (level != null) {
+            if (contents.items().isEmpty()) {
+                level.removeBlock(getBlockPos(), false);
+            } else {
+                BlockState state = level.getBlockState(getBlockPos());
+                if (state.is(ModBlocks.SANDWICH.get())) {
+                    BlockState newState = state.setValue(SandwichBlock.SIZE, SandwichBlock.getSizeFromSandwich(contents));
+                    level.setBlockAndUpdate(getBlockPos(), newState);
+                }
+                setChanged();
+            }
         }
     }
 
     @Override
-    public CompoundTag getUpdateTag() {
-        CompoundTag tag = super.getUpdateTag();
-        saveAdditional(tag);
-        return tag;
+    protected void applyImplicitComponents(DataComponentInput componentInput) {
+        super.applyImplicitComponents(componentInput);
+        contents = componentInput.getOrDefault(ModDataComponents.SANDWICH_CONTENTS.get(), SandwichContents.EMPTY);
     }
 
     @Override
-    public void handleUpdateTag(CompoundTag tag) {
-        load(tag);
+    protected void collectImplicitComponents(DataComponentMap.Builder components) {
+        super.collectImplicitComponents(components);
+        components.set(ModDataComponents.SANDWICH_CONTENTS.get(), contents);
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public void removeComponentsFromTag(CompoundTag tag) {
+        tag.remove("Sandwich");
     }
 
     @Override
@@ -172,33 +150,34 @@ public class SandwichBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
-        sandwich.deserializeNBT(tag.getList("Sandwich", Tag.TAG_COMPOUND));
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        return saveCustomOnly(registries);
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        tag.put("Sandwich", sandwich.serializeNBT());
+    public void handleUpdateTag(CompoundTag tag, HolderLookup.Provider registries) {
+        loadAdditional(tag, registries);
     }
 
     @Override
-    public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction side) {
-        if (capability == ForgeCapabilities.ITEM_HANDLER) {
-            return itemHandler.cast();
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        if (tag.contains("Sandwich")) {
+            SandwichContents.CODEC
+                    .decode(registries.createSerializationContext(NbtOps.INSTANCE), tag.get("Sandwich"))
+                    .ifError(error -> SomeAssemblyRequired.LOGGER.error(error.message()))
+                    .map(Pair::getFirst)
+                    .result().ifPresent(sandwich -> contents = sandwich);
         }
-        return super.getCapability(capability, side);
     }
 
-    private class ItemHandler extends SandwichItemHandler {
-
-        @Override
-        protected void onContentsChanged() {
-            super.onContentsChanged();
-            if (getLevel() instanceof ServerLevel level) {
-                level.getChunkSource().blockChanged(getBlockPos());
-                setChanged();
-            }
-        }
+    @Override
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        tag.put("Sandwich",
+                SandwichContents.CODEC
+                        .encodeStart(registries.createSerializationContext(NbtOps.INSTANCE), contents)
+                        .getOrThrow()
+        );
     }
 }

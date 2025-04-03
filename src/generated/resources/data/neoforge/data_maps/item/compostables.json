@@ -1,0 +1,34 @@
+{
+  "values": {
+    "someassemblyrequired:apple_slices": {
+      "chance": 0.3
+    },
+    "someassemblyrequired:bread_slice": {
+      "chance": 0.3
+    },
+    "someassemblyrequired:burger_bun": {
+      "chance": 0.5
+    },
+    "someassemblyrequired:burger_bun_bottom": {
+      "chance": 0.3
+    },
+    "someassemblyrequired:burger_bun_top": {
+      "chance": 0.3
+    },
+    "someassemblyrequired:chopped_beetroot": {
+      "chance": 0.3
+    },
+    "someassemblyrequired:chopped_carrot": {
+      "chance": 0.3
+    },
+    "someassemblyrequired:sliced_onion": {
+      "chance": 0.3
+    },
+    "someassemblyrequired:toasted_bread_slice": {
+      "chance": 0.3
+    },
+    "someassemblyrequired:tomato_slices": {
+      "chance": 0.3
+    }
+  }
+}

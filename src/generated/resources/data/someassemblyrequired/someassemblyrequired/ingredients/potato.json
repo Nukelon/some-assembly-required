@@ -1,11 +1,12 @@
 {
-  "displayItem": {
-    "item": "someassemblyrequired:spread",
-    "nbt": {
-      "CustomModelData": 51
-    }
+  "display_item": {
+    "components": {
+      "minecraft:custom_model_data": 51
+    },
+    "count": 1,
+    "id": "someassemblyrequired:spread"
   },
   "height": 5,
   "item": "minecraft:potato",
-  "renderAsItem": false
+  "render_as_item": false
 }

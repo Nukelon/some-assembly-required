@@ -1,41 +1,47 @@
 package someassemblyrequired.data.providers;
 
 import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementHolder;
+import net.minecraft.advancements.AdvancementType;
 import net.minecraft.advancements.DisplayInfo;
-import net.minecraft.advancements.FrameType;
-import net.minecraft.advancements.critereon.ContextAwarePredicate;
-import net.minecraft.advancements.critereon.InventoryChangeTrigger;
-import net.minecraft.advancements.critereon.ItemPredicate;
-import net.minecraft.advancements.critereon.PlayerTrigger;
+import net.minecraft.advancements.critereon.*;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.HolderSet;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potions;
-import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.common.data.ForgeAdvancementProvider;
+import net.neoforged.neoforge.common.data.AdvancementProvider;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.registries.holdersets.NotHolderSet;
 import someassemblyrequired.SomeAssemblyRequired;
 import someassemblyrequired.item.sandwich.SandwichItem;
+import someassemblyrequired.predicate.DoubleDeckerPredicate;
+import someassemblyrequired.predicate.SandwichContentsPredicate;
 import someassemblyrequired.registry.ModAdvancementTriggers;
+import someassemblyrequired.registry.ModItemSubPredicateTypes;
 import someassemblyrequired.registry.ModItems;
 import someassemblyrequired.registry.ModTags;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
-public class Advancements extends ForgeAdvancementProvider {
+@SuppressWarnings("removal")
+public class Advancements extends AdvancementProvider {
 
     public Advancements(PackOutput output, CompletableFuture<HolderLookup.Provider> registries, ExistingFileHelper existingFileHelper) {
         super(output, registries, existingFileHelper, List.of(Advancements::generate));
     }
-    private static void generate(HolderLookup.Provider registries, Consumer<Advancement> saver, ExistingFileHelper existingFileHelper) {
-        ResourceLocation plantSeed = new ResourceLocation("minecraft:husbandry/plant_seed");
+    private static void generate(HolderLookup.Provider registries, Consumer<AdvancementHolder> saver, ExistingFileHelper existingFileHelper) {
+        ResourceLocation plantSeed = ResourceLocation.parse("minecraft:husbandry/plant_seed");
 
         ResourceLocation obtainBreadSliceId = SomeAssemblyRequired.id("obtain_bread_slice");
-        Advancement obtainBreadSlice = advancement(obtainBreadSliceId, new ItemStack(ModItems.BREAD_SLICE.get()), false)
+        AdvancementHolder obtainBreadSlice = advancement(obtainBreadSliceId, new ItemStack(ModItems.BREAD_SLICE.get()), false)
                 .parent(plantSeed)
                 .addCriterion(obtainBreadSliceId.getPath(), InventoryChangeTrigger.TriggerInstance.hasItems(
                         ItemPredicate.Builder.item().of(ModTags.BREAD_SLICES).build()
@@ -58,7 +64,28 @@ public class Advancements extends ForgeAdvancementProvider {
         ResourceLocation consumePotionSandwichId = SomeAssemblyRequired.id("consume_potion_sandwich");
         advancement(consumePotionSandwichId, SandwichItem.makeSandwich(Potions.NIGHT_VISION), true)
                 .parent(obtainSandwich)
-                .addCriterion(consumePotionSandwichId.getPath(), ModAdvancementTriggers.CONSUME_POTION_SANDWICH.instance())
+                .addCriterion(consumePotionSandwichId.getPath(), ConsumeItemTrigger.TriggerInstance.usedItem(
+                        ItemPredicate.Builder.item().of(ModItems.SANDWICH.get())
+                                .withSubPredicate(ModItemSubPredicateTypes.SANDWICH_CONTENTS.get(),
+                                        new SandwichContentsPredicate(Optional.of(
+                                                new CollectionPredicate<>(
+                                                        Optional.of(CollectionContentsPredicate.of(
+                                                                ItemPredicate.Builder.item()
+                                                                        .of(Items.POTION)
+                                                                        .withSubPredicate(ItemSubPredicates.POTIONS, new ItemPotionsPredicate(
+                                                                                new NotHolderSet<>(
+                                                                                        BuiltInRegistries.POTION.asLookup(),
+                                                                                        HolderSet.direct(Potions.WATER)
+                                                                                )
+                                                                        ))
+                                                                        .build()
+                                                        )),
+                                                        Optional.empty(),
+                                                        Optional.empty()
+                                                )
+                                        ))
+                                )
+                ))
                 .save(saver, consumePotionSandwichId, existingFileHelper);
 
         ResourceLocation consumeDoubleDeckerSandwichId = SomeAssemblyRequired.id("consume_double_decker_sandwich");
@@ -70,15 +97,21 @@ public class Advancements extends ForgeAdvancementProvider {
                 ModItems.CHOPPED_CARROT.get()
         ), true)
                 .parent(obtainSandwich)
-                .addCriterion(consumeDoubleDeckerSandwichId.getPath(), ModAdvancementTriggers.CONSUME_DOUBLE_DECKER_SANDWICH.instance())
+                .addCriterion(consumeDoubleDeckerSandwichId.getPath(), ConsumeItemTrigger.TriggerInstance.usedItem(
+                        ItemPredicate.Builder.item()
+                                .withSubPredicate(
+                                        ModItemSubPredicateTypes.IS_DOUBLE_DECKER.get(),
+                                        DoubleDeckerPredicate.INSTANCE
+                                )
+                ))
                 .save(saver, consumeDoubleDeckerSandwichId, existingFileHelper);
 
         ResourceLocation consume100SandwichesId = SomeAssemblyRequired.id("consume_1000_sandwiches");
         advancement(consume100SandwichesId, SandwichItem.makeSandwich(
                 Items.GOLD_BLOCK
-        ), FrameType.CHALLENGE, true)
+        ), AdvancementType.CHALLENGE, true)
                 .parent(obtainSandwich)
-                .addCriterion(consume100SandwichesId.getPath(), new PlayerTrigger.TriggerInstance(ModAdvancementTriggers.CONSUME_1000_SANDWICHES.getId(), ContextAwarePredicate.ANY))
+                .addCriterion(consume100SandwichesId.getPath(), ModAdvancementTriggers.CONSUME_1000_SANDWICHES.get().createCriterion(new PlayerTrigger.TriggerInstance(Optional.empty())))
                 .save(saver, consume100SandwichesId, existingFileHelper);
 
         ResourceLocation consume1000BurgersId = SomeAssemblyRequired.id("consume_1000_burgers");
@@ -86,13 +119,13 @@ public class Advancements extends ForgeAdvancementProvider {
                 new ItemStack(ModItems.BURGER_BUN_BOTTOM.get()),
                 new ItemStack(Items.GOLD_BLOCK),
                 new ItemStack(ModItems.BURGER_BUN_TOP.get())
-        ), FrameType.CHALLENGE, true)
+        ), AdvancementType.CHALLENGE, true)
                 .parent(obtainSandwich)
-                .addCriterion(consume1000BurgersId.getPath(), new PlayerTrigger.TriggerInstance(ModAdvancementTriggers.CONSUME_1000_BURGERS.getId(), ContextAwarePredicate.ANY))
+                .addCriterion(consume1000BurgersId.getPath(), ModAdvancementTriggers.CONSUME_1000_BURGERS.get().createCriterion(new PlayerTrigger.TriggerInstance(Optional.empty())))
                 .save(saver, consume1000BurgersId, existingFileHelper);
     }
 
-    private static Advancement.Builder advancement(ResourceLocation id, ItemStack icon, FrameType frameType, boolean hidden) {
+    private static Advancement.Builder advancement(ResourceLocation id, ItemStack icon, AdvancementType frameType, boolean hidden) {
         return Advancement.Builder.advancement().display(display(id.getPath(), icon, frameType, hidden));
     }
 
@@ -101,15 +134,15 @@ public class Advancements extends ForgeAdvancementProvider {
     }
 
     private static DisplayInfo display(String title, ItemStack icon, boolean hidden) {
-        return display(title, icon, FrameType.TASK, hidden);
+        return display(title, icon, AdvancementType.TASK, hidden);
     }
 
-    private static DisplayInfo display(String title, ItemStack icon, FrameType frameType, boolean hidden) {
+    private static DisplayInfo display(String title, ItemStack icon, AdvancementType frameType, boolean hidden) {
         return new DisplayInfo(
                 icon,
                 Component.translatable("%s.advancement.%s.title".formatted(SomeAssemblyRequired.MOD_ID, title)),
                 Component.translatable("%s.advancement.%s.description".formatted(SomeAssemblyRequired.MOD_ID, title)),
-                null,
+                Optional.empty(),
                 frameType,
                 true,
                 true,

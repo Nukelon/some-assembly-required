@@ -1,19 +1,17 @@
 {
-  "conditions": [
+  "neoforge:conditions": [
     {
-      "type": "forge:mod_loaded",
+      "type": "neoforge:mod_loaded",
       "modid": "farmersdelight"
     }
   ],
-  "container": {
-    "item": "minecraft:glass_bottle"
-  },
-  "displayItem": {
-    "item": "someassemblyrequired:spread",
-    "nbt": {
-      "Color": 8079413
-    }
+  "display_item": {
+    "components": {
+      "someassemblyrequired:spread_color": -8697803
+    },
+    "count": 1,
+    "id": "someassemblyrequired:spread"
   },
   "item": "farmersdelight:hot_cocoa",
-  "soundEvent": "someassemblyrequired:block.sandwich.add_item.moist"
+  "sound": "someassemblyrequired:block.sandwich.add_item.moist"
 }

@@ -1,22 +1,20 @@
 {
-  "conditions": [
+  "neoforge:conditions": [
     {
-      "type": "forge:mod_loaded",
+      "type": "neoforge:mod_loaded",
       "modid": "farmersdelight"
     }
   ],
-  "container": {
-    "item": "minecraft:glass_bottle"
+  "display_item": {
+    "components": {
+      "someassemblyrequired:spread_color": -1114625
+    },
+    "count": 1,
+    "id": "someassemblyrequired:spread"
   },
-  "displayItem": {
-    "item": "someassemblyrequired:spread",
-    "nbt": {
-      "Color": 15662591
-    }
-  },
-  "fullName": {
+  "full_name": {
     "translate": "someassemblyrequired.ingredient.milk_bucket"
   },
   "item": "farmersdelight:milk_bottle",
-  "soundEvent": "someassemblyrequired:block.sandwich.add_item.moist"
+  "sound": "someassemblyrequired:block.sandwich.add_item.moist"
 }

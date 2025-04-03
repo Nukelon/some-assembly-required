@@ -2,12 +2,12 @@
   "type": "someassemblyrequired:roll_loot_table",
   "conditions": [
     {
-      "condition": "forge:loot_table_id",
+      "condition": "neoforge:loot_table_id",
       "loot_table_id": "minecraft:chests/shipwreck_supply"
     },
     {
       "condition": "someassemblyrequired:sandwich_loot_enabled"
     }
   ],
-  "lootTable": "someassemblyrequired:inject/chests/shipwreck_supply"
+  "loot_table": "someassemblyrequired:inject/chests/shipwreck_supply"
 }

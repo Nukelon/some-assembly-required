@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import someassemblyrequired.item.sandwich.SandwichItemHandler;
+import someassemblyrequired.item.sandwich.SandwichContents;
 import someassemblyrequired.item.sandwich.SandwichItemRenderer;
 
 public class SandwichBlockRenderer implements BlockEntityRenderer<BlockEntity> {
@@ -28,8 +28,10 @@ public class SandwichBlockRenderer implements BlockEntityRenderer<BlockEntity> {
                 poseStack.mulPose(Axis.YP.rotationDegrees(180 - state.getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot()));
             }
         }
-
-        SandwichItemHandler.get(blockEntity).ifPresent(sandwich -> SandwichItemRenderer.renderSandwich(sandwich, poseStack, buffer, packedLight, overlay, blockEntity.getBlockPos().asLong()));
+        if (blockEntity instanceof SandwichBlockEntity sandwichBlockEntity) {
+            SandwichContents sandwich = sandwichBlockEntity.getContents();
+            SandwichItemRenderer.renderSandwich(sandwich, poseStack, buffer, packedLight, overlay, blockEntity.getBlockPos().asLong());
+        }
         poseStack.popPose();
     }
 }

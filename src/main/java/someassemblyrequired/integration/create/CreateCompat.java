@@ -1,7 +1,6 @@
 package someassemblyrequired.integration.create;
 
 import com.simibubi.create.AllFluids;
-import com.simibubi.create.AllItems;
 import com.simibubi.create.compat.jei.CreateJEI;
 import com.simibubi.create.content.fluids.potion.PotionFluidHandler;
 import com.simibubi.create.content.fluids.transfer.FillingRecipe;
@@ -9,25 +8,23 @@ import com.simibubi.create.content.kinetics.deployer.DeployerApplicationRecipe;
 import com.simibubi.create.content.kinetics.deployer.DeployerRecipeSearchEvent;
 import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipe;
 import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipeBuilder;
+import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.fluids.FluidStack;
 import someassemblyrequired.SomeAssemblyRequired;
-import someassemblyrequired.ingredient.Ingredients;
-import someassemblyrequired.integration.create.ingredient.BuildersTeaBehavior;
 import someassemblyrequired.integration.create.recipe.SandwichFluidSpoutingRecipe;
 import someassemblyrequired.integration.create.recipe.deployer.SandwichDeployingRecipe;
+import someassemblyrequired.item.sandwich.SandwichContents;
 import someassemblyrequired.item.sandwich.SandwichItem;
-import someassemblyrequired.item.sandwich.SandwichItemHandler;
+import someassemblyrequired.registry.ModDataComponents;
 import someassemblyrequired.registry.ModItems;
 import someassemblyrequired.registry.ModRecipeTypes;
 
@@ -38,15 +35,7 @@ import java.util.stream.Stream;
 public class CreateCompat {
 
     public static void setup() {
-        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-
-        modEventBus.addListener(CreateCompat::onCommonSetup);
-
-        MinecraftForge.EVENT_BUS.addListener(CreateCompat::onDeployerRecipeSearch);
-    }
-
-    public static void onCommonSetup(FMLCommonSetupEvent event) {
-        event.enqueueWork(() -> Ingredients.addBehavior(AllItems.BUILDERS_TEA.get(), new BuildersTeaBehavior()));
+        NeoForge.EVENT_BUS.addListener(CreateCompat::onDeployerRecipeSearch);
     }
 
     public static void onDeployerRecipeSearch(DeployerRecipeSearchEvent event) {
@@ -77,32 +66,36 @@ public class CreateCompat {
                 Potions.REGENERATION,
                 Potions.STRENGTH,
                 Potions.WEAKNESS,
-                Potions.SLOW_FALLING
+                Potions.SLOW_FALLING,
+                Potions.WIND_CHARGED,
+                Potions.WEAVING,
+                Potions.OOZING,
+                Potions.INFESTED
         )
                 .map(SandwichItem::makeSandwich)
                 .map(sandwich -> createSandwichRecipe(sandwich, "sequenced_assembly/sandwich_potions"))
                 .forEach(recipes::add);
 
-        CreateJEI.getTypedRecipesExcluding(ModRecipeTypes.SANDWICH_SPOUTING.get(), recipe -> recipe.getSerializer() != ModRecipeTypes.SANDWICH_FLUID_SPOUTING_SERIALIZER.get())
+        CreateJEI.getTypedRecipesExcluding(ModRecipeTypes.SANDWICH_SPOUTING.get(), recipe -> recipe.value().getSerializer() != ModRecipeTypes.SANDWICH_FLUID_SPOUTING_SERIALIZER.get())
                 .stream()
-                .map(recipe -> (SandwichFluidSpoutingRecipe) recipe)
-                .map(recipe -> builder(SandwichItem.makeSandwich(recipe.getResultItem(RegistryAccess.EMPTY)), "sandwich_spouting")
-                        .addStep(FillingRecipe::new, r -> r.require(recipe.getIngredient()))
+                .map(recipe -> (SandwichFluidSpoutingRecipe) recipe.value())
+                .map(recipe -> builder(SandwichItem.makeSandwich(recipe.assemble(FluidStack.EMPTY)), "sandwich_spouting")
+                        .addStep(FillingRecipe::new, r -> r.require(recipe.ingredient()))
                         .addStep(DeployerApplicationRecipe::new, r -> r.require(ModItems.BREAD_SLICE.get()))
                         .build()
-                ).forEach(recipes::add);
+                ).forEach(e -> recipes.add(e.value()));
 
         return recipes;
     }
 
     private static SequencedAssemblyRecipe createSandwichRecipe(ItemStack sandwich, String name) {
         SequencedAssemblyRecipeBuilder builder = builder(sandwich, name);
-        SandwichItemHandler handler = SandwichItemHandler.get(sandwich).orElseThrow();
+        SandwichContents contents = sandwich.getOrDefault(ModDataComponents.SANDWICH_CONTENTS, SandwichContents.EMPTY);
 
-        for (int j = 1; j < handler.getItems().size(); j++) {
-            ItemStack ingredient = handler.getStackInSlot(j);
+        for (int j = 1; j < contents.items().size(); j++) {
+            ItemStack ingredient = contents.items().get(j);
             if (ingredient.is(Items.POTION)) {
-                Potion potion = PotionUtils.getPotion(ingredient);
+                Holder<Potion> potion = ingredient.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY).potion().orElse(Potions.WATER);
                 builder.addStep(FillingRecipe::new, recipe -> recipe.require(PotionFluidHandler.potionIngredient(potion, PotionFluidHandler.getRequiredAmountForFilledBottle(null, null))));
             } else if (ingredient.is(Items.HONEY_BOTTLE)) {
                 builder.addStep(FillingRecipe::new, recipe -> recipe.require(AllFluids.HONEY.get(), 250));
@@ -111,12 +104,12 @@ public class CreateCompat {
             }
         }
 
-        return builder.build();
+        return builder.build().value();
     }
 
     private static SequencedAssemblyRecipeBuilder builder(ItemStack sandwich, String name) {
         return new SequencedAssemblyRecipeBuilder(SomeAssemblyRequired.id("sequenced_assembly/%s".formatted(name)))
-                .require(Ingredient.of(SandwichItemHandler.get(sandwich).map(s -> s.getStackInSlot(0)).orElseThrow()))
+                .require(Ingredient.of(sandwich.getOrDefault(ModDataComponents.SANDWICH_CONTENTS, SandwichContents.EMPTY).items().getFirst()))
                 .transitionTo(ModItems.SANDWICH.get())
                 .loops(1)
                 .addOutput(sandwich, 1);

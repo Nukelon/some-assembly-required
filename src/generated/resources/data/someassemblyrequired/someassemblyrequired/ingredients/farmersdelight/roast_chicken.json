@@ -1,22 +1,20 @@
 {
-  "conditions": [
+  "neoforge:conditions": [
     {
-      "type": "forge:mod_loaded",
+      "type": "neoforge:mod_loaded",
       "modid": "farmersdelight"
     }
   ],
-  "container": {
-    "item": "minecraft:bowl"
+  "display_item": {
+    "components": {
+      "minecraft:custom_model_data": 49
+    },
+    "count": 1,
+    "id": "someassemblyrequired:spread"
   },
-  "displayItem": {
-    "item": "someassemblyrequired:spread",
-    "nbt": {
-      "CustomModelData": 49
-    }
-  },
-  "fullName": {
+  "full_name": {
     "translate": "block.farmersdelight.roast_chicken_block"
   },
   "item": "farmersdelight:roast_chicken",
-  "soundEvent": "someassemblyrequired:block.sandwich.add_item.wet"
+  "sound": "someassemblyrequired:block.sandwich.add_item.wet"
 }

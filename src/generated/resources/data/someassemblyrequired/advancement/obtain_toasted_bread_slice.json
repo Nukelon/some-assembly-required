@@ -1,0 +1,33 @@
+{
+  "parent": "someassemblyrequired:obtain_bread_slice",
+  "criteria": {
+    "obtain_toasted_bread_slice": {
+      "conditions": {
+        "items": [
+          {
+            "items": "someassemblyrequired:toasted_bread_slice"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "someassemblyrequired.advancement.obtain_toasted_bread_slice.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "someassemblyrequired:toasted_bread_slice"
+    },
+    "title": {
+      "translate": "someassemblyrequired.advancement.obtain_toasted_bread_slice.title"
+    }
+  },
+  "requirements": [
+    [
+      "obtain_toasted_bread_slice"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

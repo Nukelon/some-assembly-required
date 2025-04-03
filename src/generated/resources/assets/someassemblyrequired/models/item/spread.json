@@ -296,7 +296,7 @@
       }
     },
     {
-      "model": "someassemblyrequired:ingredient/miners_delight/vegan_patty",
+      "model": "someassemblyrequired:ingredient/minersdelight/vegan_patty",
       "predicate": {
         "minecraft:custom_model_data": 50.0
       }

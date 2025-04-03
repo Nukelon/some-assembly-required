@@ -1,30 +1,32 @@
 package someassemblyrequired.integration.create.recipe;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraftforge.common.crafting.CraftingHelper;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 import someassemblyrequired.recipe.SandwichSpoutingRecipe;
 import someassemblyrequired.registry.ModRecipeTypes;
-
-import javax.annotation.Nullable;
 
 public class SandwichFluidSpoutingRecipe extends SandwichSpoutingRecipe {
 
     private final FluidIngredient ingredient;
     private final ItemStack result;
 
-    public SandwichFluidSpoutingRecipe(ResourceLocation id, FluidIngredient ingredient, ItemStack result) {
-        super(id);
+    public SandwichFluidSpoutingRecipe(FluidIngredient ingredient, ItemStack result) {
         this.ingredient = ingredient;
         this.result = result;
+    }
+
+    public FluidIngredient ingredient() {
+        return ingredient;
+    }
+
+    private ItemStack result() {
+        return result;
     }
 
     @Override
@@ -47,44 +49,29 @@ public class SandwichFluidSpoutingRecipe extends SandwichSpoutingRecipe {
         return ModRecipeTypes.SANDWICH_FLUID_SPOUTING_SERIALIZER.get();
     }
 
-    @Override
-    public ItemStack getResultItem(RegistryAccess access) {
-        return result;
-    }
-
-    public FluidIngredient getIngredient() {
-        return ingredient;
-    }
-
     public static class Serializer implements RecipeSerializer<SandwichFluidSpoutingRecipe> {
 
-        @Override
-        public SandwichFluidSpoutingRecipe fromJson(ResourceLocation id, JsonObject object) {
-            if (!object.has("fluid")) {
-                throw new JsonParseException("Missing 'fluid', expected to find fluid ingredient");
-            }
-            FluidIngredient ingredient = FluidIngredient.deserialize(object.get("fluid"));
-            JsonObject resultObject = GsonHelper.getAsJsonObject(object, "result");
-            ItemStack result = CraftingHelper.getItemStack(resultObject, true, true);
-            if (result.isEmpty()) {
-                throw new JsonParseException("Resulting item cannot be empty");
-            }
-            if (result.getCount() != 1) {
-                throw new JsonParseException("Resulting item must have a count of 1");
-            }
-            return new SandwichFluidSpoutingRecipe(id, ingredient, result);
-        }
+        private static final MapCodec<SandwichFluidSpoutingRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+                FluidIngredient.CODEC.fieldOf("fluid").forGetter(SandwichFluidSpoutingRecipe::ingredient),
+                ItemStack.SINGLE_ITEM_CODEC.fieldOf("result").forGetter(SandwichFluidSpoutingRecipe::result)
+        ).apply(instance, SandwichFluidSpoutingRecipe::new));
 
-        @Nullable
+        private static final StreamCodec<RegistryFriendlyByteBuf, SandwichFluidSpoutingRecipe> STREAM_CODEC = StreamCodec.composite(
+                FluidIngredient.STREAM_CODEC,
+                SandwichFluidSpoutingRecipe::ingredient,
+                ItemStack.STREAM_CODEC,
+                SandwichFluidSpoutingRecipe::result,
+                SandwichFluidSpoutingRecipe::new
+        );
+
         @Override
-        public SandwichFluidSpoutingRecipe fromNetwork(ResourceLocation id, FriendlyByteBuf buffer) {
-            return new SandwichFluidSpoutingRecipe(id, FluidIngredient.read(buffer), buffer.readItem());
+        public MapCodec<SandwichFluidSpoutingRecipe> codec() {
+            return CODEC;
         }
 
         @Override
-        public void toNetwork(FriendlyByteBuf buffer, SandwichFluidSpoutingRecipe recipe) {
-            recipe.ingredient.write(buffer);
-            buffer.writeItem(recipe.result);
+        public StreamCodec<RegistryFriendlyByteBuf, SandwichFluidSpoutingRecipe> streamCodec() {
+            return STREAM_CODEC;
         }
     }
 }

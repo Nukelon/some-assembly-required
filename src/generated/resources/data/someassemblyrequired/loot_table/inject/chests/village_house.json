@@ -1,0 +1,98 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "chance": 0.4,
+          "condition": "minecraft:random_chance"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "add": false,
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 5.0,
+                "min": 2.0
+              },
+              "function": "minecraft:set_count"
+            },
+            {
+              "entries": [
+                {
+                  "type": "minecraft:alternatives",
+                  "children": [
+                    {
+                      "type": "minecraft:loot_table",
+                      "conditions": [
+                        {
+                          "chance": 0.15,
+                          "condition": "minecraft:random_chance"
+                        }
+                      ],
+                      "value": "someassemblyrequired:sandwich/special"
+                    },
+                    {
+                      "type": "minecraft:loot_table",
+                      "conditions": [
+                        {
+                          "chance": 0.25,
+                          "condition": "minecraft:random_chance"
+                        }
+                      ],
+                      "functions": [
+                        {
+                          "function": "someassemblyrequired:smelt_matching_item",
+                          "item": "someassemblyrequired:bread_slice"
+                        }
+                      ],
+                      "value": "someassemblyrequired:sandwich/sandwich"
+                    },
+                    {
+                      "type": "minecraft:loot_table",
+                      "value": "someassemblyrequired:sandwich/sandwich"
+                    }
+                  ]
+                }
+              ],
+              "function": "someassemblyrequired:set_sandwich_contents"
+            }
+          ],
+          "name": "someassemblyrequired:sandwich",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "add": false,
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 5.0,
+                "min": 2.0
+              },
+              "function": "minecraft:set_count"
+            },
+            {
+              "entries": [
+                {
+                  "type": "minecraft:loot_table",
+                  "value": "someassemblyrequired:sandwich/burger"
+                }
+              ],
+              "function": "someassemblyrequired:set_sandwich_contents"
+            }
+          ],
+          "name": "someassemblyrequired:sandwich"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "someassemblyrequired:inject/chests/village_house"
+}

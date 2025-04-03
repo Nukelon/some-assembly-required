@@ -1,0 +1,25 @@
+{
+  "type": "farmersdelight:cutting",
+  "ingredients": [
+    {
+      "item": "someassemblyrequired:burger_bun"
+    }
+  ],
+  "result": [
+    {
+      "item": {
+        "count": 1,
+        "id": "someassemblyrequired:burger_bun_bottom"
+      }
+    },
+    {
+      "item": {
+        "count": 1,
+        "id": "someassemblyrequired:burger_bun_top"
+      }
+    }
+  ],
+  "tool": {
+    "tag": "c:tools/knife"
+  }
+}

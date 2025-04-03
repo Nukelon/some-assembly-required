@@ -1,22 +1,20 @@
 {
-  "conditions": [
+  "neoforge:conditions": [
     {
-      "type": "forge:mod_loaded",
+      "type": "neoforge:mod_loaded",
       "modid": "farmersdelight"
     }
   ],
-  "container": {
-    "item": "minecraft:bowl"
+  "display_item": {
+    "components": {
+      "minecraft:custom_model_data": 46
+    },
+    "count": 1,
+    "id": "someassemblyrequired:spread"
   },
-  "displayItem": {
-    "item": "someassemblyrequired:spread",
-    "nbt": {
-      "CustomModelData": 46
-    }
-  },
-  "fullName": {
+  "full_name": {
     "translate": "block.farmersdelight.stuffed_pumpkin_block"
   },
   "item": "farmersdelight:stuffed_pumpkin",
-  "soundEvent": "someassemblyrequired:block.sandwich.add_item.slimy"
+  "sound": "someassemblyrequired:block.sandwich.add_item.slimy"
 }

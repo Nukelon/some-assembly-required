@@ -1,0 +1,17 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "create"
+    }
+  ],
+  "type": "someassemblyrequired:sandwich_spouting",
+  "fluid": {
+    "type": "fluid_stack",
+    "amount": 250,
+    "fluid": "minecraft:milk"
+  },
+  "result": {
+    "id": "minecraft:milk_bucket"
+  }
+}

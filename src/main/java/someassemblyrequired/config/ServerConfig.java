@@ -1,7 +1,7 @@
 package someassemblyrequired.config;
 
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import someassemblyrequired.SomeAssemblyRequired;
 import someassemblyrequired.integration.ModCompat;
 
@@ -10,17 +10,17 @@ import java.util.List;
 
 public class ServerConfig {
 
-    public final ForgeConfigSpec.IntValue maximumSandwichHeight;
+    public final ModConfigSpec.IntValue maximumSandwichHeight;
 
-    public final ForgeConfigSpec.BooleanValue generateChestLoot;
+    public final ModConfigSpec.BooleanValue generateChestLoot;
 
-    public final ForgeConfigSpec.ConfigValue<String> sandwichBonusEffect;
-    public final ForgeConfigSpec.ConfigValue<String> burgerBonusEffect;
+    public final ModConfigSpec.ConfigValue<String> sandwichBonusEffect;
+    public final ModConfigSpec.ConfigValue<String> burgerBonusEffect;
 
-    public final ForgeConfigSpec.ConfigValue<List<Integer>> sandwichEffectDurations;
-    public final ForgeConfigSpec.ConfigValue<List<Integer>> burgerEffectDurations;
+    public final ModConfigSpec.ConfigValue<List<Integer>> sandwichEffectDurations;
+    public final ModConfigSpec.ConfigValue<List<Integer>> burgerEffectDurations;
 
-    ServerConfig(ForgeConfigSpec.Builder builder) {
+    ServerConfig(ModConfigSpec.Builder builder) {
         maximumSandwichHeight = builder
                 .comment("The maximum amount of items a sandwich can contain")
                 .translation(translate("maximum_sandwich_height"))
@@ -34,11 +34,11 @@ public class ServerConfig {
         sandwichBonusEffect = builder
                 .comment("The effect applied by sandwiches, depending on the number of unique ingredients")
                 .translation(translate("sandwich_bonus_effect"))
-                .define("sandwich_effect", new ResourceLocation(ModCompat.FARMERSDELIGHT, "comfort").toString());
+                .define("sandwich_effect", ResourceLocation.fromNamespaceAndPath(ModCompat.FARMERSDELIGHT, "comfort").toString());
         burgerBonusEffect = builder
                 .comment("The effect applied by burgers, depending on the number of unique ingredients")
                 .translation(translate("burger_bonus_effect"))
-                .define("burger_effect", new ResourceLocation(ModCompat.FARMERSDELIGHT, "nourishment").toString());
+                .define("burger_effect", ResourceLocation.fromNamespaceAndPath(ModCompat.FARMERSDELIGHT, "nourishment").toString());
 
         sandwichEffectDurations = builder
                 .comment("The durations of the effect applied by sandwiches in seconds, depending on the number of unique ingredients")

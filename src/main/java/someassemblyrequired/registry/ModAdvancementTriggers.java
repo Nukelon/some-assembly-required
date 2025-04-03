@@ -1,21 +1,16 @@
 package someassemblyrequired.registry;
 
-import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.advancements.critereon.PlayerTrigger;
+import net.minecraft.core.registries.Registries;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
 import someassemblyrequired.SomeAssemblyRequired;
-import someassemblyrequired.advancement.ItemTrigger;
 
 public class ModAdvancementTriggers {
 
-    public static final ItemTrigger CONSUME_POTION_SANDWICH = new ItemTrigger(SomeAssemblyRequired.id("consume_potion_sandwich"));
-    public static final ItemTrigger CONSUME_DOUBLE_DECKER_SANDWICH = new ItemTrigger(SomeAssemblyRequired.id("consume_double_decker_sandwich"));
-    public static final PlayerTrigger CONSUME_1000_SANDWICHES = new PlayerTrigger(SomeAssemblyRequired.id("consume_1000_sandwiches"));
-    public static final PlayerTrigger CONSUME_1000_BURGERS = new PlayerTrigger(SomeAssemblyRequired.id("consume_1000_burgers"));
+    public static final DeferredRegister<CriterionTrigger<?>> CRITERIA_TRIGGERS = DeferredRegister.create(Registries.TRIGGER_TYPE, SomeAssemblyRequired.MOD_ID);
 
-    public static void register() {
-        CriteriaTriggers.register(CONSUME_POTION_SANDWICH);
-        CriteriaTriggers.register(CONSUME_DOUBLE_DECKER_SANDWICH);
-        CriteriaTriggers.register(CONSUME_1000_SANDWICHES);
-        CriteriaTriggers.register(CONSUME_1000_BURGERS);
-    }
+    public static final DeferredHolder<CriterionTrigger<?>, PlayerTrigger> CONSUME_1000_SANDWICHES = CRITERIA_TRIGGERS.register("consume_1000_sandwiches", PlayerTrigger::new);
+    public static final DeferredHolder<CriterionTrigger<?>, PlayerTrigger> CONSUME_1000_BURGERS = CRITERIA_TRIGGERS.register("consume_1000_burgers", PlayerTrigger::new);
 }

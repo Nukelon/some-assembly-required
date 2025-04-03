@@ -1,11 +1,14 @@
 package someassemblyrequired.item.sandwich;
 
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionUtils;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.alchemy.Potions;
 import someassemblyrequired.SomeAssemblyRequired;
 import someassemblyrequired.ingredient.Ingredients;
 import someassemblyrequired.registry.ModItems;
@@ -17,43 +20,41 @@ import java.util.List;
 public class SandwichNameHelper {
 
     public static Component getSandwichDisplayName(ItemStack stack) {
-        SandwichItemHandler sandwich = SandwichItemHandler.get(stack).orElse(null);
+        SandwichContents sandwich = SandwichContents.get(stack);
 
-        // noinspection ConstantConditions
-        if (sandwich == null
-                || sandwich.getItemCount() == 0
-                || !ForgeRegistries.ITEMS.tags().isKnownTagName(ModTags.SANDWICH_BREAD)
-                || !ForgeRegistries.ITEMS.tags().isKnownTagName(ModTags.BURGER_BUNS)
+        if (sandwich.items().isEmpty()
+                || BuiltInRegistries.ITEM.getTags().noneMatch(p -> p.getFirst().equals(ModTags.SANDWICH_BREAD))
         ) {
             return translateItem("sandwich");
         }
 
-        String sandwichName = sandwich.top().is(ModTags.BURGER_BUNS)
-                && sandwich.bottom().is(ModTags.BURGER_BUNS)
+        String sandwichName = sandwich.items().getLast().is(ModTags.BURGER_BUNS)
+                && sandwich.items().getFirst().is(ModTags.BURGER_BUNS)
                 ? "burger" : "sandwich";
 
         int amountOfBread = getAmountOfBread(sandwich);
 
         // full bread sandwich
-        if (sandwich.getItemCount() == amountOfBread) {
+        if (sandwich.items().size() == amountOfBread) {
             return getBreadSandwichName(sandwich, sandwichName);
         }
 
         List<ItemStack> uniqueIngredients = getUniqueIngredientsExcludingBread(sandwich);
 
         // potion sandwich
-        if (uniqueIngredients.size() == 1 && uniqueIngredients.get(0).is(Items.POTION)) {
-            Potion potion = PotionUtils.getPotion(uniqueIngredients.get(0));
-            if (potion.getEffects().size() == 1) {
-                return translateItem("potion_%s".formatted(sandwichName), potion.getEffects().get(0).getEffect().getDisplayName());
+        if (uniqueIngredients.size() == 1 && uniqueIngredients.getFirst().is(Items.POTION)) {
+            PotionContents contents = uniqueIngredients.getFirst().getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
+            Holder<Potion> potion = contents.potion().orElse(Potions.WATER);
+            if (potion.value().getEffects().size() == 1) {
+                return translateItem("potion_%s".formatted(sandwichName), potion.value().getEffects().getFirst().getEffect().value().getDisplayName());
             }
         }
 
-        boolean isOpenFacedSandwich = amountOfBread == 1 && sandwich.getItemCount() > 1;
+        boolean isOpenFacedSandwich = amountOfBread == 1 && sandwich.items().size() > 1;
 
-        if (uniqueIngredients.size() > 0 && uniqueIngredients.size() <= 3) {
+        if (!uniqueIngredients.isEmpty() && uniqueIngredients.size() <= 3) {
             Component ingredientList = listIngredients(uniqueIngredients);
-            if (sandwich.isDoubleDeckerSandwich()) {
+            if (sandwich.isDoubleDecker()) {
                 return translateItem("double_decker_ingredients_%s".formatted(sandwichName), ingredientList);
             } else if (isOpenFacedSandwich) {
                 return translateItem("open_faced_ingredients_sandwich", ingredientList);
@@ -62,7 +63,7 @@ public class SandwichNameHelper {
             }
         }
 
-        if (sandwich.isDoubleDeckerSandwich()) {
+        if (sandwich.isDoubleDecker()) {
             return translateItem("double_decker_%s".formatted(sandwichName));
         } else if (isOpenFacedSandwich) {
             return translateItem("open_faced_sandwich");
@@ -71,9 +72,9 @@ public class SandwichNameHelper {
         }
     }
 
-    private static List<ItemStack> getUniqueIngredientsExcludingBread(SandwichItemHandler sandwich) {
+    private static List<ItemStack> getUniqueIngredientsExcludingBread(SandwichContents sandwich) {
         List<ItemStack> result = new ArrayList<>();
-        for (ItemStack ingredient : sandwich) {
+        for (ItemStack ingredient : sandwich.items()) {
             if (!ingredient.is(ModTags.SANDWICH_BREAD) && result.stream().noneMatch(stack -> ItemStack.matches(ingredient, stack))) {
                 result.add(ingredient);
             }
@@ -81,9 +82,9 @@ public class SandwichNameHelper {
         return result;
     }
 
-    private static int getAmountOfBread(SandwichItemHandler sandwich) {
+    private static int getAmountOfBread(SandwichContents sandwich) {
         int result = 0;
-        for (ItemStack ingredient : sandwich) {
+        for (ItemStack ingredient : sandwich.items()) {
             if (ingredient.is(ModTags.SANDWICH_BREAD)) {
                 result++;
             }
@@ -91,12 +92,12 @@ public class SandwichNameHelper {
         return result;
     }
 
-    private static Component getBreadSandwichName(SandwichItemHandler sandwich, String sandwichName) {
-        if ((sandwich.getItemCount() == 3)
-                && sandwich.getStackInSlot(0).getItem() != ModItems.TOASTED_BREAD_SLICE.get()
-                && sandwich.getStackInSlot(1).getItem() == ModItems.TOASTED_BREAD_SLICE.get()
-                && sandwich.getStackInSlot(2).getItem() != ModItems.TOASTED_BREAD_SLICE.get()) {
-            return translateItem("ingredients_%s".formatted(sandwichName), Ingredients.getDisplayName(sandwich.getStackInSlot(1)));
+    private static Component getBreadSandwichName(SandwichContents sandwich, String sandwichName) {
+        if ((sandwich.items().size() == 3)
+                && sandwich.items().getFirst().getItem() != ModItems.TOASTED_BREAD_SLICE.get()
+                && sandwich.items().get(1).getItem() == ModItems.TOASTED_BREAD_SLICE.get()
+                && sandwich.items().get(2).getItem() != ModItems.TOASTED_BREAD_SLICE.get()) {
+            return translateItem("ingredients_%s".formatted(sandwichName), Ingredients.getDisplayName(sandwich.items().get(1)));
         }
         return translateItem("bread_%s".formatted(sandwichName));
     }

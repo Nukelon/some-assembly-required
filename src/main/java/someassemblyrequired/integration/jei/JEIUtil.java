@@ -1,10 +1,10 @@
 package someassemblyrequired.integration.jei;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.PotionUtils;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.world.item.alchemy.PotionContents;
 import someassemblyrequired.ingredient.Ingredients;
 import someassemblyrequired.item.sandwich.SandwichItem;
 import someassemblyrequired.registry.ModItems;
@@ -24,8 +24,8 @@ public class JEIUtil {
     private static final Map<Item, List<ItemStack>> SANDWICHES = new HashMap<>();
     private static final List<ItemStack> BURGERS = new ArrayList<>();
     public static final List<ItemStack> INGREDIENTS = new ArrayList<>();
-    public static final List<ItemStack> POTIONS = ForgeRegistries.POTIONS.getValues().stream()
-            .map(potion -> PotionUtils.setPotion(new ItemStack(Items.POTION), potion))
+    public static final List<ItemStack> POTIONS = BuiltInRegistries.POTION.holders()
+            .map(potion -> PotionContents.createItemStack(Items.POTION, potion))
             .toList();
 
     public static List<ItemStack> getSandwichesForBread(ItemStack bread) {
@@ -51,7 +51,7 @@ public class JEIUtil {
         INGREDIENTS.clear();
         SANDWICHES.clear();
 
-        INGREDIENTS.addAll(ForgeRegistries.ITEMS.getValues()
+        INGREDIENTS.addAll(BuiltInRegistries.ITEM
                 .stream()
                 .filter(Ingredients::hasCustomIngredientProperties)
                 .map(ItemStack::new)

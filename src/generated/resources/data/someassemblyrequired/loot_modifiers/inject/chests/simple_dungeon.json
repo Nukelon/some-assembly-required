@@ -2,12 +2,12 @@
   "type": "someassemblyrequired:roll_loot_table",
   "conditions": [
     {
-      "condition": "forge:loot_table_id",
+      "condition": "neoforge:loot_table_id",
       "loot_table_id": "minecraft:chests/simple_dungeon"
     },
     {
       "condition": "someassemblyrequired:sandwich_loot_enabled"
     }
   ],
-  "lootTable": "someassemblyrequired:inject/chests/simple_dungeon"
+  "loot_table": "someassemblyrequired:inject/chests/simple_dungeon"
 }

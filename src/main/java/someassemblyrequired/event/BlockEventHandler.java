@@ -9,9 +9,9 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.Event;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.util.TriState;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import someassemblyrequired.SomeAssemblyRequired;
 import someassemblyrequired.block.SandwichBlockEntity;
 import someassemblyrequired.ingredient.Ingredients;
@@ -19,14 +19,14 @@ import someassemblyrequired.item.sandwich.SandwichItem;
 import someassemblyrequired.registry.ModItems;
 import someassemblyrequired.registry.ModTags;
 
-public class BlockEventHandler { // TODO do more testing on this
+public class BlockEventHandler {
 
     public static void register() {
-        MinecraftForge.EVENT_BUS.addListener(BlockEventHandler::onRightClickBlock);
+        NeoForge.EVENT_BUS.addListener(BlockEventHandler::onRightClickBlock);
     }
 
     private static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
-        if (event.isCanceled() || event.getUseBlock() != Event.Result.DEFAULT || event.getUseItem() != Event.Result.DEFAULT) {
+        if (event.isCanceled() || event.getUseBlock() != TriState.DEFAULT || event.getUseItem() != TriState.DEFAULT) {
             return;
         }
 
@@ -41,9 +41,18 @@ public class BlockEventHandler { // TODO do more testing on this
         }
 
         if (state.is(ModTags.SANDWICHING_STATIONS)) {
-            InteractionResult result = (level.getBlockEntity(pos.above()) instanceof SandwichBlockEntity blockEntity)
-                    ? blockEntity.interact(player, hand)
-                    : tryPlaceSandwich(event);
+            InteractionResult result;
+            if (level.getBlockEntity(pos.above()) instanceof SandwichBlockEntity blockEntity) {
+                if (player.getItemInHand(InteractionHand.MAIN_HAND).isEmpty() && player.getItemInHand(InteractionHand.OFF_HAND).isEmpty()) {
+                    result = blockEntity.useWithoutItem(player);
+                } else if (!player.getItemInHand(hand).isEmpty()) {
+                    result = blockEntity.useItemOn(player.getItemInHand(hand), player, hand).result();
+                } else {
+                    result = InteractionResult.PASS;
+                }
+            } else {
+                result = tryPlaceSandwich(event);
+            }
 
             if (result != InteractionResult.PASS) {
                 event.setCanceled(true);

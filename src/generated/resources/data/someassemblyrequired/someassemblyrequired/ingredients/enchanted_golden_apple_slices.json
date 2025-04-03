@@ -1,12 +1,13 @@
 {
-  "displayItem": {
-    "item": "someassemblyrequired:spread",
-    "nbt": {
-      "CustomModelData": 5,
-      "HasEffect": 1
-    }
+  "display_item": {
+    "components": {
+      "minecraft:custom_model_data": 5,
+      "minecraft:enchantment_glint_override": true
+    },
+    "count": 1,
+    "id": "someassemblyrequired:spread"
   },
-  "displayName": {
+  "display_name": {
     "translate": "someassemblyrequired.ingredient.enchanted_golden_apple_slices"
   },
   "item": "someassemblyrequired:enchanted_golden_apple_slices"

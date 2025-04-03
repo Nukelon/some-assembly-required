@@ -2,12 +2,12 @@
   "type": "someassemblyrequired:roll_loot_table",
   "conditions": [
     {
-      "condition": "forge:loot_table_id",
+      "condition": "neoforge:loot_table_id",
       "loot_table_id": "minecraft:chests/nether_bridge"
     },
     {
       "condition": "someassemblyrequired:sandwich_loot_enabled"
     }
   ],
-  "lootTable": "someassemblyrequired:inject/chests/nether_bridge"
+  "loot_table": "someassemblyrequired:inject/chests/nether_bridge"
 }

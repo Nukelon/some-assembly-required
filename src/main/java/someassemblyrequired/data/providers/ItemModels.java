@@ -1,7 +1,8 @@
 package someassemblyrequired.data.providers;
 
-import com.sammy.minersdelight.setup.MDItems;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
@@ -9,13 +10,13 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
-import net.minecraftforge.client.model.generators.ItemModelBuilder;
-import net.minecraftforge.client.model.generators.ItemModelProvider;
-import net.minecraftforge.client.model.generators.ModelBuilder;
-import net.minecraftforge.client.model.generators.ModelFile;
-import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
+import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
+import net.neoforged.neoforge.client.model.generators.ModelBuilder;
+import net.neoforged.neoforge.client.model.generators.ModelFile;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import someassemblyrequired.SomeAssemblyRequired;
+import someassemblyrequired.integration.ModCompat;
 import someassemblyrequired.registry.ModItems;
 
 import java.util.Arrays;
@@ -34,36 +35,36 @@ public class ItemModels extends ItemModelProvider {
 
     @Override
     protected void registerModels() {
-        Set<Item> items = ForgeRegistries.ITEMS.getValues().stream()
-                .filter(item -> ForgeRegistries.ITEMS.getKey(item).getNamespace().equals(SomeAssemblyRequired.MOD_ID))
+        Set<Item> items = BuiltInRegistries.ITEM.stream()
+                .filter(item -> BuiltInRegistries.ITEM.getKey(item).getNamespace().equals(SomeAssemblyRequired.MOD_ID))
                 .collect(Collectors.toSet());
 
         removeAll(items, ModItems.SANDWICH.get());
         addSandwich();
 
         removeAll(items, ModItems.SPREAD.get());
-        removeAll(items, Ingredients.MODEL_OVERRIDES.toArray(new ItemLike[]{}));
+        items.removeIf(item -> Ingredients.MODEL_OVERRIDES.contains(BuiltInRegistries.ITEM.wrapAsHolder(item)));
         addSpread();
 
         removeAll(items, ModItems.ENCHANTED_GOLDEN_APPLE_SLICES.get());
         addGeneratedModel("enchanted_golden_apple_slices", prefixItem("golden_apple_slices"));
 
         removeAll(items, item -> item instanceof BlockItem).forEach(
-                block -> withExistingParent(ForgeRegistries.ITEMS.getKey(block).getPath(), prefixBlock(ForgeRegistries.ITEMS.getKey(block).getPath()))
+                block -> withExistingParent(BuiltInRegistries.ITEM.getKey(block).getPath(), prefixBlock(BuiltInRegistries.ITEM.getKey(block).getPath()))
         );
 
         items.forEach(this::addGeneratedModel);
     }
 
     private void addSpread() {
-        HashMap<Item, ItemModelBuilder> customModels = new HashMap<>();
+        HashMap<Holder<Item>, ItemModelBuilder> customModels = new HashMap<>();
         addCustomIngredientModels(customModels);
 
         ItemModelBuilder spreadModel = addGeneratedModel(ModItems.SPREAD.get());
         for (int i = 0; i < Ingredients.MODEL_OVERRIDES.size(); i++) {
-            Item item = Ingredients.MODEL_OVERRIDES.get(i);
-            if (SomeAssemblyRequired.MOD_ID.equals(ForgeRegistries.ITEMS.getKey(item).getNamespace())) {
-                addGeneratedModel(item);
+            Holder<Item> item = Ingredients.MODEL_OVERRIDES.get(i);
+            if (SomeAssemblyRequired.MOD_ID.equals(item.getKey().location().getNamespace())) {
+                addGeneratedModel(item.value());
             }
 
             String path = getIngredientPath(item);
@@ -77,17 +78,17 @@ public class ItemModels extends ItemModelProvider {
 
             spreadModel.override()
                     .model(model)
-                    .predicate(new ResourceLocation("custom_model_data"), i + 1)
+                    .predicate(ResourceLocation.parse("custom_model_data"), i + 1)
                     .end();
         }
     }
 
-    private void addCustomIngredientModels(HashMap<Item, ItemModelBuilder> customModels) {
+    private void addCustomIngredientModels(HashMap<Holder<Item>, ItemModelBuilder> customModels) {
         addBeefPattyModels(customModels);
 
         String path = getIngredientPath(Items.POTATO);
         ResourceLocation texture = prefixItem(path);
-        customModels.put(Items.POTATO,
+        customModels.put(BuiltInRegistries.ITEM.wrapAsHolder(Items.POTATO),
                 getBuilder(path)
                         .texture("potato", texture)
                         .element()
@@ -105,7 +106,7 @@ public class ItemModels extends ItemModelProvider {
 
         path = getIngredientPath(ModItems.BURGER_BUN.get());
         texture = prefixItem(path);
-        customModels.put(ModItems.BURGER_BUN.get(),
+        customModels.put(ModItems.BURGER_BUN,
                 getBuilder(path)
                         .texture("burger_bun", texture)
                         .element()
@@ -121,7 +122,7 @@ public class ItemModels extends ItemModelProvider {
                         .end()
         );
         path = getIngredientPath(ModItems.BURGER_BUN_BOTTOM.get());
-        customModels.put(ModItems.BURGER_BUN_BOTTOM.get(),
+        customModels.put(ModItems.BURGER_BUN_BOTTOM,
                 getBuilder(path)
                         .texture("burger_bun", texture)
                         .element()
@@ -137,7 +138,7 @@ public class ItemModels extends ItemModelProvider {
                         .end()
         );
         path = getIngredientPath(ModItems.BURGER_BUN_TOP.get());
-        customModels.put(ModItems.BURGER_BUN_TOP.get(),
+        customModels.put(ModItems.BURGER_BUN_TOP,
                 getBuilder(path)
                         .texture("burger_bun", texture)
                         .element()
@@ -154,11 +155,11 @@ public class ItemModels extends ItemModelProvider {
         );
     }
 
-    private void addBeefPattyModels(HashMap<Item, ItemModelBuilder> customModels) {
-        for (Item item : Arrays.asList(
-                vectorwing.farmersdelight.common.registry.ModItems.BEEF_PATTY.get(),
-                vectorwing.farmersdelight.common.registry.ModItems.MINCED_BEEF.get(),
-                MDItems.VEGAN_PATTY.get()
+    private void addBeefPattyModels(HashMap<Holder<Item>, ItemModelBuilder> customModels) {
+        for (Holder<Item> item : Arrays.asList(
+                BuiltInRegistries.ITEM.wrapAsHolder(vectorwing.farmersdelight.common.registry.ModItems.BEEF_PATTY.get()),
+                BuiltInRegistries.ITEM.wrapAsHolder(vectorwing.farmersdelight.common.registry.ModItems.MINCED_BEEF.get()),
+                Ingredients.reference(ModCompat.MINERSDELIGHT, "vegan_patty")
         )) {
             String path = getIngredientPath(item);
             ResourceLocation texture = prefixItem(path);
@@ -180,16 +181,20 @@ public class ItemModels extends ItemModelProvider {
         }
     }
 
+    private String getIngredientPath(Holder<Item> item) {
+        return "ingredient/" + item.getKey().location().toString().replace(':', '/');
+    }
+
     private String getIngredientPath(Item item) {
         return "ingredient/" + getItemPath(item);
     }
 
     private String getItemPath(Item item) {
-        return ForgeRegistries.ITEMS.getKey(item).toString().replace(':', '/');
+        return BuiltInRegistries.ITEM.getKey(item).toString().replace(':', '/');
     }
 
     private String getItemName(Item item) {
-        return ForgeRegistries.ITEMS.getKey(item).getPath();
+        return BuiltInRegistries.ITEM.getKey(item).getPath();
     }
 
     private void addSandwich() {
@@ -235,7 +240,7 @@ public class ItemModels extends ItemModelProvider {
 
     private ItemModelBuilder addGeneratedModel(Item item) {
         // noinspection ConstantConditions
-        String name = ForgeRegistries.ITEMS.getKey(item).getPath();
+        String name = BuiltInRegistries.ITEM.getKey(item).getPath();
         return withExistingParent("item/" + name, "item/generated").texture("layer0", prefixItem(name));
     }
 

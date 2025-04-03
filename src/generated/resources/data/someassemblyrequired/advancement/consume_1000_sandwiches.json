@@ -1,0 +1,44 @@
+{
+  "parent": "someassemblyrequired:obtain_sandwich",
+  "criteria": {
+    "consume_1000_sandwiches": {
+      "trigger": "someassemblyrequired:consume_1000_sandwiches"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "someassemblyrequired.advancement.consume_1000_sandwiches.description"
+    },
+    "frame": "challenge",
+    "hidden": true,
+    "icon": {
+      "components": {
+        "someassemblyrequired:sandwich_contents": [
+          {
+            "count": 1,
+            "id": "someassemblyrequired:bread_slice"
+          },
+          {
+            "count": 1,
+            "id": "minecraft:gold_block"
+          },
+          {
+            "count": 1,
+            "id": "someassemblyrequired:bread_slice"
+          }
+        ]
+      },
+      "count": 1,
+      "id": "someassemblyrequired:sandwich"
+    },
+    "title": {
+      "translate": "someassemblyrequired.advancement.consume_1000_sandwiches.title"
+    }
+  },
+  "requirements": [
+    [
+      "consume_1000_sandwiches"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

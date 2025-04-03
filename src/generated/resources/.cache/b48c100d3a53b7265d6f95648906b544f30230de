@@ -1,3 +1,3 @@
-// 1.20.1	2025-03-29T14:14:45.5470873	Tags for minecraft:block mod id someassemblyrequired
-bb94d26eb5d35f63e81cd475226c3a119a78f961 data/minecraft/tags/blocks/mineable/axe.json
-bb94d26eb5d35f63e81cd475226c3a119a78f961 data/someassemblyrequired/tags/blocks/sandwiching_stations.json
+// 1.21.1	2025-04-01T13:57:07.599632	Tags for minecraft:block mod id someassemblyrequired
+bb94d26eb5d35f63e81cd475226c3a119a78f961 data/minecraft/tags/block/mineable/axe.json
+bb94d26eb5d35f63e81cd475226c3a119a78f961 data/someassemblyrequired/tags/block/sandwiching_stations.json

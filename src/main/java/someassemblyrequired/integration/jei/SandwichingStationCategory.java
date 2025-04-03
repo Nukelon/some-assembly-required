@@ -19,9 +19,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import someassemblyrequired.SomeAssemblyRequired;
 import someassemblyrequired.ingredient.Ingredients;
+import someassemblyrequired.item.sandwich.SandwichContents;
 import someassemblyrequired.item.sandwich.SandwichItem;
-import someassemblyrequired.item.sandwich.SandwichItemHandler;
 import someassemblyrequired.registry.ModBlocks;
+import someassemblyrequired.registry.ModDataComponents;
 import someassemblyrequired.registry.ModItems;
 import someassemblyrequired.registry.ModTags;
 
@@ -65,12 +66,12 @@ public class SandwichingStationCategory implements IRecipeCategory<SandwichingSt
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, Recipe recipe, IFocusGroup focuses) {
-        Optional<SandwichItemHandler> sandwich = focuses.getItemStackFocuses(RecipeIngredientRole.OUTPUT)
+        Optional<SandwichContents> sandwich = focuses.getItemStackFocuses(RecipeIngredientRole.OUTPUT)
                 .findFirst()
                 .map(IFocus::getTypedValue)
                 .flatMap(ITypedIngredient::getItemStack)
-                .filter(item -> item.getTag() == null || !item.getTag().getBoolean("IsJEIExample"))
-                .flatMap(SandwichItemHandler::get);
+                .filter(item -> !item.has(ModDataComponents.JEI_EXAMPLE))
+                .map(SandwichContents::get);
 
         if (sandwich.isEmpty()) {
             Optional<ItemStack> input = focuses.getItemStackFocuses(RecipeIngredientRole.INPUT)
@@ -84,21 +85,21 @@ public class SandwichingStationCategory implements IRecipeCategory<SandwichingSt
             if (input.isPresent()) {
                 ItemStack ingredient = input.get().copy();
                 ingredient.setCount(1);
-                sandwich = SandwichItemHandler.get(SandwichItem.makeSandwich(ingredient));
+                sandwich = Optional.of(SandwichContents.get(SandwichItem.makeSandwich(ingredient)));
             }
         }
 
         IRecipeSlotBuilder output = builder.addSlot(RecipeIngredientRole.OUTPUT, 72, 52).setBackground(slot, -1, -1);
 
-        if (sandwich.isPresent() && sandwich.get().getItemCount() <= 6) {
+        if (sandwich.isPresent() && sandwich.get().items().size() <= 6) {
 
-            List<ItemStack> ingredients = sandwich.get().getItems();
+            List<ItemStack> ingredients = sandwich.get().items();
 
             for (int i = 0; i < ingredients.size(); i++) {
                 IRecipeSlotBuilder slotBuilder = builder.addSlot(RecipeIngredientRole.INPUT, 8, 62 - ingredients.size() * 10 + i * 20).setBackground(slot, -1, -1);
                 slotBuilder.addItemStack(ingredients.get(ingredients.size() - i - 1));
             }
-            output.addItemStack(sandwich.get().getAsItem());
+            output.addItemStack(sandwich.get().makeItem());
         } else {
             ItemStack bread = focuses.getItemStackFocuses(RecipeIngredientRole.INPUT)
                     .map(IFocus::getTypedValue)

@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -25,9 +26,9 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import someassemblyrequired.item.sandwich.SandwichItemHandler;
+import someassemblyrequired.item.sandwich.SandwichContents;
 import someassemblyrequired.registry.ModBlockEntityTypes;
-import someassemblyrequired.registry.ModItems;
+import someassemblyrequired.registry.ModDataComponents;
 import someassemblyrequired.registry.ModTags;
 
 import javax.annotation.Nullable;
@@ -57,16 +58,6 @@ public class SandwichBlock extends Block implements EntityBlock, SimpleWaterlogg
         return result;
     }
 
-    public static ItemStack createSandwich(BlockEntity blockEntity) {
-        if (!(blockEntity instanceof SandwichBlockEntity sandwichAssemblyTable)) {
-            return ItemStack.EMPTY;
-        }
-
-        ItemStack sandwich = new ItemStack(ModItems.SANDWICH.get());
-        sandwichAssemblyTable.saveAdditional(sandwich.getOrCreateTagElement("BlockEntityTag"));
-        return sandwich;
-    }
-
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
@@ -76,16 +67,14 @@ public class SandwichBlock extends Block implements EntityBlock, SimpleWaterlogg
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public RenderShape getRenderShape(BlockState state) {
         return RenderShape.ENTITYBLOCK_ANIMATED;
     }
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        int size = SandwichItemHandler.get(context.getItemInHand())
-                .map(SandwichBlock::getSizeFromSandwich)
-                .orElse(1);
+        SandwichContents contents = context.getItemInHand().getOrDefault(ModDataComponents.SANDWICH_CONTENTS.get(), SandwichContents.EMPTY);
+        int size = getSizeFromSandwich(contents);
         boolean isWaterLogged = context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER;
 
         return defaultBlockState()
@@ -94,44 +83,52 @@ public class SandwichBlock extends Block implements EntityBlock, SimpleWaterlogg
                 .setValue(SIZE, size);
     }
 
-    public static int getSizeFromSandwich(SandwichItemHandler sandwich) {
+    public static int getSizeFromSandwich(SandwichContents sandwich) {
         int size = Math.min(32, Math.max(2, sandwich.getTotalHeight())) + 1;
         return size / 2;
     }
 
     @Override
-    @SuppressWarnings("deprecation")
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult blockHitResult) {
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (level.getBlockState(pos.below()).is(ModTags.SANDWICHING_STATIONS)) {
             return level.getBlockEntity(pos, ModBlockEntityTypes.SANDWICH.get())
-                    .map(blockEntity -> blockEntity.interact(player, hand))
-                    .orElse(InteractionResult.FAIL);
+                    .map(blockEntity -> blockEntity.useItemOn(stack, player, hand))
+                    .orElse(ItemInteractionResult.FAIL);
         }
-        return super.use(state, level, pos, player, hand, blockHitResult);
+        return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
     }
 
     @Override
-    @SuppressWarnings("deprecation")
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        if (level.getBlockState(pos.below()).is(ModTags.SANDWICHING_STATIONS)) {
+            return level.getBlockEntity(pos, ModBlockEntityTypes.SANDWICH.get())
+                    .map(blockEntity -> blockEntity.useWithoutItem(player))
+                    .orElse(InteractionResult.FAIL);
+        }
+        return super.useWithoutItem(state, level, pos, player, hitResult);
+    }
+
+    @Override
     public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
         List<ItemStack> drops = new ArrayList<>(super.getDrops(state, builder));
-        SandwichItemHandler.get(builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY))
-                .map(sandwich -> {
-                    if (sandwich.getItemCount() != 1) {
-                        return sandwich.getAsItem();
-                    }
-                    return sandwich.getStackInSlot(0);
-                })
-                .ifPresent(drops::add);
+        BlockEntity blockEntity = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
+        if (blockEntity instanceof SandwichBlockEntity sandwichBlockEntity) {
+            drops.add(sandwichBlockEntity.getContents().makeItem());
+        }
         return drops;
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
-        return createSandwich(world.getBlockEntity(pos));
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
+        ItemStack result = super.getCloneItemStack(state, target, level, pos, player);
+        BlockEntity blockEntity = level.getBlockEntity(pos);
+        if (blockEntity != null) {
+            blockEntity.saveToItem(result, level.registryAccess());
+        }
+        return result;
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return SHAPES[state.getValue(SIZE) - 1];
     }
@@ -142,12 +139,12 @@ public class SandwichBlock extends Block implements EntityBlock, SimpleWaterlogg
         return new SandwichBlockEntity(pos, state);
     }
 
-    @SuppressWarnings("deprecation")
+    @Override
     public FluidState getFluidState(BlockState state) {
         return state.getValue(BlockStateProperties.WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
     }
 
-    @SuppressWarnings("deprecation")
+    @Override
     public BlockState rotate(BlockState state, Rotation rotation) {
         return state.setValue(BlockStateProperties.HORIZONTAL_FACING, rotation.rotate(state.getValue(BlockStateProperties.HORIZONTAL_FACING)));
     }
@@ -158,12 +155,11 @@ public class SandwichBlock extends Block implements EntityBlock, SimpleWaterlogg
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
         return canSupportCenter(level, pos.below(), Direction.UP);
     }
 
-    @SuppressWarnings("deprecation")
+    @Override
     public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor level, BlockPos currentPos, BlockPos facingPos) {
         if (facing == Direction.DOWN && !this.canSurvive(state, level, currentPos)) {
             return Blocks.AIR.defaultBlockState();

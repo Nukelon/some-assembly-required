@@ -1,0 +1,19 @@
+{
+  "type": "farmersdelight:cutting",
+  "ingredients": [
+    {
+      "item": "minecraft:golden_carrot"
+    }
+  ],
+  "result": [
+    {
+      "item": {
+        "count": 2,
+        "id": "someassemblyrequired:chopped_golden_carrot"
+      }
+    }
+  ],
+  "tool": {
+    "tag": "c:tools/knife"
+  }
+}

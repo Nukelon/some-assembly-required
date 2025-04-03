@@ -1,0 +1,18 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "minersdelight"
+    }
+  ],
+  "display_item": {
+    "components": {
+      "minecraft:custom_model_data": 50
+    },
+    "count": 1,
+    "id": "someassemblyrequired:spread"
+  },
+  "height": 2,
+  "item": "minersdelight:vegan_patty",
+  "render_as_item": false
+}

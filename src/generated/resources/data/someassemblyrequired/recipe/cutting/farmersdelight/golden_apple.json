@@ -1,0 +1,19 @@
+{
+  "type": "farmersdelight:cutting",
+  "ingredients": [
+    {
+      "item": "minecraft:golden_apple"
+    }
+  ],
+  "result": [
+    {
+      "item": {
+        "count": 2,
+        "id": "someassemblyrequired:golden_apple_slices"
+      }
+    }
+  ],
+  "tool": {
+    "tag": "c:tools/knife"
+  }
+}
