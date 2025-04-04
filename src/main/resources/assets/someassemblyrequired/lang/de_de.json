@@ -27,12 +27,12 @@
   "item.someassemblyrequired.chopped_beetroot": "Geschnittene rote Beete",
   "item.someassemblyrequired.tomato_slices": "Tomatenscheiben",
 
-  "item.someassemblyrequired.sandwich": "Sandwich",
-  "item.someassemblyrequired.bread_sandwich": "Sandwich... ?",
-  "item.someassemblyrequired.double_decker_sandwich": "Doppeldecker Sandwich",
-  "item.someassemblyrequired.ingredients_sandwich": "%s Sandwich",
-  "item.someassemblyrequired.double_decker_ingredients_sandwich": "Doppeldecker %s Sandwich",
-  "item.someassemblyrequired.potion_sandwich": "Sandwich der %s",
+  "item.someassemblyrequired.sandwich.base.sandwich": "Sandwich",
+  "item.someassemblyrequired.sandwich.base.with_ingredients.sandwich": "%s Sandwich",
+  "item.someassemblyrequired.sandwich.only_bread.sandwich": "Sandwich... ?",
+  "item.someassemblyrequired.sandwich.double_decker.sandwich": "Doppeldecker Sandwich",
+  "item.someassemblyrequired.sandwich.double_decker.with_ingredients.sandwich": "Doppeldecker %s Sandwich",
+  "item.someassemblyrequired.sandwich.potion.pattern.1.sandwich": "Sandwich der %s",
 
   "someassemblyrequired.tooltip.ingredient_list.1": "%s",
   "someassemblyrequired.tooltip.ingredient_list.2": "%s & %s",

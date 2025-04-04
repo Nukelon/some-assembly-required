@@ -27,12 +27,12 @@
   "item.someassemblyrequired.chopped_beetroot": "Beterraba Picada",
   "item.someassemblyrequired.tomato_slices": "Fatias de Tomate",
 
-  "item.someassemblyrequired.sandwich": "Sanduíche",
-  "item.someassemblyrequired.bread_sandwich": "Sanduíche... ?",
-  "item.someassemblyrequired.double_decker_sandwich": "Sanduíche de Dois Andares",
-  "item.someassemblyrequired.ingredients_sandwich": "Sanduíche de %s",
-  "item.someassemblyrequired.double_decker_ingredients_sandwich": "Sanduíche de %s de Dois Andares",
-  "item.someassemblyrequired.potion_sandwich": "Sanduíche de %s",
+  "item.someassemblyrequired.sandwich.base.sandwich": "Sanduíche",
+  "item.someassemblyrequired.sandwich.only_bread.sandwich": "Sanduíche... ?",
+  "item.someassemblyrequired.sandwich.double_decker.sandwich": "Sanduíche de Dois Andares",
+  "item.someassemblyrequired.sandwich.base.with_ingredients.sandwich": "Sanduíche de %s",
+  "item.someassemblyrequired.sandwich.double_decker.with_ingredients.sandwich": "Sanduíche de %s de Dois Andares",
+  "item.someassemblyrequired.sandwich.potion.pattern.1.sandwich": "Sanduíche de %s",
 
   "someassemblyrequired.tooltip.ingredient_list.1": "%s",
   "someassemblyrequired.tooltip.ingredient_list.2": "%s e %s",
