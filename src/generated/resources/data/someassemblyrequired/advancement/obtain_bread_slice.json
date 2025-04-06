@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": "#neoforge:bread_slices"
+            "items": "#c:bread_slices"
           }
         ]
       },

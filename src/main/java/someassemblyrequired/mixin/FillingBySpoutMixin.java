@@ -18,6 +18,7 @@ import someassemblyrequired.registry.ModItems;
 import someassemblyrequired.registry.ModRecipeTypes;
 import someassemblyrequired.registry.ModTags;
 
+// TODO migrate to modifyReturnValue/modifyExpressionValue
 @Pseudo
 @Mixin(com.simibubi.create.content.fluids.spout.FillingBySpout.class)
 public class FillingBySpoutMixin {

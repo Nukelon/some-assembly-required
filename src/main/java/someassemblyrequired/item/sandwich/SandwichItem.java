@@ -71,6 +71,20 @@ public class SandwichItem extends BlockItem {
         return of(list);
     }
 
+    public static ItemStack makeToastSandwich(ItemLike... items) {
+        return makeToastSandwich(Arrays.stream(items)
+                .map(ItemStack::new)
+                .toArray(ItemStack[]::new));
+    }
+
+    public static ItemStack makeToastSandwich(ItemStack... items) {
+        ArrayList<ItemStack> list = new ArrayList<>();
+        list.add(new ItemStack(ModItems.TOASTED_BREAD_SLICE.get()));
+        list.addAll(Arrays.asList(items));
+        list.add(new ItemStack(ModItems.TOASTED_BREAD_SLICE.get()));
+        return of(list);
+    }
+
     public static ItemStack makeBurger(ItemLike... items) {
         return makeBurger(Arrays.stream(items)
                 .map(ItemStack::new)
@@ -95,7 +109,7 @@ public class SandwichItem extends BlockItem {
             if (item.getCount() != 1) {
                 throw new IllegalArgumentException();
             } else if (item.is(ModItems.SANDWICH.get())) {
-                flattenedItems.addAll(SandwichContents.get(item).items());
+                flattenedItems.addAll(SandwichContents.get(item));
             } else {
                 flattenedItems.add(item);
             }
@@ -119,7 +133,7 @@ public class SandwichItem extends BlockItem {
         SandwichContents sandwich = SandwichContents.get(stack);
 
         if (ModConfig.client.listItemsInTooltip.get()) {
-            sandwich.items().stream()
+            sandwich.stream()
                     .collect(
                             Collectors.groupingBy(
                                     item -> Ingredients.getFullName(item).plainCopy(),
@@ -172,7 +186,7 @@ public class SandwichItem extends BlockItem {
         }
 
         SandwichContents contents = SandwichContents.get(sandwich);
-        if (contents.items().isEmpty()) {
+        if (contents.isEmpty()) {
             return InteractionResult.FAIL;
         }
         int size = SandwichBlock.getSizeFromSandwich(contents);
@@ -216,7 +230,7 @@ public class SandwichItem extends BlockItem {
     @Override
     public ItemStack finishUsingItem(ItemStack stack, Level world, LivingEntity entity) {
         SandwichContents sandwich = SandwichContents.get(stack);
-        for (ItemStack item : sandwich.items()) {
+        for (ItemStack item : sandwich) {
             Ingredients.applyIngredientBehaviours(item, entity);
         }
         if (entity instanceof ServerPlayer player) {

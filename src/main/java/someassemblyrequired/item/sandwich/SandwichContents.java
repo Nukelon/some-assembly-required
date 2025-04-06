@@ -22,13 +22,15 @@ import someassemblyrequired.registry.ModItems;
 import someassemblyrequired.registry.ModTags;
 
 import java.util.*;
+import java.util.function.Function;
 
-public record SandwichContents(List<ItemStack> items) {
+public final class SandwichContents extends AbstractList<ItemStack> {
 
     public static final SandwichContents EMPTY = new SandwichContents(List.of());
 
-    public static final Codec<SandwichContents> CODEC = ItemStack.CODEC.listOf(0, 32).xmap(SandwichContents::new, SandwichContents::items);
-    public static final StreamCodec<RegistryFriendlyByteBuf, SandwichContents> STREAM_CODEC = ItemStack.STREAM_CODEC.apply(ByteBufCodecs.list()).map(SandwichContents::new, SandwichContents::items);
+    public static final Codec<SandwichContents> CODEC = ItemStack.CODEC.listOf(0, 32).xmap(SandwichContents::new, Function.identity());
+    public static final StreamCodec<RegistryFriendlyByteBuf, SandwichContents> STREAM_CODEC = ItemStack.STREAM_CODEC.apply(ByteBufCodecs.list()).map(SandwichContents::new, Function.identity());
+    private final List<ItemStack> items;
 
     public SandwichContents(List<ItemStack> items) {
         this.items = items.stream().map(ItemStack::copy).toList();
@@ -43,7 +45,7 @@ public record SandwichContents(List<ItemStack> items) {
     }
 
     public SandwichContents dropLast() {
-        List<ItemStack> items = new ArrayList<>(this.items);
+        List<ItemStack> items = new ArrayList<>(this);
         items.removeLast();
         return new SandwichContents(items);
     }
@@ -52,7 +54,7 @@ public record SandwichContents(List<ItemStack> items) {
         if (toAdd.stream().anyMatch(ItemStack::isEmpty)) {
             throw new IllegalArgumentException("Cannot add empty item to sandwich");
         }
-        List<ItemStack> items = new ArrayList<>(this.items);
+        List<ItemStack> items = new ArrayList<>(this);
         toAdd.stream()
                 .map(ItemStack::copy)
                 .peek(stack -> stack.setCount(1))
@@ -62,7 +64,7 @@ public record SandwichContents(List<ItemStack> items) {
 
     public int getTotalHeight() {
         int size = 0;
-        for (ItemStack item : items) {
+        for (ItemStack item : this) {
             size += Ingredients.getHeight(item);
         }
         return size;
@@ -70,7 +72,7 @@ public record SandwichContents(List<ItemStack> items) {
 
     public int nutrition(@Nullable LivingEntity entity) {
         int result = 0;
-        for (ItemStack stack : items) {
+        for (ItemStack stack : this) {
             result += Ingredients.getFood(stack, entity).nutrition();
         }
         return result;
@@ -78,34 +80,34 @@ public record SandwichContents(List<ItemStack> items) {
 
     public float saturation(@Nullable LivingEntity entity) {
         float result = 0;
-        for (ItemStack stack : items) {
+        for (ItemStack stack : this) {
             result += Ingredients.getFood(stack, entity).saturation();
         }
         return result;
     }
 
     public boolean isBurger() {
-        return !items.isEmpty()
-                && items.getFirst().is(ModTags.BURGER_BUNS)
-                && items.getLast().is(ModTags.BURGER_BUNS);
+        return !isEmpty()
+                && getFirst().is(ModTags.BURGER_BUNS)
+                && getLast().is(ModTags.BURGER_BUNS);
     }
 
     public boolean hasTopAndBottomBread() {
-        return !items.isEmpty()
-                && items.getFirst().is(ModTags.SANDWICH_BREAD)
-                && items.getLast().is(ModTags.SANDWICH_BREAD);
+        return !isEmpty()
+                && getFirst().is(ModTags.SANDWICH_BREAD)
+                && getLast().is(ModTags.SANDWICH_BREAD);
     }
 
     public boolean isDoubleDecker() {
-        if (items.size() < 5 || !hasTopAndBottomBread()
-                || items.get(1).is(ModTags.SANDWICH_BREAD)
-                || items.get(items.size() - 2).is(ModTags.SANDWICH_BREAD)
+        if (size() < 5 || !hasTopAndBottomBread()
+                || get(1).is(ModTags.SANDWICH_BREAD)
+                || get(size() - 2).is(ModTags.SANDWICH_BREAD)
         ) {
             return false;
         }
 
         int breadCount = 0;
-        for (ItemStack item : items) {
+        for (ItemStack item : this) {
             if (item.is(ModTags.SANDWICH_BREAD)) {
                 breadCount++;
             }
@@ -121,7 +123,7 @@ public record SandwichContents(List<ItemStack> items) {
                 .saturationModifier(saturationModifier);
 
         Set<Item> uniqueIngredients = new HashSet<>();
-        for (ItemStack stack : items) {
+        for (ItemStack stack : this) {
             FoodProperties food = Ingredients.getFood(stack, entity);
             if (food.nutrition() > 0 && food.effects().isEmpty() && !stack.is(ModTags.SANDWICH_BREAD)) {
                 uniqueIngredients.add(stack.getItem());
@@ -158,10 +160,10 @@ public record SandwichContents(List<ItemStack> items) {
     }
 
     public ItemStack makeItem() {
-        if (items.isEmpty()) {
+        if (isEmpty()) {
             return ItemStack.EMPTY;
-        } else if (items.size() == 1) {
-            return items.getFirst().copy();
+        } else if (size() == 1) {
+            return getFirst().copy();
         } else {
             ItemStack result = new ItemStack(ModItems.SANDWICH.get());
             result.set(ModDataComponents.SANDWICH_CONTENTS.get(), this);
@@ -170,15 +172,27 @@ public record SandwichContents(List<ItemStack> items) {
     }
 
     @Override
+    public ItemStack get(int index) {
+        return items.get(index);
+    }
+
+    @Override
+    public int size() {
+        return items.size();
+    }
+
+    @Override
     @SuppressWarnings("deprecation")
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof SandwichContents contents)) return false;
-        return ItemStack.listMatches(items, contents.items);
+
+        return ItemStack.listMatches(this, contents);
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public int hashCode() {
-        return items.hashCode();
+        return ItemStack.hashStackList(this);
     }
 }

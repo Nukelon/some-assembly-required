@@ -42,7 +42,7 @@ public class SandwichItemRenderer extends BlockEntityWithoutLevelRenderer {
             poseStack.translate(0, -height / 32D, 0);
         }
 
-        if (sandwich.items().isEmpty()) {
+        if (sandwich.isEmpty()) {
             poseStack.mulPose(Axis.XP.rotationDegrees(90));
             poseStack.mulPose(Axis.ZP.rotationDegrees(180));
             Minecraft.getInstance().getItemRenderer().renderStatic(BARRIER, ItemDisplayContext.FIXED, packedLight, overlay, poseStack, buffer, null, 0);
@@ -58,9 +58,9 @@ public class SandwichItemRenderer extends BlockEntityWithoutLevelRenderer {
         poseStack.mulPose(Axis.XP.rotationDegrees(90));
         poseStack.mulPose(Axis.ZP.rotationDegrees(180));
         random.setSeed(seed);
-        for (int slot = 0; slot < sandwich.items().size(); slot++) {
+        for (int slot = 0; slot < sandwich.size(); slot++) {
             poseStack.pushPose();
-            ItemStack stack = sandwich.items().get(slot);
+            ItemStack stack = sandwich.get(slot);
             if (!stack.is(ModTags.SANDWICH_BREAD)) {
                 poseStack.mulPose(Axis.ZP.rotationDegrees(random.nextFloat() * 40 - 20));
             }

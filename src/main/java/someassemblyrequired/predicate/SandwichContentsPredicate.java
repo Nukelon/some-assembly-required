@@ -24,7 +24,7 @@ public record SandwichContentsPredicate(Optional<CollectionPredicate<ItemStack, 
         return ModDataComponents.SANDWICH_CONTENTS.get();
     }
 
-    public boolean matches(ItemStack stack, SandwichContents value) {
-        return items.isEmpty() || items.get().test(value.items());
+    public boolean matches(ItemStack stack, SandwichContents sandwich) {
+        return items.isEmpty() || items.get().test(sandwich);
     }
 }

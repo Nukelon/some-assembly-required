@@ -92,9 +92,9 @@ public class SandwichingStationCategory implements IRecipeCategory<SandwichingSt
 
         IRecipeSlotBuilder output = builder.addSlot(RecipeIngredientRole.OUTPUT, 72, 52).setBackground(slot, -1, -1);
 
-        if (sandwich.isPresent() && sandwich.get().items().size() <= 6) {
+        if (sandwich.isPresent() && sandwich.get().size() <= 6) {
 
-            List<ItemStack> ingredients = sandwich.get().items();
+            List<ItemStack> ingredients = sandwich.get();
 
             for (int i = 0; i < ingredients.size(); i++) {
                 IRecipeSlotBuilder slotBuilder = builder.addSlot(RecipeIngredientRole.INPUT, 8, 62 - ingredients.size() * 10 + i * 20).setBackground(slot, -1, -1);

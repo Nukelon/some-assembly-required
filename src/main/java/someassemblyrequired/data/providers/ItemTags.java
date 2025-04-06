@@ -38,11 +38,7 @@ public class ItemTags extends ItemTagsProvider {
                 ModItems.BURGER_BUN_TOP.get()
         );
 
-        tag(ModTags.BREAD_SLICES).addTags(
-                ModTags.BREAD_SLICES_WHEAT
-        );
-
-        tag(ModTags.BREAD_SLICES_WHEAT).add(
+        tag(ModTags.BREAD_SLICES).add(
                 ModItems.BREAD_SLICE.get(),
                 ModItems.TOASTED_BREAD_SLICE.get()
         );

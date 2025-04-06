@@ -26,7 +26,7 @@ public class SandwichNameHelper {
     public static Component getSandwichDisplayName(ItemStack stack) {
         SandwichContents contents = SandwichContents.get(stack);
 
-        if (contents.items().isEmpty()
+        if (contents.isEmpty()
                 || BuiltInRegistries.ITEM.getTags().noneMatch(p -> p.getFirst().equals(ModTags.SANDWICH_BREAD))
         ) {
             return translate("base", "sandwich");
@@ -38,7 +38,7 @@ public class SandwichNameHelper {
         String sandwichType = bunCount > (breadCount - bunCount) ? "burger" : "sandwich";
 
         // full bread sandwich
-        if (contents.items().size() == breadCount) {
+        if (contents.size() == breadCount) {
             return getBreadSandwichName(contents, sandwichType);
         }
 
@@ -49,7 +49,7 @@ public class SandwichNameHelper {
             return getPotionSandwichName(uniqueIngredients.getFirst(), sandwichType);
         }
 
-        boolean isOpenFacedSandwich = breadCount == 1 && contents.items().size() > 1;
+        boolean isOpenFacedSandwich = breadCount == 1 && contents.size() > 1;
 
         if (!uniqueIngredients.isEmpty() && uniqueIngredients.size() <= 3) {
             Component ingredientList = listIngredients(uniqueIngredients);
@@ -67,13 +67,13 @@ public class SandwichNameHelper {
         } else if (isOpenFacedSandwich) {
             return translate("open_faced", sandwichType);
         } else {
-            return translate("base", "sandwich");
+            return translate("base", sandwichType);
         }
     }
 
     private static List<ItemStack> getUniqueIngredientsExcludingBread(SandwichContents sandwich) {
         List<ItemStack> result = new ArrayList<>();
-        for (ItemStack ingredient : sandwich.items()) {
+        for (ItemStack ingredient : sandwich) {
             if (!ingredient.is(ModTags.SANDWICH_BREAD) && result.stream().noneMatch(stack -> ItemStack.matches(ingredient, stack))) {
                 result.add(ingredient);
             }
@@ -83,7 +83,7 @@ public class SandwichNameHelper {
 
     private static int countItems(SandwichContents sandwich, TagKey<Item> tagKey) {
         int result = 0;
-        for (ItemStack ingredient : sandwich.items()) {
+        for (ItemStack ingredient : sandwich) {
             if (ingredient.is(tagKey)) {
                 result++;
             }
@@ -92,11 +92,11 @@ public class SandwichNameHelper {
     }
 
     private static Component getBreadSandwichName(SandwichContents contents, String sandwichType) {
-        if ((contents.items().size() == 3)
-                && contents.items().getFirst().getItem() != ModItems.TOASTED_BREAD_SLICE.get()
-                && contents.items().get(1).getItem() == ModItems.TOASTED_BREAD_SLICE.get()
-                && contents.items().get(2).getItem() != ModItems.TOASTED_BREAD_SLICE.get()) {
-            return translateWithArg("base", "with_ingredients", sandwichType, Ingredients.getDisplayName(contents.items().get(1)));
+        if ((contents.size() == 3)
+                && contents.getFirst().getItem() != ModItems.TOASTED_BREAD_SLICE.get()
+                && contents.get(1).getItem() == ModItems.TOASTED_BREAD_SLICE.get()
+                && contents.get(2).getItem() != ModItems.TOASTED_BREAD_SLICE.get()) {
+            return translateWithArg("base", "with_ingredients", sandwichType, Ingredients.getDisplayName(contents.get(1)));
         }
         return translate("only_bread", sandwichType);
     }

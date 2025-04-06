@@ -41,7 +41,10 @@ public class FarmersDelightCompat {
     }
 
     public static void populateJEI(Consumer<ItemStack> items) {
-
+        items.accept(SandwichItem.makeToastSandwich(ModItems.FRIED_EGG.get()));
+        items.accept(SandwichItem.makeToastSandwich(ModItems.COOKED_BACON.get()));
+        items.accept(SandwichItem.makeSandwich(ModItems.COOKED_CHICKEN_CUTS.get()));
+        items.accept(SandwichItem.makeBurger(ModItems.HAMBURGER.get()));
     }
 
     public static void onCommonSetup(FMLCommonSetupEvent event) {

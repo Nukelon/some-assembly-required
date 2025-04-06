@@ -106,5 +106,10 @@
   "someassemblyrequired.config.server.sandwich_bonus_effect": "Sandwich bonus effect",
   "someassemblyrequired.config.server.burger_bonus_effect": "Burger bonus effect",
   "someassemblyrequired.config.server.sandwich_bonus_effect_durations": "Sandwich bonus effect durations",
-  "someassemblyrequired.config.server.burger_bonus_effect_durations": "Burger bonus effect durations"
+  "someassemblyrequired.config.server.burger_bonus_effect_durations": "Burger bonus effect durations",
+
+  "tag.item.c.bread_slices": "Bread Slices",
+  "tag.item.someassemblyrequired.burger_buns": "Burger Buns",
+  "tag.item.someassemblyrequired.sandwich_bread": "Sandwich Bread",
+  "tag.block.someassemblyrequired.sandwiching_stations": "Sandwiching Stations"
 }

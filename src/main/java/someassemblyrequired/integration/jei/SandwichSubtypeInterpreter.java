@@ -10,11 +10,11 @@ public class SandwichSubtypeInterpreter implements ISubtypeInterpreter<ItemStack
 
     @Override
     public @Nullable Object getSubtypeData(ItemStack stack, UidContext uidContext) {
-        return SandwichContents.get(stack).items();
+        return SandwichContents.get(stack);
     }
 
     @Override
     public String getLegacyStringSubtypeInfo(ItemStack stack, UidContext uidContext) {
-        return SandwichContents.get(stack).items().toString();
+        return SandwichContents.get(stack).toString();
     }
 }

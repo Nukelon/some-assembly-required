@@ -1,13 +1,17 @@
 package someassemblyrequired.integration;
 
+import net.minecraft.core.Holder;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.Potions;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModList;
 import someassemblyrequired.integration.create.CreateCompat;
 import someassemblyrequired.integration.farmersdelight.FarmersDelightCompat;
 import someassemblyrequired.item.sandwich.SandwichItem;
+import someassemblyrequired.registry.ModItems;
 
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -18,6 +22,31 @@ public class ModCompat {
     public static final String JEI = "jei";
     public static final String MINERSDELIGHT = "minersdelight";
     public static final String SLICE_AND_DICE = "sliceanddice";
+
+    public static final List<Holder<Potion>> EXAMPLE_POTIONS = List.of(
+            Potions.MUNDANE,
+            Potions.THICK,
+            Potions.AWKWARD,
+            Potions.NIGHT_VISION,
+            Potions.INVISIBILITY,
+            Potions.LEAPING,
+            Potions.FIRE_RESISTANCE,
+            Potions.SWIFTNESS,
+            Potions.SLOWNESS,
+            Potions.TURTLE_MASTER,
+            Potions.WATER_BREATHING,
+            Potions.HEALING,
+            Potions.HARMING,
+            Potions.POISON,
+            Potions.REGENERATION,
+            Potions.STRENGTH,
+            Potions.WEAKNESS,
+            Potions.SLOW_FALLING,
+            Potions.WIND_CHARGED,
+            Potions.WEAVING,
+            Potions.OOZING,
+            Potions.INFESTED
+    );
 
     public static void setup(IEventBus modEventBus) {
         if (isFarmersDelightLoaded()) FarmersDelightCompat.setup(modEventBus);
@@ -44,9 +73,6 @@ public class ModCompat {
         if (ModCompat.isFarmersDelightLoaded()) {
             FarmersDelightCompat.populateCreativeTab(consumer);
         }
-        if (ModCompat.isCreateLoaded()) {
-            CreateCompat.populateCreativeTab(consumer);
-        }
     }
 
     public static void gatherJEISandwiches(Consumer<ItemStack> consumer) {
@@ -56,26 +82,12 @@ public class ModCompat {
         if (ModCompat.isCreateLoaded()) {
             CreateCompat.populateJEI(consumer);
         }
+        EXAMPLE_POTIONS.stream().map(SandwichItem::makeSandwich).forEach(consumer);
         Stream.of(
-                Potions.NIGHT_VISION,
-                Potions.INVISIBILITY,
-                Potions.LEAPING,
-                Potions.FIRE_RESISTANCE,
-                Potions.SWIFTNESS,
-                Potions.SLOWNESS,
-                Potions.TURTLE_MASTER,
-                Potions.WATER_BREATHING,
-                Potions.HEALING,
-                Potions.HARMING,
-                Potions.POISON,
-                Potions.REGENERATION,
-                Potions.STRENGTH,
-                Potions.WEAKNESS,
-                Potions.SLOW_FALLING,
-                Potions.WIND_CHARGED,
-                Potions.WEAVING,
-                Potions.OOZING,
-                Potions.INFESTED
+                ModItems.APPLE_SLICES.get(),
+                ModItems.CHOPPED_CARROT.get(),
+                ModItems.CHOPPED_BEETROOT.get(),
+                ModItems.TOMATO_SLICES.get()
         ).map(SandwichItem::makeSandwich).forEach(consumer);
     }
 }

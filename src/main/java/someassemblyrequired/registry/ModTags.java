@@ -5,14 +5,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.neoforged.neoforge.internal.versions.neoforge.NeoForgeVersion;
 import someassemblyrequired.SomeAssemblyRequired;
 
 public class ModTags {
 
-    // forge item tags
-    public static final TagKey<Item> BREAD_SLICES = itemTag(NeoForgeVersion.MOD_ID, "bread_slices");
-    public static final TagKey<Item> BREAD_SLICES_WHEAT = itemTag(NeoForgeVersion.MOD_ID, "bread_slices/wheat");
+    // c item tags
+    public static final TagKey<Item> BREAD_SLICES = itemTag("c", "bread_slices");
 
     // mod item tags
     public static final TagKey<Item> SANDWICH_BREAD = itemTag("sandwich_bread");

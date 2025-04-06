@@ -49,7 +49,7 @@ public class SandwichBlockEntity extends BlockEntity {
             return InteractionResult.SUCCESS_NO_ITEM_USED;
         }
 
-        ItemStack stack = contents.items().getLast();
+        ItemStack stack = contents.getLast();
         Ingredients.playRemoveSound(stack, level, player, getBlockPos());
 
         setContents(getContents().dropLast());
@@ -75,7 +75,7 @@ public class SandwichBlockEntity extends BlockEntity {
 
         List<ItemStack> itemsToAdd = new ArrayList<>();
         if (useItem.is(ModItems.SANDWICH)) {
-            itemsToAdd.addAll(SandwichContents.get(useItem).items());
+            itemsToAdd.addAll(SandwichContents.get(useItem));
         } else {
             itemsToAdd.add(useItem);
         }
@@ -113,7 +113,7 @@ public class SandwichBlockEntity extends BlockEntity {
 
     public void onSandwichUpdated() {
         if (level != null) {
-            if (contents.items().isEmpty()) {
+            if (contents.isEmpty()) {
                 level.removeBlock(getBlockPos(), false);
             } else {
                 BlockState state = level.getBlockState(getBlockPos());

@@ -6,63 +6,57 @@ import com.simibubi.create.content.fluids.transfer.FillingRecipe;
 import com.simibubi.create.content.kinetics.deployer.DeployerApplicationRecipe;
 import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipe;
 import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipeBuilder;
+import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
-import net.minecraft.core.Holder;
+import mezz.jei.api.recipe.RecipeType;
+import mezz.jei.api.registration.IAdvancedRegistration;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionContents;
-import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.neoforged.neoforge.fluids.FluidStack;
 import someassemblyrequired.SomeAssemblyRequired;
+import someassemblyrequired.integration.ModCompat;
 import someassemblyrequired.integration.create.recipe.SandwichFluidSpoutingRecipe;
 import someassemblyrequired.item.sandwich.SandwichContents;
 import someassemblyrequired.item.sandwich.SandwichItem;
+import someassemblyrequired.recipe.SandwichSpoutingRecipe;
 import someassemblyrequired.registry.ModItems;
 import someassemblyrequired.registry.ModRecipeTypes;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
-// TODO support double deckers
 public class SequencedAssemblyRecipeGenerator extends SandwichRecipeGenerator<SequencedAssemblyRecipe> {
 
-    @Override
-    protected int getMaxInputs() {
-        return 32;
+    private static final RecipeType<SequencedAssemblyRecipe> SEQUENCED_ASSEMBLY = RecipeType.create(ModCompat.CREATE, "sequenced_assembly", SequencedAssemblyRecipe.class);
+
+    public static void register(IAdvancedRegistration registration) {
+        registration.addTypedRecipeManagerPlugin(SEQUENCED_ASSEMBLY, new SequencedAssemblyRecipeGenerator());
     }
 
     @Override
-    protected SequencedAssemblyRecipe getRecipeForSandwich(SandwichContents contents) {
-        List<ItemStack> items = contents.items();
-        ItemStack startItem = items.getFirst();
-        int size = items.size();
-        if (size - 1 > 6) {
-            startItem = SandwichItem.of(items.subList(0, size - 6));
-            items = items.subList(size - 6, size);
-        } else {
-            items = items.subList(1, size);
-        }
+    protected int getMaxToppings() {
+        return 6;
+    }
 
-        SequencedAssemblyRecipeBuilder recipe = new SequencedAssemblyRecipeBuilder(SomeAssemblyRequired.id("dynamic/sequenced_assembly"))
+    @Override
+    protected SequencedAssemblyRecipe getRecipeForSandwich(List<ItemStack> contents, ItemStack prefix, ItemStack result) {
+        SequencedAssemblyRecipeBuilder recipe = new SequencedAssemblyRecipeBuilder(
+                SomeAssemblyRequired.id("dynamic/sequenced_assembly"))
                 .transitionTo(ModItems.SANDWICH.get())
                 .loops(1)
-                .addOutput(contents.makeItem(), 1)
-                .require(Ingredient.of(startItem));
+                .addOutput(result, 1)
+                .require(Ingredient.of(prefix));
 
-        for (ItemStack input : items) {
-            Optional<SandwichFluidSpoutingRecipe> spoutingRecipe = getSpoutingRecipeFor(input);
+        for (ItemStack input : contents) {
+            Optional<FluidIngredient> fluidIngredient = getFluidFromFilling(input);
 
-            if (input.is(Items.POTION)) {
-                Holder<Potion> potion = input.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY).potion().orElse(Potions.WATER);
-                int requiredAmount = PotionFluidHandler.getRequiredAmountForFilledBottle(null, null);
-                FluidIngredient potionIngredient = PotionFluidHandler.potionIngredient(potion, requiredAmount);
-                recipe.addStep(FillingRecipe::new, builder -> builder.require(potionIngredient));
-            } else if (spoutingRecipe.isPresent()) {
-                recipe.addStep(FillingRecipe::new, builder -> builder.require(spoutingRecipe.get().ingredient()));
+            if (fluidIngredient.isPresent()) {
+                recipe.addStep(FillingRecipe::new, builder -> builder.require(fluidIngredient.get()));
             } else {
                 recipe.addStep(DeployerApplicationRecipe::new, builder -> builder.require(Ingredient.of(input)));
             }
@@ -71,12 +65,50 @@ public class SequencedAssemblyRecipeGenerator extends SandwichRecipeGenerator<Se
         return recipe.build().value();
     }
 
-    private Optional<SandwichFluidSpoutingRecipe> getSpoutingRecipeFor(ItemStack sandwichIngredient) {
+    @Override
+    protected List<SequencedAssemblyRecipe> getRecipesForBread(ItemStack bottomBread, ItemStack topBread) {
+        List<SequencedAssemblyRecipe> recipes = super.getRecipesForBread(bottomBread, topBread);
+        getSpoutingRecipes()
+                .map(recipe -> recipe.assemble(FluidStack.EMPTY))
+                .filter(item -> !item.is(Items.HONEY_BOTTLE)) // already included by super
+                .map(filling -> SandwichItem.of(bottomBread, filling, topBread))
+                .map(sandwich -> getRecipeForSandwich(SandwichContents.get(sandwich)))
+                .forEach(recipes::add);
+        ModCompat.EXAMPLE_POTIONS.stream()
+                .filter(potion -> !potion.value().getEffects().isEmpty())
+                .map(potion -> PotionContents.createItemStack(Items.POTION, potion))
+                .map(potion -> createRecipe(bottomBread, potion, topBread))
+                .forEach(recipes::add);
+        return recipes;
+    }
+
+    @Override
+    protected ItemStack getFillingFromFluid(FluidStack fluid) {
+        for (RecipeHolder<?> recipe : CreateJEI.getTypedRecipes(ModRecipeTypes.SANDWICH_SPOUTING.get())) {
+            if (((SandwichSpoutingRecipe) recipe.value()).matches(fluid)) {
+                return ((SandwichSpoutingRecipe) recipe.value()).assemble(fluid);
+            }
+        }
+        throw new IllegalArgumentException("Unsupported fluid: [%s]".formatted(fluid.toString()));
+    }
+
+    @Override
+    protected Optional<FluidIngredient> getFluidFromFilling(ItemStack filling) {
+        if (filling.is(Items.POTION)) {
+            int requiredAmount = PotionFluidHandler.getRequiredAmountForFilledBottle(null, null);
+            return Optional.of(FluidIngredient.fromFluidStack(FluidHelper.copyStackWithAmount(PotionFluidHandler
+                    .getFluidFromPotionItem(filling), requiredAmount)));
+        }
+        return getSpoutingRecipes()
+                .filter(recipe -> ItemStack.isSameItemSameComponents(recipe.getResultItem(RegistryAccess.EMPTY), filling))
+                .map(SandwichFluidSpoutingRecipe::ingredient)
+                .findFirst();
+    }
+
+    private Stream<SandwichFluidSpoutingRecipe> getSpoutingRecipes() {
         return CreateJEI.getTypedRecipesExcluding(ModRecipeTypes.SANDWICH_SPOUTING.get(), recipe -> recipe.value().getSerializer() != ModRecipeTypes.SANDWICH_FLUID_SPOUTING_SERIALIZER.get())
                 .stream()
                 .map(RecipeHolder::value)
-                .map(recipe -> (SandwichFluidSpoutingRecipe) recipe)
-                .filter(recipe -> ItemStack.isSameItemSameComponents(recipe.getResultItem(RegistryAccess.EMPTY), sandwichIngredient))
-                .findFirst();
+                .map(recipe -> (SandwichFluidSpoutingRecipe) recipe);
     }
 }
