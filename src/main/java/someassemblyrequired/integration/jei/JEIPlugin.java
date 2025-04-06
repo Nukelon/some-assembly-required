@@ -3,6 +3,8 @@ package someassemblyrequired.integration.jei;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaTypes;
+import mezz.jei.api.ingredients.subtypes.ISubtypeInterpreter;
+import mezz.jei.api.ingredients.subtypes.UidContext;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.registration.*;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -10,6 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import someassemblyrequired.SomeAssemblyRequired;
 import someassemblyrequired.integration.ModCompat;
+import someassemblyrequired.integration.jei.create.SequencedAssemblyRecipeGenerator;
 import someassemblyrequired.item.sandwich.SandwichContents;
 import someassemblyrequired.registry.ModBlocks;
 import someassemblyrequired.registry.ModItems;
@@ -19,8 +22,7 @@ import java.util.Comparator;
 import java.util.List;
 
 @JeiPlugin
-@SuppressWarnings("unused")
-public class JEICompat implements IModPlugin {
+public class JEIPlugin implements IModPlugin {
 
     private static final ResourceLocation ID = SomeAssemblyRequired.id("main");
 
@@ -45,6 +47,7 @@ public class JEICompat implements IModPlugin {
         if (ModCompat.isCreateLoaded()) {
             SequencedAssemblyRecipeGenerator.register(registration);
         }
+        registration.addTypedRecipeManagerPlugin(SANDWICHING_STATION, new SandwichingStationRecipeGenerator());
     }
 
     @Override
@@ -64,7 +67,17 @@ public class JEICompat implements IModPlugin {
 
     @Override
     public void registerItemSubtypes(ISubtypeRegistration registration) {
-        registration.registerSubtypeInterpreter(ModItems.SANDWICH.get(), new SandwichSubtypeInterpreter());
+        registration.registerSubtypeInterpreter(ModItems.SANDWICH.get(), new ISubtypeInterpreter<>() {
+            @Override
+            public Object getSubtypeData(ItemStack ingredient, UidContext context) {
+                return SandwichContents.get(ingredient);
+            }
+
+            @Override
+            public String getLegacyStringSubtypeInfo(ItemStack ingredient, UidContext context) {
+                return getSubtypeData(ingredient, context).toString();
+            }
+        });
     }
 
     @Override

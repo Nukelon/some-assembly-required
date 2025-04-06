@@ -11,8 +11,6 @@ import someassemblyrequired.SomeAssemblyRequired;
 import someassemblyrequired.ingredient.IngredientProperties;
 import someassemblyrequired.ingredient.IngredientPropertiesBase;
 import someassemblyrequired.ingredient.PotionProperties;
-import someassemblyrequired.integration.ModCompat;
-import someassemblyrequired.integration.jei.JEIUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,9 +36,6 @@ public class ModIngredients {
             properties.put(item, ingredient);
         });
         properties.put(Items.POTION, new PotionProperties());
-        if (ModCompat.isJEILoaded()) {
-            JEIUtil.refresh();
-        }
     }
 
     public static boolean hasIngredientFor(Item item) {

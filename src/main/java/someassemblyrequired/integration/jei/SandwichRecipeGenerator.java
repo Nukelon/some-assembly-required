@@ -137,10 +137,10 @@ public abstract class SandwichRecipeGenerator<RECIPE> implements ISimpleRecipeMa
         } else {
             items = items.subList(1, size);
         }
-        return getRecipeForSandwich(items, prefix, contents.makeItem());
+        return getRecipeForSandwich(prefix, items, contents.makeItem());
     }
 
-    protected abstract RECIPE getRecipeForSandwich(List<ItemStack> contents, ItemStack prefix, ItemStack result);
+    protected abstract RECIPE getRecipeForSandwich(ItemStack prefix, List<ItemStack> toppings, ItemStack result);
 
     @Override
     public List<RECIPE> getAllRecipes() {

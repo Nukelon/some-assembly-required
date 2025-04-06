@@ -1,4 +1,4 @@
-package someassemblyrequired.integration.jei;
+package someassemblyrequired.integration.jei.create;
 
 import com.simibubi.create.compat.jei.CreateJEI;
 import com.simibubi.create.content.fluids.potion.PotionFluidHandler;
@@ -20,6 +20,7 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import someassemblyrequired.SomeAssemblyRequired;
 import someassemblyrequired.integration.ModCompat;
 import someassemblyrequired.integration.create.recipe.SandwichFluidSpoutingRecipe;
+import someassemblyrequired.integration.jei.SandwichRecipeGenerator;
 import someassemblyrequired.item.sandwich.SandwichContents;
 import someassemblyrequired.item.sandwich.SandwichItem;
 import someassemblyrequired.recipe.SandwichSpoutingRecipe;
@@ -44,7 +45,7 @@ public class SequencedAssemblyRecipeGenerator extends SandwichRecipeGenerator<Se
     }
 
     @Override
-    protected SequencedAssemblyRecipe getRecipeForSandwich(List<ItemStack> contents, ItemStack prefix, ItemStack result) {
+    protected SequencedAssemblyRecipe getRecipeForSandwich(ItemStack prefix, List<ItemStack> toppings, ItemStack result) {
         SequencedAssemblyRecipeBuilder recipe = new SequencedAssemblyRecipeBuilder(
                 SomeAssemblyRequired.id("dynamic/sequenced_assembly"))
                 .transitionTo(ModItems.SANDWICH.get())
@@ -52,7 +53,7 @@ public class SequencedAssemblyRecipeGenerator extends SandwichRecipeGenerator<Se
                 .addOutput(result, 1)
                 .require(Ingredient.of(prefix));
 
-        for (ItemStack input : contents) {
+        for (ItemStack input : toppings) {
             Optional<FluidIngredient> fluidIngredient = getFluidFromFilling(input);
 
             if (fluidIngredient.isPresent()) {

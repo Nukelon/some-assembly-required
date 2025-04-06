@@ -19,7 +19,6 @@ public class ModCompat {
 
     public static final String FARMERSDELIGHT = "farmersdelight";
     public static final String CREATE = "create";
-    public static final String JEI = "jei";
     public static final String MINERSDELIGHT = "minersdelight";
     public static final String SLICE_AND_DICE = "sliceanddice";
 
@@ -59,10 +58,6 @@ public class ModCompat {
 
     public static boolean isCreateLoaded() {
         return isLoaded(CREATE);
-    }
-
-    public static boolean isJEILoaded() {
-        return isLoaded(JEI);
     }
 
     private static boolean isLoaded(String modid) {
