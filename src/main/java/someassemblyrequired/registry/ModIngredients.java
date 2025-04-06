@@ -22,7 +22,7 @@ public class ModIngredients {
 
     private static final IngredientPropertiesBase DEFAULT_PROPERTIES = new IngredientProperties(
             null, Optional.empty(), Optional.empty(), Optional.empty(),
-            ItemStack.EMPTY, ModSoundEvents.ADD_ITEM, 1, true
+            ItemStack.EMPTY, ModSoundEvents.ADD_ITEM, 1, true, false
     );
 
     private static final Map<Item, IngredientPropertiesBase> properties = new HashMap<>();

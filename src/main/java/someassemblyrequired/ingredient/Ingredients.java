@@ -37,12 +37,9 @@ public class Ingredients {
         addBehavior(Items.HONEY_BOTTLE, new HoneyBottleBehavior());
     }
 
-    public static boolean hasCustomIngredientProperties(Item item) {
-        return ModIngredients.hasIngredientFor(item);
-    }
-
+    @SuppressWarnings("ConstantConditions")
     public static boolean canAddToSandwich(ItemStack item) {
-        return !item.isEmpty() && (item.getFoodProperties(null) != null || ModIngredients.get(item) != null);
+        return !item.isEmpty() && (item.getFoodProperties(null) != null || ModIngredients.get(item) != null && !ModIngredients.get(item).hidden());
     }
 
     public static @NotNull FoodProperties getFood(ItemStack item, @Nullable LivingEntity entity) {

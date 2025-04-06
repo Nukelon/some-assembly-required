@@ -11,10 +11,10 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.fluids.FluidStack;
+import someassemblyrequired.ingredient.Ingredients;
 import someassemblyrequired.integration.ModCompat;
 import someassemblyrequired.item.sandwich.SandwichContents;
 import someassemblyrequired.item.sandwich.SandwichItem;
-import someassemblyrequired.registry.ModIngredients;
 import someassemblyrequired.registry.ModItems;
 import someassemblyrequired.registry.ModTags;
 
@@ -42,7 +42,7 @@ public abstract class SandwichRecipeGenerator<RECIPE> implements ISimpleRecipeMa
         return !filling.is(ModItems.SANDWICH)
                 && !filling.is(ModTags.SANDWICH_BREAD)
                 && getFluidFromFilling(filling).isEmpty()
-                && (filling.getFoodProperties(null) != null || ModIngredients.hasIngredientFor(filling.getItem()));
+                && Ingredients.canAddToSandwich(filling);
     }
 
     protected boolean isHandledFilling(FluidStack fluid) {

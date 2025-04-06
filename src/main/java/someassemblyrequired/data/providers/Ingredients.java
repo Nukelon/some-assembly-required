@@ -86,13 +86,13 @@ public record Ingredients(PackOutput packOutput) implements DataProvider {
         builder(Items.MILK_BUCKET).setCustomFullName().setSpread(0xEEFDFF).setMoistSound()
                 .setFoodProperties(new FoodProperties.Builder().usingConvertsTo(Items.BUCKET).build());
 
-        builder(Items.POTATO).setHeight(5).setRenderAsItem(false);
-        builder(ModItems.BURGER_BUN.get()).setHeight(6).setRenderAsItem(false);
+        builder(Items.POTATO).setHeight(5).customModel();
+        builder(ModItems.BURGER_BUN.get()).setHeight(6).customModel();
         String burgerBunHalf = "%s.ingredient.%s".formatted(SomeAssemblyRequired.MOD_ID, "burger_bun_half");
-        builder(ModItems.BURGER_BUN_BOTTOM.get()).setHeight(2).setRenderAsItem(false).setFullName(burgerBunHalf);
-        builder(ModItems.BURGER_BUN_TOP.get()).setHeight(4).setRenderAsItem(false).setFullName(burgerBunHalf);
+        builder(ModItems.BURGER_BUN_BOTTOM.get()).setHeight(2).customModel().setFullName(burgerBunHalf);
+        builder(ModItems.BURGER_BUN_TOP.get()).setHeight(4).customModel().setFullName(burgerBunHalf);
 
-        builder(Items.GOLD_BLOCK).setHeight(8).setRenderAsItem(false);
+        builder(Items.GOLD_BLOCK).setHeight(8).customModel().hidden();
 
         Arrays.asList(
                 ModItems.TOASTED_BREAD_SLICE.get(),

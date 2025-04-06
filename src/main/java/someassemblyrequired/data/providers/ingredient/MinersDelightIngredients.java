@@ -14,6 +14,6 @@ public class MinersDelightIngredients {
     );
 
     public static void addIngredients(Ingredients ingredients) {
-        ingredients.builder(Ingredients.reference(ModCompat.MINERSDELIGHT, "vegan_patty")).setRenderAsItem(false).setHeight(2);
+        ingredients.builder(Ingredients.reference(ModCompat.MINERSDELIGHT, "vegan_patty")).customModel().setHeight(2);
     }
 }

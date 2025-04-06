@@ -38,6 +38,8 @@ public class IngredientBuilder {
 
     private FoodProperties foodProperties = null;
 
+    private boolean hidden = false;
+
     public IngredientBuilder(Holder<Item> item) {
         this.item = item;
     }
@@ -50,7 +52,8 @@ public class IngredientBuilder {
                 displayItem,
                 soundEvent == null ? ModSoundEvents.ADD_ITEM : BuiltInRegistries.SOUND_EVENT.getHolderOrThrow(BuiltInRegistries.SOUND_EVENT.getResourceKey(soundEvent).orElseThrow()),
                 height,
-                renderAsItem
+                renderAsItem,
+                hidden
         );
     }
 
@@ -138,8 +141,13 @@ public class IngredientBuilder {
         return this;
     }
 
-    public IngredientBuilder setRenderAsItem(boolean renderAsItem) {
-        this.renderAsItem = renderAsItem;
+    public IngredientBuilder customModel() {
+        this.renderAsItem = false;
+        return this;
+    }
+
+    public IngredientBuilder hidden() {
+        this.hidden = true;
         return this;
     }
 

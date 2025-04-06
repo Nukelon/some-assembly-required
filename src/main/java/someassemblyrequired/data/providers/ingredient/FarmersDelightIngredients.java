@@ -64,7 +64,7 @@ public class FarmersDelightIngredients {
         ingredients.builder(ModItems.APPLE_CIDER.get()).setSpread(0xbd783d, 0.8).setMoistSound();
         ingredients.builder(ModItems.MELON_JUICE.get()).setSpread(0xc73225, 0.8).setMoistSound();
 
-        ingredients.builder(ModItems.MINCED_BEEF.get()).setSlimySound().setRenderAsItem(false).setHeight(2);
+        ingredients.builder(ModItems.MINCED_BEEF.get()).setSlimySound().customModel().setHeight(2);
         ingredients.builder(ModItems.CHICKEN_CUTS.get()).setCustomDisplayName().setWetSound();
         ingredients.builder(ModItems.BACON.get()).setCustomDisplayName();
         ingredients.builder(ModItems.MUTTON_CHOPS.get()).setMoistSound().setCustomDisplayName();
@@ -73,7 +73,7 @@ public class FarmersDelightIngredients {
 
         ingredients.builder(ModItems.CABBAGE_LEAF.get()).setCustomDisplayName().setLeafySound();
         ingredients.builder(ModItems.FRIED_EGG.get()).setCustomDisplayName().setSlimySound();
-        ingredients.builder(ModItems.BEEF_PATTY.get()).setCustomDisplayName().setRenderAsItem(false).setHeight(2);
+        ingredients.builder(ModItems.BEEF_PATTY.get()).setCustomDisplayName().customModel().setHeight(2);
         ingredients.builder(ModItems.COOKED_CHICKEN_CUTS.get()).setDisplayName((Holder<Item>) ModItems.CHICKEN_CUTS);
         ingredients.builder(ModItems.COOKED_BACON.get()).setDisplayName((Holder<Item>) ModItems.BACON);
         ingredients.builder(ModItems.COOKED_COD_SLICE.get()).setDisplayName((Holder<Item>) ModItems.COD_SLICE);

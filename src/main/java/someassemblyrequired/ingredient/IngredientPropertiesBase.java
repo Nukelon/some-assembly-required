@@ -56,6 +56,10 @@ public interface IngredientPropertiesBase {
 
     boolean renderAsItem();
 
+    default boolean hidden() {
+        return false;
+    }
+
     default int height() {
         return 1;
     }

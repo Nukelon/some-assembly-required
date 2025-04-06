@@ -24,7 +24,8 @@ public record IngredientProperties(
         ItemStack displayItem,
         Holder<SoundEvent> sound,
         int height,
-        boolean renderAsItem
+        boolean renderAsItem,
+        boolean hidden
 ) implements IngredientPropertiesBase {
 
     public static final Codec<IngredientProperties> CODEC = RecordCodecBuilder.create(instance -> instance.group(
@@ -35,6 +36,7 @@ public record IngredientProperties(
             ItemStack.CODEC.optionalFieldOf("display_item", ItemStack.EMPTY).forGetter(IngredientProperties::displayItem),
             BuiltInRegistries.SOUND_EVENT.holderByNameCodec().optionalFieldOf("sound", ModSoundEvents.ADD_ITEM).forGetter(IngredientProperties::sound),
             ExtraCodecs.intRange(1, 32).optionalFieldOf("height", 1).forGetter(IngredientProperties::height),
-            Codec.BOOL.optionalFieldOf("render_as_item", true).forGetter(IngredientProperties::renderAsItem)
+            Codec.BOOL.optionalFieldOf("render_as_item", true).forGetter(IngredientProperties::renderAsItem),
+            Codec.BOOL.optionalFieldOf("hidden", false).forGetter(IngredientProperties::hidden)
     ).apply(instance, IngredientProperties::new));
 }

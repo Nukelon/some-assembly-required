@@ -1,5 +1,6 @@
 {
   "height": 8,
+  "hidden": true,
   "item": "minecraft:gold_block",
   "render_as_item": false
 }
