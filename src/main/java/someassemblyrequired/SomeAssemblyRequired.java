@@ -31,7 +31,7 @@ public class SomeAssemblyRequired {
 
     public SomeAssemblyRequired(IEventBus modEventBus, Dist dist, ModContainer container) {
         if (dist == Dist.CLIENT) {
-            new SomeAssemblyRequiredClient(modEventBus);
+            new SomeAssemblyRequiredClient(modEventBus, container);
         }
         container.registerConfig(net.neoforged.fml.config.ModConfig.Type.SERVER, ModConfig.serverSpec);
 

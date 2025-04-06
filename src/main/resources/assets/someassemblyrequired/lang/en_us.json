@@ -100,6 +100,7 @@
   "someassemblyrequired.ingredient.farmersdelight.mutton_chops": "Mutton",
   "someassemblyrequired.ingredient.farmersdelight.cooked_rice": "Rice",
 
+  "someassemblyrequired.config.client.list_ingredients_in_tooltip": "List ingredients in tooltip",
   "someassemblyrequired.config.server.maximum_sandwich_height": "Maximum sandwich height",
   "someassemblyrequired.config.server.generate_chest_loot": "Generate chest loot",
   "someassemblyrequired.config.server.sandwich_bonus_effect": "Sandwich bonus effect",

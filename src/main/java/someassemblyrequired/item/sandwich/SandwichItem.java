@@ -35,6 +35,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
 import someassemblyrequired.SomeAssemblyRequired;
 import someassemblyrequired.block.SandwichBlock;
+import someassemblyrequired.config.ModConfig;
 import someassemblyrequired.ingredient.Ingredients;
 import someassemblyrequired.integration.ModCompat;
 import someassemblyrequired.registry.*;
@@ -117,27 +118,31 @@ public class SandwichItem extends BlockItem {
         super.appendHoverText(stack, context, tooltip, flag);
         SandwichContents sandwich = SandwichContents.get(stack);
 
-        sandwich.items().stream()
-                .collect(
-                        Collectors.groupingBy(
-                                item -> Ingredients.getFullName(item).plainCopy(),
-                                LinkedHashMap::new,
-                                Collectors.counting()
-                        )
-                )
-                .forEach(
-                        (item, count) -> {
-                            if (count > 1) {
-                                tooltip.add(SomeAssemblyRequired.translate("tooltip.ingredient_count", item, count).withStyle(ChatFormatting.GRAY));
-                            } else {
-                                tooltip.add(item.withStyle(ChatFormatting.GRAY));
+        if (ModConfig.client.listItemsInTooltip.get()) {
+            sandwich.items().stream()
+                    .collect(
+                            Collectors.groupingBy(
+                                    item -> Ingredients.getFullName(item).plainCopy(),
+                                    LinkedHashMap::new,
+                                    Collectors.counting()
+                            )
+                    )
+                    .forEach(
+                            (item, count) -> {
+                                if (count > 1) {
+                                    tooltip.add(SomeAssemblyRequired.translate("tooltip.ingredient_count", item, count).withStyle(ChatFormatting.GRAY));
+                                } else {
+                                    tooltip.add(item.withStyle(ChatFormatting.GRAY));
+                                }
                             }
-                        }
-                );
+                    );
+        }
 
         FoodProperties food = getFoodProperties(stack, null);
         if (ModCompat.isFarmersDelightLoaded() && food != null && !food.effects().isEmpty()) {
-            tooltip.add(CommonComponents.EMPTY);
+            if (ModConfig.client.listItemsInTooltip.get()) {
+                tooltip.add(CommonComponents.EMPTY);
+            }
             TextUtils.addFoodEffectTooltip(stack, tooltip::add, 1, context.tickRate());
         }
     }

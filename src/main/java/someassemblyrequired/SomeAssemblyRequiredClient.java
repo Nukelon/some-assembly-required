@@ -3,11 +3,13 @@ package someassemblyrequired;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import someassemblyrequired.block.SandwichBlockRenderer;
+import someassemblyrequired.config.ModConfig;
 import someassemblyrequired.item.sandwich.SandwichItemRenderer;
 import someassemblyrequired.registry.ModBlockEntityTypes;
 import someassemblyrequired.registry.ModDataComponents;
@@ -15,10 +17,11 @@ import someassemblyrequired.registry.ModItems;
 
 public class SomeAssemblyRequiredClient {
 
-    public SomeAssemblyRequiredClient(IEventBus modEventBus) {
+    public SomeAssemblyRequiredClient(IEventBus modEventBus, ModContainer container) {
         modEventBus.addListener(this::onClientSetup);
         modEventBus.addListener(this::onRegisterColorHandlers);
         modEventBus.addListener(this::onRegisterClientExtensions);
+        container.registerConfig(net.neoforged.fml.config.ModConfig.Type.CLIENT, ModConfig.clientSpec);
     }
 
     public void onClientSetup(FMLClientSetupEvent event) {
