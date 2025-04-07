@@ -54,7 +54,8 @@ public class FarmersDelightIngredients {
             ModItems.SHEPHERDS_PIE.get(),
             ModItems.HONEY_GLAZED_HAM.get(),
             ModItems.ROAST_CHICKEN.get(),
-            ModItems.HAMBURGER.get()
+            ModItems.HAMBURGER.get(),
+            ModItems.GLOW_BERRY_CUSTARD.get()
     );
 
     @SuppressWarnings("unchecked")
@@ -104,6 +105,7 @@ public class FarmersDelightIngredients {
         ingredients.builder(ModItems.RATATOUILLE.get()).setWetSound();
         ingredients.builder(ModItems.SQUID_INK_PASTA.get()).setSlimySound();
         ingredients.builder(ModItems.GRILLED_SALMON.get()).setWetSound();
+        ingredients.builder(ModItems.GLOW_BERRY_CUSTARD.get()).setSlimySound();
         ingredients.builder(ModItems.ROAST_CHICKEN.get()).setWetSound().setFullName(getTranslationKey(ModItems.ROAST_CHICKEN_BLOCK.get()));
         ingredients.builder(ModItems.STUFFED_PUMPKIN.get()).setSlimySound().setFullName(getTranslationKey(ModItems.STUFFED_PUMPKIN_BLOCK.get()));
         ingredients.builder(ModItems.HONEY_GLAZED_HAM.get()).setSlimySound().setFullName(getTranslationKey(ModItems.HONEY_GLAZED_HAM_BLOCK.get()));

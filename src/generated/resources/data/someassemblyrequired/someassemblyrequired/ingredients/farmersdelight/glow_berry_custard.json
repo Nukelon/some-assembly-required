@@ -2,17 +2,16 @@
   "neoforge:conditions": [
     {
       "type": "neoforge:mod_loaded",
-      "modid": "minersdelight"
+      "modid": "farmersdelight"
     }
   ],
   "display_item": {
     "components": {
-      "minecraft:custom_model_data": 52
+      "minecraft:custom_model_data": 51
     },
     "count": 1,
     "id": "someassemblyrequired:spread"
   },
-  "height": 2,
-  "item": "minersdelight:vegan_patty",
-  "render_as_item": false
+  "item": "farmersdelight:glow_berry_custard",
+  "sound": "someassemblyrequired:block.sandwich.add_item.slimy"
 }

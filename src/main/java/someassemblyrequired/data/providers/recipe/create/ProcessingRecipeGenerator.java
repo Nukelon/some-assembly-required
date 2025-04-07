@@ -29,6 +29,7 @@ public abstract class ProcessingRecipeGenerator extends ProcessingRecipeGen {
 
     public static void registerAll(boolean runProviders, DataGenerator gen, CompletableFuture<HolderLookup.Provider> registries) {
         GENERATORS.add(new CuttingRecipeGenerator(gen.getPackOutput(), registries));
+        GENERATORS.add(new PressingRecipeGenerator(gen.getPackOutput(), registries));
 
         gen.addProvider(runProviders, new DataProvider() {
             public String getName() {

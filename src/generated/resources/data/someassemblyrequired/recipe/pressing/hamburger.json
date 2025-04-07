@@ -1,0 +1,52 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "farmersdelight"
+    },
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "create"
+    }
+  ],
+  "type": "create:pressing",
+  "ingredients": [
+    {
+      "type": "neoforge:components",
+      "components": {
+        "someassemblyrequired:sandwich_contents": [
+          {
+            "count": 1,
+            "id": "someassemblyrequired:burger_bun_bottom"
+          },
+          {
+            "count": 1,
+            "id": "farmersdelight:beef_patty"
+          },
+          {
+            "count": 1,
+            "id": "farmersdelight:cabbage_leaf"
+          },
+          {
+            "count": 1,
+            "id": "someassemblyrequired:tomato_slices"
+          },
+          {
+            "count": 1,
+            "id": "someassemblyrequired:sliced_onion"
+          },
+          {
+            "count": 1,
+            "id": "someassemblyrequired:burger_bun_top"
+          }
+        ]
+      },
+      "items": "someassemblyrequired:sandwich"
+    }
+  ],
+  "results": [
+    {
+      "id": "farmersdelight:hamburger"
+    }
+  ]
+}
