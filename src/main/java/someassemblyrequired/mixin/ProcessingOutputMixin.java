@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import someassemblyrequired.registry.ModDataComponents;
+import someassemblyrequired.item.sandwich.SandwichContents;
 import someassemblyrequired.registry.ModItems;
 
 /*
@@ -25,7 +25,7 @@ public class ProcessingOutputMixin {
 
     @ModifyReturnValue(method = "getStack", at = @At("RETURN"))
     public ItemStack getStack(ItemStack original) {
-        if (original.is(ModItems.SANDWICH) && !original.has(ModDataComponents.SANDWICH_CONTENTS)) {
+        if (original.is(ModItems.SANDWICH) && SandwichContents.get(original).isEmpty()) {
             original.applyComponents(patch);
         }
         return original;
@@ -33,7 +33,7 @@ public class ProcessingOutputMixin {
 
     @ModifyReturnValue(method = "rollOutput", at = @At("RETURN"))
     public ItemStack rollOutput(ItemStack original) {
-        if (original.is(ModItems.SANDWICH) && !original.has(ModDataComponents.SANDWICH_CONTENTS)) {
+        if (original.is(ModItems.SANDWICH) && SandwichContents.get(original).isEmpty()) {
             original.applyComponents(patch);
         }
         return original;
