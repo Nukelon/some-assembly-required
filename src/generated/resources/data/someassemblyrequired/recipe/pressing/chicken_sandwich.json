@@ -1,0 +1,48 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "farmersdelight"
+    },
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "create"
+    }
+  ],
+  "type": "create:pressing",
+  "ingredients": [
+    {
+      "type": "neoforge:components",
+      "components": {
+        "someassemblyrequired:sandwich_contents": [
+          {
+            "count": 1,
+            "id": "someassemblyrequired:bread_slice"
+          },
+          {
+            "count": 1,
+            "id": "someassemblyrequired:chopped_carrot"
+          },
+          {
+            "count": 1,
+            "id": "farmersdelight:cooked_chicken_cuts"
+          },
+          {
+            "count": 1,
+            "id": "farmersdelight:cabbage_leaf"
+          },
+          {
+            "count": 1,
+            "id": "someassemblyrequired:bread_slice"
+          }
+        ]
+      },
+      "items": "someassemblyrequired:sandwich"
+    }
+  ],
+  "results": [
+    {
+      "id": "farmersdelight:chicken_sandwich"
+    }
+  ]
+}

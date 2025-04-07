@@ -1,0 +1,44 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "farmersdelight"
+    },
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "create"
+    }
+  ],
+  "type": "create:pressing",
+  "ingredients": [
+    {
+      "type": "neoforge:components",
+      "components": {
+        "someassemblyrequired:sandwich_contents": [
+          {
+            "count": 1,
+            "id": "someassemblyrequired:bread_slice"
+          },
+          {
+            "count": 1,
+            "id": "farmersdelight:fried_egg"
+          },
+          {
+            "count": 1,
+            "id": "farmersdelight:fried_egg"
+          },
+          {
+            "count": 1,
+            "id": "someassemblyrequired:bread_slice"
+          }
+        ]
+      },
+      "items": "someassemblyrequired:sandwich"
+    }
+  ],
+  "results": [
+    {
+      "id": "farmersdelight:egg_sandwich"
+    }
+  ]
+}
