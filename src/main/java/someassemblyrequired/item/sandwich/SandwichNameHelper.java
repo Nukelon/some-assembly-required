@@ -44,9 +44,10 @@ public class SandwichNameHelper {
 
         List<ItemStack> uniqueIngredients = getUniqueIngredientsExcludingBread(contents);
 
+        List<ItemStack> potions = uniqueIngredients.stream().filter(item -> item.is(Items.POTION)).toList();
         // potion sandwich
-        if (uniqueIngredients.size() == 1 && uniqueIngredients.getFirst().is(Items.POTION)) {
-            return getPotionSandwichName(uniqueIngredients.getFirst(), sandwichType);
+        if (potions.size() == 1) {
+            return getPotionSandwichName(potions.getFirst(), sandwichType);
         }
 
         boolean isOpenFacedSandwich = breadCount == 1 && contents.size() > 1;
