@@ -1,5 +1,5 @@
-// 1.21.1	2025-04-06T13:57:53.3002285	Tags for minecraft:item mod id someassemblyrequired
-f8466b20f61c857efd5edf955af34c8d6d0fb2a6 data/c/tags/item/bread_slices.json
+// 1.21.1	2025-04-07T19:08:04.6753116	Tags for minecraft:item mod id someassemblyrequired
+f8466b20f61c857efd5edf955af34c8d6d0fb2a6 data/c/tags/item/foods/bread_slice.json
 bc6cb387d3155d51889e2be62263af32a718db34 data/minecraft/tags/item/piglin_loved.json
 e9a21496429ae0c8eb7be7aea9c9ac0fbe0b5394 data/someassemblyrequired/tags/item/burger_buns.json
-33f3bf2bb034ab35deef8d9e490154b167e6c7b8 data/someassemblyrequired/tags/item/sandwich_bread.json
+c1fdadb29730cee5616c3f534d171cae966e5fe9 data/someassemblyrequired/tags/item/sandwich_bread.json

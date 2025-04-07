@@ -1,4 +1,4 @@
-// 1.21.1	2025-04-07T15:58:55.5898165	Item Models: someassemblyrequired
+// 1.21.1	2025-04-07T18:54:17.880545	Item Models: someassemblyrequired
 198ca0c64b6b807164871c3afdefe0b61852edaf assets/someassemblyrequired/models/ingredient/farmersdelight/bacon.json
 396a3b0a1371350c1ca27ba7d5445ad73e3bc7f2 assets/someassemblyrequired/models/ingredient/farmersdelight/bacon_and_eggs.json
 8efaaf879c6b6a94224a2aceae7266800e9357be assets/someassemblyrequired/models/ingredient/farmersdelight/baked_cod_stew.json
@@ -61,6 +61,7 @@ b32bdd813115eceb8ee31f641e8177e7bca3a7e2 assets/someassemblyrequired/models/item
 5e755252548f3e0892b07feb43daf5e8d27e47e8 assets/someassemblyrequired/models/item/chopped_golden_carrot.json
 d82206ccff766c83d6f838381dbad6af9cc4063f assets/someassemblyrequired/models/item/enchanted_golden_apple_slices.json
 d82206ccff766c83d6f838381dbad6af9cc4063f assets/someassemblyrequired/models/item/golden_apple_slices.json
+2f8fa5ed3ed0329c3ee4dec9fc0b5ec87b9422d7 assets/someassemblyrequired/models/item/raw_burger_bun.json
 5a53627d869c32a34f925d8f165ed343413407db assets/someassemblyrequired/models/item/sandwich.json
 99b46d8c1b7da6189de881a13748a964f5a27ab0 assets/someassemblyrequired/models/item/sandwiching_station.json
 1dac3d26a11166c55e7b295788e39d8090d9d374 assets/someassemblyrequired/models/item/sliced_onion.json

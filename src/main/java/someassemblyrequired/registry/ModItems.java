@@ -50,6 +50,7 @@ public class ModItems {
     // foods
     public static final DeferredHolder<Item, Item> BREAD_SLICE = ITEMS.register("bread_slice", () -> createFoodItem(ModFoods.BREAD_SLICE));
     public static final DeferredHolder<Item, Item> TOASTED_BREAD_SLICE = ITEMS.register("toasted_bread_slice", () -> createFoodItem(ModFoods.TOASTED_BREAD_SLICE));
+    public static final DeferredHolder<Item, Item> RAW_BURGER_BUN = ITEMS.register("raw_burger_bun", () -> createFoodItem(ModFoods.RAW_BURGER_BUN));
     public static final DeferredHolder<Item, Item> BURGER_BUN = ITEMS.register("burger_bun", () -> createFoodItem(ModFoods.BURGER_BUN));
     public static final DeferredHolder<Item, Item> BURGER_BUN_BOTTOM = ITEMS.register("burger_bun_bottom", () -> createFoodItem(ModFoods.BURGER_BUN_BOTTOM));
     public static final DeferredHolder<Item, Item> BURGER_BUN_TOP = ITEMS.register("burger_bun_top", () -> createFoodItem(ModFoods.BURGER_BUN_TOP));

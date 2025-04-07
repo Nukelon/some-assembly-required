@@ -1,6 +1,6 @@
 {
   "values": [
-    "#c:bread_slices",
+    "#c:foods/bread_slice",
     "#someassemblyrequired:burger_buns"
   ]
 }

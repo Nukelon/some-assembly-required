@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:smelting",
+  "category": "food",
+  "cookingtime": 200,
+  "experience": 0.35,
+  "ingredient": {
+    "item": "someassemblyrequired:raw_burger_bun"
+  },
+  "result": {
+    "count": 1,
+    "id": "someassemblyrequired:burger_bun"
+  }
+}

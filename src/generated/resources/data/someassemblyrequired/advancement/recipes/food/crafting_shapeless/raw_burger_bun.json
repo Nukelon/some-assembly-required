@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_ingredient": {
+    "has_seeds": {
       "conditions": {
         "items": [
           {
-            "items": "someassemblyrequired:bread_slice"
+            "items": "#c:seeds"
           }
         ]
       },
@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "someassemblyrequired:smelting/toasted_bread_slice"
+        "recipe": "someassemblyrequired:crafting_shapeless/raw_burger_bun"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -21,12 +21,12 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_ingredient"
+      "has_seeds"
     ]
   ],
   "rewards": {
     "recipes": [
-      "someassemblyrequired:smelting/toasted_bread_slice"
+      "someassemblyrequired:crafting_shapeless/raw_burger_bun"
     ]
   }
 }
