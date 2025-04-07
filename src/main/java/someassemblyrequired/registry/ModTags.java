@@ -11,7 +11,6 @@ public class ModTags {
 
     // c item tags
     public static final TagKey<Item> BREAD_SLICES = itemTag("c", "foods/bread_slice");
-    public static final TagKey<Item> BREAD_SLICES_WHEAT = itemTag("c", "foods/bread_slice/wheat");
     // TODO inconsistent dough tags between farmer's delight/create
     public static final TagKey<Item> DOUGH = itemTag("c", "foods/dough");
     public static final TagKey<Item> DOUGHS = itemTag("c", "doughs");
