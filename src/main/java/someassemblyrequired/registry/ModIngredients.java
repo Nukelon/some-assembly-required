@@ -38,10 +38,6 @@ public class ModIngredients {
         properties.put(Items.POTION, new PotionProperties());
     }
 
-    public static boolean hasIngredientFor(Item item) {
-        return properties.containsKey(item);
-    }
-
     @Nullable
     public static IngredientPropertiesBase get(ItemStack item) {
         return properties.get(item.getItem());

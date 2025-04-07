@@ -296,15 +296,21 @@
       }
     },
     {
-      "model": "someassemblyrequired:ingredient/minersdelight/vegan_patty",
+      "model": "someassemblyrequired:item/ingredient/farmersdelight/hamburger",
       "predicate": {
         "minecraft:custom_model_data": 50.0
       }
     },
     {
-      "model": "someassemblyrequired:ingredient/minecraft/potato",
+      "model": "someassemblyrequired:ingredient/minersdelight/vegan_patty",
       "predicate": {
         "minecraft:custom_model_data": 51.0
+      }
+    },
+    {
+      "model": "someassemblyrequired:ingredient/minecraft/potato",
+      "predicate": {
+        "minecraft:custom_model_data": 52.0
       }
     }
   ],

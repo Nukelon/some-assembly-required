@@ -5,6 +5,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.PackType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -69,9 +70,11 @@ public class ItemModels extends ItemModelProvider {
 
             String path = getIngredientPath(item);
 
-            ItemModelBuilder model;
+            ModelFile model;
             if (customModels.containsKey(item)) {
                 model = customModels.get(item);
+            } else if (existingFileHelper.exists(prefixItem(path), PackType.CLIENT_RESOURCES, ".json", "models")) {
+                model = new ModelFile.UncheckedModelFile(prefixItem(path));
             } else {
                 model = addGeneratedModel(path, prefixItem(path));
             }

@@ -53,7 +53,8 @@ public class FarmersDelightIngredients {
             ModItems.STUFFED_PUMPKIN.get(),
             ModItems.SHEPHERDS_PIE.get(),
             ModItems.HONEY_GLAZED_HAM.get(),
-            ModItems.ROAST_CHICKEN.get()
+            ModItems.ROAST_CHICKEN.get(),
+            ModItems.HAMBURGER.get()
     );
 
     @SuppressWarnings("unchecked")
@@ -79,6 +80,7 @@ public class FarmersDelightIngredients {
         ingredients.builder(ModItems.COOKED_COD_SLICE.get()).setDisplayName((Holder<Item>) ModItems.COD_SLICE);
         ingredients.builder(ModItems.COOKED_SALMON_SLICE.get()).setDisplayName((Holder<Item>) ModItems.SALMON_SLICE);
         ingredients.builder(ModItems.COOKED_MUTTON_CHOPS.get()).setDisplayName((Holder<Item>) ModItems.MUTTON_CHOPS);
+        ingredients.builder(ModItems.HAMBURGER.get()).customModel().setHeight(7);
 
         ingredients.builder(ModItems.COOKED_RICE.get()).setCustomDisplayName();
 
