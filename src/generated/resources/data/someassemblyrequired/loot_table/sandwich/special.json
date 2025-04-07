@@ -17,7 +17,12 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:honey_bottle",
-          "weight": 20
+          "weight": 15
+        },
+        {
+          "type": "minecraft:item",
+          "name": "create:chocolate_bucket",
+          "weight": 15
         },
         {
           "type": "minecraft:item",

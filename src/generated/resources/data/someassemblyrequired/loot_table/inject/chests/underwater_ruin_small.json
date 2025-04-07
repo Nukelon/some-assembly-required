@@ -24,7 +24,7 @@
                   "functions": [
                     {
                       "function": "minecraft:set_potion",
-                      "id": "minecraft:turtle_master"
+                      "id": "minecraft:water"
                     }
                   ],
                   "name": "minecraft:potion"
@@ -43,5 +43,5 @@
       "rolls": 1.0
     }
   ],
-  "random_sequence": "someassemblyrequired:inject/chests/underwater_ruin_big"
+  "random_sequence": "someassemblyrequired:inject/chests/underwater_ruin_small"
 }

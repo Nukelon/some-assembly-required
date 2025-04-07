@@ -13,7 +13,8 @@
     "someassemblyrequired:inject/chests/nether_bridge",
     "someassemblyrequired:inject/chests/underwater_ruin_big",
     "someassemblyrequired:inject/chests/end_city_treasure",
-    "someassemblyrequired:inject/chests/spawn_bonus_chest"
+    "someassemblyrequired:inject/chests/spawn_bonus_chest",
+    "someassemblyrequired:inject/chests/underwater_ruin_small"
   ],
   "replace": false
 }

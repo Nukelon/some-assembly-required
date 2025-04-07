@@ -1,5 +1,5 @@
-// 1.21.1	2025-04-01T13:57:07.6006325	Global Loot Modifiers : someassemblyrequired
-dc638a7727a7fb6d3e3551f35c1de6f3dc5a6fb1 data/neoforge/loot_modifiers/global_loot_modifiers.json
+// 1.21.1	2025-04-07T16:56:50.0937657	Global Loot Modifiers : someassemblyrequired
+7303896d467a042e566e16c6db0de3d12c3ae8e2 data/neoforge/loot_modifiers/global_loot_modifiers.json
 ed8f0b93c0de6f3efd9a4dfb6d13ede8e305fe87 data/someassemblyrequired/loot_modifiers/inject/chests/abandoned_mineshaft.json
 39545082f8a4bdf1313031fa53b0ee600a222a2b data/someassemblyrequired/loot_modifiers/inject/chests/ancient_city.json
 2cdae783c52af66c5a0e2c3091e0848464f1d445 data/someassemblyrequired/loot_modifiers/inject/chests/buried_treasure.json
@@ -9,6 +9,7 @@ e13db57c8475d825a4355b6dc1126924e6f7695f data/someassemblyrequired/loot_modifier
 74a4832107575c5688c159aef29588a4773dba87 data/someassemblyrequired/loot_modifiers/inject/chests/simple_dungeon.json
 c3985eb2e2da62b29a1ae275381c672a7777f538 data/someassemblyrequired/loot_modifiers/inject/chests/spawn_bonus_chest.json
 10b4b44037a7a1654a54e8d217432dfdad629626 data/someassemblyrequired/loot_modifiers/inject/chests/underwater_ruin_big.json
+9a51c74f17c2754729d1088d47d38d0a8a948701 data/someassemblyrequired/loot_modifiers/inject/chests/underwater_ruin_small.json
 14e8e2a033baf5e6c10d41e26d99b0fb072c2174 data/someassemblyrequired/loot_modifiers/inject/chests/village/village_desert_house.json
 1f87d6d349db2e8dc6467c1c7b8769428b2dc7c4 data/someassemblyrequired/loot_modifiers/inject/chests/village/village_plains_house.json
 769c57b39dd9ee45f79e699f74ca783b16a0ffd8 data/someassemblyrequired/loot_modifiers/inject/chests/village/village_savanna_house.json

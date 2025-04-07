@@ -39,7 +39,8 @@ public class LootModifiers extends GlobalLootModifierProvider {
     }
 
     private void addLoot() {
-        addSandwich(BuiltInLootTables.UNDERWATER_RUIN_BIG, Potions.WATER);
+        addSandwich(BuiltInLootTables.UNDERWATER_RUIN_BIG, Potions.TURTLE_MASTER);
+        addSandwich(BuiltInLootTables.UNDERWATER_RUIN_SMALL, Potions.WATER);
         addSandwich(BuiltInLootTables.BURIED_TREASURE, Potions.WATER_BREATHING);
         addSandwich(BuiltInLootTables.END_CITY_TREASURE, Items.CHORUS_FRUIT);
         addSandwich(BuiltInLootTables.ABANDONED_MINESHAFT, Potions.NIGHT_VISION);

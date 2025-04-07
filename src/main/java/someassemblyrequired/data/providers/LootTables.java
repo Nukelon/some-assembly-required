@@ -1,6 +1,7 @@
 package someassemblyrequired.data.providers;
 
 import com.google.common.base.Preconditions;
+import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllItems;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
@@ -153,7 +154,8 @@ public class LootTables extends LootTableProvider {
                 LootTable.lootTable().withPool(LootPool.lootPool()
                         .add(item(BREAD_SLICE.get()))
                 ).withPool(LootPool.lootPool()
-                        .add(item(Items.HONEY_BOTTLE, 20))
+                        .add(item(Items.HONEY_BOTTLE, 15))
+                        .add(item(AllFluids.CHOCOLATE.get().getBucket(), 15))
                         .add(item(TOASTED_BREAD_SLICE.get(), 1))
                         .add(item(Items.MILK_BUCKET, 1))
                         .add(item(Items.POTATO, 1))
