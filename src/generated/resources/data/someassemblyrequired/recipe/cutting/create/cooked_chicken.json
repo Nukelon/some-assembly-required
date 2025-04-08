@@ -1,0 +1,31 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:mod_loaded",
+        "modid": "sliceanddice"
+      }
+    },
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "create"
+    }
+  ],
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "minecraft:cooked_chicken"
+    }
+  ],
+  "processing_time": 30,
+  "results": [
+    {
+      "count": 2,
+      "id": "farmersdelight:cooked_chicken_cuts"
+    },
+    {
+      "id": "minecraft:bone_meal"
+    }
+  ]
+}

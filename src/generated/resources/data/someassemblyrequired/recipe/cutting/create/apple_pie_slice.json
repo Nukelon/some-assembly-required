@@ -1,0 +1,28 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:mod_loaded",
+        "modid": "sliceanddice"
+      }
+    },
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "create"
+    }
+  ],
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "farmersdelight:apple_pie"
+    }
+  ],
+  "processing_time": 30,
+  "results": [
+    {
+      "count": 4,
+      "id": "farmersdelight:apple_pie_slice"
+    }
+  ]
+}
