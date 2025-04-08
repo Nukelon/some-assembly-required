@@ -7,6 +7,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
@@ -17,6 +18,7 @@ import someassemblyrequired.registry.ModTags;
 import vectorwing.farmersdelight.common.tag.CommonTags;
 import vectorwing.farmersdelight.data.builder.CuttingBoardRecipeBuilder;
 
+import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
@@ -71,7 +73,7 @@ public class CuttingRecipeGenerator extends ProcessingRecipeGenerator {
         create(SomeAssemblyRequired.id(ModCompat.CREATE + "/" + "dough"), builder -> {
             builder.output(vectorwing.farmersdelight.common.registry.ModItems.RAW_PASTA.get());
 
-            return builder.whenModLoaded(ModCompat.SLICE_AND_DICE)
+            return builder.whenModMissing(ModCompat.SLICE_AND_DICE)
                     .duration(30)
                     .withItemIngredients(Ingredient.fromValues(Stream.of(new Ingredient.TagValue(ModTags.DOUGH), new Ingredient.TagValue(ModTags.DOUGHS))));
         });
@@ -87,6 +89,11 @@ public class CuttingRecipeGenerator extends ProcessingRecipeGenerator {
         ResourceLocation id = SomeAssemblyRequired.id(ModCompat.CREATE + "/" + BuiltInRegistries.ITEM.getKey(input.asItem()).getPath());
         create(id, builder -> {
             builder.output(result, count);
+            if (BuiltInRegistries.ITEM.getKey(input.asItem()).getNamespace().equals(ModCompat.FARMERSDELIGHT)
+                    || BuiltInRegistries.ITEM.getKey(result.asItem()).getNamespace().equals(ModCompat.FARMERSDELIGHT)) {
+                builder.whenModLoaded(ModCompat.FARMERSDELIGHT);
+            }
+
             for (ItemLike item : extraResults) {
                 builder.output(item);
             }
@@ -106,8 +113,17 @@ public class CuttingRecipeGenerator extends ProcessingRecipeGenerator {
     }
 
     private void cut(Ingredient input, ItemLike result, int count) {
-        // noinspection ConstantConditions
-        create(SomeAssemblyRequired.id(ModCompat.CREATE + "/" + BuiltInRegistries.ITEM.getKey(result.asItem()).getPath()), builder -> builder.whenModMissing(ModCompat.SLICE_AND_DICE).duration(30).output(result, count).withItemIngredients(input));
+        create(SomeAssemblyRequired.id(ModCompat.CREATE + "/" + BuiltInRegistries.ITEM.getKey(result.asItem()).getPath()), builder -> {
+            if (Stream.concat(Arrays.stream(input.getItems()).map(ItemStack::getItem), Stream.of(result))
+                    .map(ItemLike::asItem)
+                    .map(BuiltInRegistries.ITEM::getKey)
+                    .map(ResourceLocation::getNamespace)
+                    .anyMatch(ModCompat.FARMERSDELIGHT::equals)
+            ) {
+                builder.whenModLoaded(ModCompat.FARMERSDELIGHT);
+            }
+            return builder.whenModMissing(ModCompat.SLICE_AND_DICE).duration(30).output(result, count).withItemIngredients(input);
+        });
     }
 
     protected AllRecipeTypes getRecipeType() {
