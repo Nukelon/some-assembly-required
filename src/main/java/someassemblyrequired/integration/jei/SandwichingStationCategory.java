@@ -38,7 +38,7 @@ public class SandwichingStationCategory implements IRecipeCategory<SandwichingSt
 
     @Override
     public Component getTitle() {
-        return ModBlocks.SANDWICHING_STATION.get().getName();
+        return Component.translatable("recipe_category.someassemblyrequired.sandwich_building");
     }
 
     @Override

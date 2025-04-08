@@ -117,6 +117,8 @@
   "someassemblyrequired.config.server.sandwich_bonus_effect_durations": "Sandwich bonus effect durations",
   "someassemblyrequired.config.server.burger_bonus_effect_durations": "Burger bonus effect durations",
 
+  "recipe_category.someassemblyrequired.sandwich_building": "Sandwich Building",
+
   "tag.item.c.bread_slices": "Bread Slices",
   "tag.item.someassemblyrequired.burger_buns": "Burger Buns",
   "tag.item.someassemblyrequired.sandwich_bread": "Sandwich Bread",
