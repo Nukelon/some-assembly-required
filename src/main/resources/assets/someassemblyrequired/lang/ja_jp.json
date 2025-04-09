@@ -22,12 +22,13 @@
   "someassemblyrequired.message.bottom_bread": "一番下にスライスパンがありません！",
   "someassemblyrequired.message.full_sandwich": "サンドウィッチが大きくなりすぎてしまいます！",
 
-  "block.someassemblyrequired.sandwiching_station": "サンドウィッチ制作所",
+  "block.someassemblyrequired.sandwiching_station": "サンドウィッチ製作所",
   "block.someassemblyrequired.sandwich": "サンドウィッチ",
 
   "item.someassemblyrequired.spread": "塗り物",
   "item.someassemblyrequired.bread_slice": "スライスパン",
   "item.someassemblyrequired.toasted_bread_slice": "トースト",
+  "item.someassemblyrequired.raw_burger_bun": "生のバンズ",
   "item.someassemblyrequired.burger_bun": "バンズ",
   "item.someassemblyrequired.burger_bun_bottom": "バンズの下部",
   "item.someassemblyrequired.burger_bun_top": "バンズの上部",
@@ -38,7 +39,7 @@
   "item.someassemblyrequired.chopped_golden_carrot": "みじん切りにされた金のニンジン",
   "item.someassemblyrequired.chopped_beetroot": "みじん切りにされたビートルート",
   "item.someassemblyrequired.tomato_slices": "トマトスライス",
-  "item.someassemblyrequired.sliced_onion": "スライスオニオン",
+  "item.someassemblyrequired.sliced_onion": "オニオンスライス",
 
   "item.someassemblyrequired.sandwich.base.sandwich": "サンドウィッチ",
   "item.someassemblyrequired.sandwich.base.burger": "ハンバーガー",
@@ -49,11 +50,15 @@
   "item.someassemblyrequired.sandwich.double_decker.burger": "ダブルバーガー",
   "item.someassemblyrequired.sandwich.base.with_ingredients.sandwich": "%sサンド",
   "item.someassemblyrequired.sandwich.base.with_ingredients.burger": "%sバーガー",
-  "item.someassemblyrequired.sandwich.potion.pattern.1.sandwich": "%sのサンドウィッチ",
-  "item.someassemblyrequired.sandwich.potion.pattern.1.burger": "%sのハンバーガー",
   "item.someassemblyrequired.sandwich.double_decker.with_ingredients.sandwich": "ダブル%sサンド",
   "item.someassemblyrequired.sandwich.double_decker.with_ingredients.burger": "ダブル%sバーガー",
   "item.someassemblyrequired.sandwich.open_faced.with_ingredients.sandwich": "上開き%sサンド",
+
+  "item.someassemblyrequired.sandwich.potion.pattern.1": "(.*)ポーション",
+  "item.someassemblyrequired.sandwich.potion.pattern.1.sandwich": "$1サンドウィッチ",
+  "item.someassemblyrequired.sandwich.potion.pattern.1.burger": "$1ハンバーガー",
+  "item.someassemblyrequired.sandwich.potion.with_id.minecraft.water.sandwich": "びしょぬれのサンドウィッチ",
+  "item.someassemblyrequired.sandwich.potion.with_id.minecraft.water.burger": "びしょぬれのハンバーガー",
 
   "someassemblyrequired.tooltip.ingredient_list.1": "%s",
   "someassemblyrequired.tooltip.ingredient_list.2": "%s+%s",
@@ -76,6 +81,8 @@
   "someassemblyrequired.ingredient.honey_bottle": "ハチミツ",
   "someassemblyrequired.ingredient.milk_bucket": "ミルク",
 
+  "someassemblyrequired.ingredient.create.chocolate_bucket": "チョコレート",
+
   "someassemblyrequired.ingredient.farmersdelight.cabbage_leaf": "キャベツ",
   "someassemblyrequired.ingredient.farmersdelight.fried_egg": "エッグ",
   "someassemblyrequired.ingredient.farmersdelight.beef_patty": "ビーフ",
@@ -91,5 +98,12 @@
   "someassemblyrequired.config.server.sandwich_bonus_effect": "サンドウィッチの追加効果",
   "someassemblyrequired.config.server.burger_bonus_effect": "ハンバーガーの追加効果",
   "someassemblyrequired.config.server.sandwich_bonus_effect_durations": "サンドウィッチの追加効果の継続時間",
-  "someassemblyrequired.config.server.burger_bonus_effect_durations": "ハンバーガーの追加効果の継続時間"
+  "someassemblyrequired.config.server.burger_bonus_effect_durations": "ハンバーガーの追加効果の継続時間",
+
+  "recipe_category.someassemblyrequired.sandwich_building": "サンドウィッチの製作",
+
+  "tag.item.c.bread_slices": "スライスパン",
+  "tag.item.someassemblyrequired.burger_buns": "バンズ",
+  "tag.item.someassemblyrequired.sandwich_bread": "サンドウィッチのパン",
+  "tag.block.someassemblyrequired.sandwiching_stations": "サンドウィッチ製作所"
 }
