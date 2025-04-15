@@ -43,11 +43,11 @@ public class ServerConfig {
         sandwichEffectDurations = builder
                 .comment("The durations of the effect applied by sandwiches in seconds, depending on the number of unique ingredients")
                 .translation(translate("sandwich_bonus_effect_durations"))
-                .define("sandwich_effect_durations", new ArrayList<>(List.of(0, 0, 60, 60, 180, 180, 300)));
+                .define("sandwich_effect_durations", new ArrayList<>(List.of(0, 0, 60, 120, 180, 240, 300)));
         burgerEffectDurations = builder
                 .comment("The durations of the effect applied by burgers in seconds, depending on the number of unique ingredients")
                 .translation(translate("burger_bonus_effect_durations"))
-                .define("burger_effect_durations", new ArrayList<>(List.of(0, 0, 60, 60, 180, 180, 300)));
+                .define("burger_effect_durations", new ArrayList<>(List.of(0, 0, 60, 120, 180, 240, 300)));
     }
 
     private String translate(String name) {
