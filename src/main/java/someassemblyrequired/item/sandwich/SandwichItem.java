@@ -77,6 +77,34 @@ public class SandwichItem extends BlockItem {
         return of(list);
     }
 
+    public static ItemStack makeToastSandwich(ItemLike... items) {
+        return makeToastSandwich(Arrays.stream(items)
+                .map(ItemStack::new)
+                .toArray(ItemStack[]::new));
+    }
+
+    public static ItemStack makeToastSandwich(ItemStack... items) {
+        ArrayList<ItemStack> list = new ArrayList<>();
+        list.add(new ItemStack(ModItems.TOASTED_BREAD_SLICE.get()));
+        list.addAll(Arrays.asList(items));
+        list.add(new ItemStack(ModItems.TOASTED_BREAD_SLICE.get()));
+        return of(list);
+    }
+
+    public static ItemStack makeBurger(ItemLike... items) {
+        return makeBurger(Arrays.stream(items)
+                .map(ItemStack::new)
+                .toArray(ItemStack[]::new));
+    }
+
+    public static ItemStack makeBurger(ItemStack... items) {
+        ArrayList<ItemStack> list = new ArrayList<>();
+        list.add(new ItemStack(ModItems.BURGER_BUN_BOTTOM.get()));
+        list.addAll(Arrays.asList(items));
+        list.add(new ItemStack(ModItems.BURGER_BUN_TOP.get()));
+        return of(list);
+    }
+
     public static ItemStack of(ItemStack... items) {
         return of(Arrays.asList(items));
     }

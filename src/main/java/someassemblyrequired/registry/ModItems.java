@@ -11,12 +11,9 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import someassemblyrequired.SomeAssemblyRequired;
 import someassemblyrequired.integration.ModCompat;
-import someassemblyrequired.integration.farmersdelight.FarmersDelightCompat;
 import someassemblyrequired.item.EnchantedGoldenAppleSlicesItem;
 import someassemblyrequired.item.SpreadItem;
 import someassemblyrequired.item.sandwich.SandwichItem;
-
-import java.util.function.Consumer;
 
 @SuppressWarnings("unused")
 public class ModItems {
@@ -47,21 +44,7 @@ public class ModItems {
                 .filter(item -> item != SANDWICH.get())
                 .forEach(output::accept);
 
-        addSandwiches(output::accept);
-    }
-
-    public static void addSandwiches(Consumer<ItemStack> creativeTab) {
-        ItemStack sandwich;
-        if (ModCompat.isFarmersDelightLoaded()) {
-            sandwich = FarmersDelightCompat.createBLT();
-        } else {
-            sandwich = SandwichItem.makeSandwich(
-                    Items.COOKED_BEEF,
-                    ModItems.TOMATO_SLICES.get()
-            );
-        }
-        sandwich.getOrCreateTag().putBoolean("IsJEIExample", true);
-        creativeTab.accept(sandwich);
+        ModCompat.gatherCreativeTabSandwiches(output::accept);
     }
 
     // sandwich assembly tables

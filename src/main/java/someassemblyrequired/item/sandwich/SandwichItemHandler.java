@@ -39,6 +39,14 @@ public class SandwichItemHandler implements IItemHandler, IItemHandlerModifiable
         this.foodProperties = ModFoods.EMPTY;
     }
 
+    public static SandwichItemHandler of(List<ItemStack> items) {
+        SandwichItemHandler result = new SandwichItemHandler();
+        for (ItemStack item : items) {
+            result.add(item);
+        }
+        return result;
+    }
+
     public static Optional<SandwichItemHandler> get(@Nullable ICapabilityProvider capabilityProvider) {
         if (capabilityProvider == null) {
             return Optional.empty();
