@@ -10,6 +10,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.apache.logging.log4j.LogManager;
@@ -58,12 +59,15 @@ public class SomeAssemblyRequired {
         modEventBus.addListener(this::onCommonSetup);
         modEventBus.addListener(SomeAssemblyRequiredData::gatherData);
         modEventBus.addListener(this::registerDataPackRegistries);
+        modEventBus.addListener(ModPayloadTypes::register);
+
+        NeoForge.EVENT_BUS.addListener(ModIngredients::onDataPackSync);
 
         BlockEventHandler.register();
     }
 
     private void registerDataPackRegistries(DataPackRegistryEvent.NewRegistry event) {
-        event.dataPackRegistry(ModIngredients.INGREDIENTS, IngredientProperties.CODEC, IngredientProperties.CODEC, e -> e.onBake(ModIngredients::onBake));
+        event.dataPackRegistry(ModIngredients.INGREDIENTS, IngredientProperties.CODEC, IngredientProperties.CODEC);
     }
 
     private static void register(IEventBus modEventBus, DeferredRegister<?>... registers) {
