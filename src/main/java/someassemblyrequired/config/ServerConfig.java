@@ -1,12 +1,17 @@
 package someassemblyrequired.config;
 
+import net.minecraft.ResourceLocationException;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffect;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import someassemblyrequired.SomeAssemblyRequired;
 import someassemblyrequired.integration.ModCompat;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class ServerConfig {
 
@@ -48,6 +53,17 @@ public class ServerConfig {
                 .comment("The durations of the effect applied by burgers in seconds, depending on the number of unique ingredients")
                 .translation(translate("burger_bonus_effect_durations"))
                 .define("burger_effect_durations", new ArrayList<>(List.of(0, 0, 60, 120, 180, 240, 300)));
+    }
+
+    public Optional<Holder.Reference<MobEffect>> getSandwichBonusEffect(boolean burger) {
+        String effectName = burger ? burgerBonusEffect.get() : sandwichBonusEffect.get();
+        ResourceLocation effectId;
+        try {
+            effectId = ResourceLocation.parse(effectName);
+        } catch (ResourceLocationException e) {
+            return Optional.empty();
+        }
+        return BuiltInRegistries.MOB_EFFECT.getHolder(effectId);
     }
 
     private String translate(String name) {

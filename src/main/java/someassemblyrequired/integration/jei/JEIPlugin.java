@@ -8,9 +8,11 @@ import mezz.jei.api.ingredients.subtypes.UidContext;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.registration.*;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import someassemblyrequired.SomeAssemblyRequired;
+import someassemblyrequired.config.ModConfig;
 import someassemblyrequired.integration.ModCompat;
 import someassemblyrequired.integration.jei.create.SequencedAssemblyRecipeGenerator;
 import someassemblyrequired.item.sandwich.SandwichContents;
@@ -40,6 +42,35 @@ public class JEIPlugin implements IModPlugin {
         ModCompat.gatherJEISandwiches(sandwiches::add);
         sandwiches.removeIf(sandwich -> !SandwichContents.get(sandwich).isBurger());
         registration.addAliases(VanillaTypes.ITEM_STACK, sandwiches, ModItems.SANDWICH.get().getDescriptionId());
+    }
+
+    @Override
+    public void registerRecipes(IRecipeRegistration registration) {
+        registration.addIngredientInfo(ModItems.SANDWICHING_STATION.get(),
+                SomeAssemblyRequired.translate("sandwiching_station.info.creating_sandwiches.1"),
+                SomeAssemblyRequired.translate("sandwiching_station.info.creating_sandwiches.2"),
+                SomeAssemblyRequired.translate("sandwiching_station.info.creating_sandwiches.3"),
+                SomeAssemblyRequired.translate("sandwiching_station.info.creating_sandwiches.4")
+        );
+        registration.addIngredientInfo(ModItems.SANDWICHING_STATION.get(),
+                SomeAssemblyRequired.translate("sandwiching_station.info.bonus_effects.1"),
+                SomeAssemblyRequired.translate("sandwiching_station.info.bonus_effects.2",
+                        getMinIngredients(ModConfig.server.sandwichEffectDurations.get()),
+                        Component.translatable(ModConfig.server.getSandwichBonusEffect(false).map(holder -> holder.value().getDescriptionId()).orElse("unknown")),
+                        getMinIngredients(ModConfig.server.burgerEffectDurations.get()),
+                        Component.translatable(ModConfig.server.getSandwichBonusEffect(true).map(holder -> holder.value().getDescriptionId()).orElse("unknown"))
+                ),
+                SomeAssemblyRequired.translate("sandwiching_station.info.bonus_effects.3")
+        );
+    }
+
+    private int getMinIngredients(List<Integer> durations) {
+        for (int i = 0; i < durations.size(); i++) {
+            if (durations.get(i) > 0) {
+                return i;
+            }
+        }
+        return 0;
     }
 
     @Override
