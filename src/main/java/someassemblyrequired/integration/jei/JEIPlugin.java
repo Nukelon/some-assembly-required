@@ -76,7 +76,10 @@ public class JEIPlugin implements IModPlugin {
     @Override
     public void registerAdvanced(IAdvancedRegistration registration) {
         if (ModCompat.isCreateLoaded()) {
-            SequencedAssemblyRecipeGenerator.register(registration);
+            // Only register sequenced assembly integration when the recipe type is available
+            registration.getJeiHelpers()
+                    .getRecipeType(ResourceLocation.parse(ModCompat.CREATE + ":sequenced_assembly"))
+                    .ifPresent(type -> SequencedAssemblyRecipeGenerator.register(registration));
         }
         registration.addTypedRecipeManagerPlugin(SANDWICHING_STATION, new SandwichingStationRecipeGenerator());
     }
