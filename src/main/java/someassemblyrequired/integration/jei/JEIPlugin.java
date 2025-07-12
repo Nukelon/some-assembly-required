@@ -19,6 +19,8 @@ import someassemblyrequired.item.sandwich.SandwichContents;
 import someassemblyrequired.registry.ModBlocks;
 import someassemblyrequired.registry.ModItems;
 
+import mezz.jei.api.runtime.IJeiRuntime;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -27,6 +29,7 @@ import java.util.List;
 public class JEIPlugin implements IModPlugin {
 
     private static final ResourceLocation ID = SomeAssemblyRequired.id("main");
+    private static boolean hasSequencedAssemblyCategory = false;
 
     public static final RecipeType<SandwichingStationCategory.Recipe> SANDWICHING_STATION = RecipeType.create(SomeAssemblyRequired.MOD_ID, "sandwiching_station", SandwichingStationCategory.Recipe.class);
 
@@ -76,7 +79,10 @@ public class JEIPlugin implements IModPlugin {
     @Override
     public void registerAdvanced(IAdvancedRegistration registration) {
         if (ModCompat.isCreateLoaded()) {
-            SequencedAssemblyRecipeGenerator.register(registration);
+            // Only register sequenced assembly integration when the recipe type is available
+            registration.getJeiHelpers()
+                    .getRecipeType(ResourceLocation.parse(ModCompat.CREATE + ":sequenced_assembly"))
+                    .ifPresent(type -> SequencedAssemblyRecipeGenerator.register(registration));
         }
         registration.addTypedRecipeManagerPlugin(SANDWICHING_STATION, new SandwichingStationRecipeGenerator());
     }
@@ -114,5 +120,21 @@ public class JEIPlugin implements IModPlugin {
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.SANDWICHING_STATION.get()), SANDWICHING_STATION);
+    }
+
+    @Override
+    public void onRuntimeAvailable(IJeiRuntime runtime) {
+        if (ModCompat.isCreateLoaded()) {
+            hasSequencedAssemblyCategory = runtime.getRecipeManager()
+                    .createRecipeCategoryLookup()
+                    .limitTypes(List.of(SequencedAssemblyRecipeGenerator.SEQUENCED_ASSEMBLY))
+                    .get()
+                    .findAny()
+                    .isPresent();
+        }
+    }
+
+    public static boolean hasSequencedAssemblyCategory() {
+        return hasSequencedAssemblyCategory;
     }
 }

@@ -21,6 +21,8 @@ import someassemblyrequired.SomeAssemblyRequired;
 import someassemblyrequired.integration.ModCompat;
 import someassemblyrequired.integration.create.recipe.SandwichFluidSpoutingRecipe;
 import someassemblyrequired.integration.jei.SandwichRecipeGenerator;
+import someassemblyrequired.integration.jei.JEIPlugin;
+import mezz.jei.api.ingredients.ITypedIngredient;
 import someassemblyrequired.item.sandwich.SandwichContents;
 import someassemblyrequired.item.sandwich.SandwichItem;
 import someassemblyrequired.recipe.SandwichSpoutingRecipe;
@@ -33,7 +35,7 @@ import java.util.stream.Stream;
 
 public class SequencedAssemblyRecipeGenerator extends SandwichRecipeGenerator<SequencedAssemblyRecipe> {
 
-    private static final RecipeType<SequencedAssemblyRecipe> SEQUENCED_ASSEMBLY = RecipeType.create(ModCompat.CREATE, "sequenced_assembly", SequencedAssemblyRecipe.class);
+    public static final RecipeType<SequencedAssemblyRecipe> SEQUENCED_ASSEMBLY = RecipeType.create(ModCompat.CREATE, "sequenced_assembly", SequencedAssemblyRecipe.class);
 
     public static void register(IAdvancedRegistration registration) {
         registration.addTypedRecipeManagerPlugin(SEQUENCED_ASSEMBLY, new SequencedAssemblyRecipeGenerator());
@@ -42,6 +44,31 @@ public class SequencedAssemblyRecipeGenerator extends SandwichRecipeGenerator<Se
     @Override
     protected int getMaxToppings() {
         return 6;
+    }
+
+    @Override
+    public boolean isHandledInput(ITypedIngredient<?> input) {
+        return JEIPlugin.hasSequencedAssemblyCategory() && super.isHandledInput(input);
+    }
+
+    @Override
+    public boolean isHandledOutput(ITypedIngredient<?> output) {
+        return JEIPlugin.hasSequencedAssemblyCategory() && super.isHandledOutput(output);
+    }
+
+    @Override
+    public List<SequencedAssemblyRecipe> getRecipesForInput(ITypedIngredient<?> input) {
+        return JEIPlugin.hasSequencedAssemblyCategory() ? super.getRecipesForInput(input) : List.of();
+    }
+
+    @Override
+    public List<SequencedAssemblyRecipe> getRecipesForOutput(ITypedIngredient<?> output) {
+        return JEIPlugin.hasSequencedAssemblyCategory() ? super.getRecipesForOutput(output) : List.of();
+    }
+
+    @Override
+    public List<SequencedAssemblyRecipe> getAllRecipes() {
+        return JEIPlugin.hasSequencedAssemblyCategory() ? super.getAllRecipes() : List.of();
     }
 
     @Override
